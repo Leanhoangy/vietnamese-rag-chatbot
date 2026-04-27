@@ -1,0 +1,82 @@
+[
+  {
+    "question": "Vượt đèn đỏ bị phạt bao nhiêu tiền?",
+    "ground_truth": "Phạt tiền từ 3.000.000 đồng đến 5.000.000 đồng đối với người điều khiển xe không chấp hành hiệu lệnh của đèn tín hiệu giao thông"
+  },
+  {
+    "question": "Uống rượu bia lái xe máy bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 2.000.000 đồng đến 3.000.000 đồng đối với người điều khiển xe mô tô có nồng độ cồn vượt quá mức quy định"
+  },
+  {
+    "question": "Không đội mũ bảo hiểm khi đi xe máy bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 400.000 đồng đến 600.000 đồng đối với người điều khiển xe mô tô không đội mũ bảo hiểm"
+  },
+  {
+    "question": "Chạy quá tốc độ từ 10 đến 20 km/h bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 800.000 đồng đến 1.000.000 đồng đối với người điều khiển xe mô tô chạy quá tốc độ từ 10 đến 20 km/h"
+  },
+  {
+    "question": "Đi ngược chiều bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 3.000.000 đồng đến 5.000.000 đồng đối với người điều khiển xe đi ngược chiều đường một chiều"
+  },
+  {
+    "question": "Người lao động được nghỉ phép bao nhiêu ngày mỗi năm?",
+    "ground_truth": "Người lao động làm việc đủ 12 tháng được nghỉ hằng năm 12 ngày làm việc"
+  },
+  {
+    "question": "Tuổi nghỉ hưu của nam giới là bao nhiêu?",
+    "ground_truth": "Nam giới nghỉ hưu ở tuổi 62"
+  },
+  {
+    "question": "Tuổi nghỉ hưu của nữ giới là bao nhiêu?",
+    "ground_truth": "Nữ giới nghỉ hưu ở tuổi 60"
+  },
+  {
+    "question": "Thời gian thử việc tối đa là bao nhiêu ngày?",
+    "ground_truth": "Thời gian thử việc không quá 180 ngày đối với công việc của người quản lý doanh nghiệp và không quá 60 ngày đối với công việc có chức danh nghề nghiệp cần trình độ chuyên môn kỹ thuật từ cao đẳng trở lên"
+  },
+  {
+    "question": "Doanh nghiệp tư nhân do bao nhiêu người thành lập?",
+    "ground_truth": "Doanh nghiệp tư nhân do một cá nhân làm chủ"
+  },
+  {
+    "question": "Công ty TNHH một thành viên do bao nhiêu người thành lập?",
+    "ground_truth": "Công ty TNHH một thành viên do một tổ chức hoặc một cá nhân làm chủ sở hữu"
+  },
+  {
+    "question": "Vốn điều lệ của công ty là gì?",
+    "ground_truth": "Vốn điều lệ là tổng giá trị tài sản do các thành viên đã góp hoặc cam kết góp khi thành lập công ty"
+  },
+  {
+    "question": "Hợp đồng lao động phải được ký kết bằng hình thức gì?",
+    "ground_truth": "Hợp đồng lao động phải được giao kết bằng văn bản"
+  },
+  {
+    "question": "Lái xe không có bằng lái bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 800.000 đồng đến 1.200.000 đồng đối với người điều khiển xe mô tô không có giấy phép lái xe"
+  },
+  {
+    "question": "Đỗ xe trên vỉa hè bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 100.000 đồng đến 200.000 đồng đối với người điều khiển xe mô tô dừng xe, đỗ xe trên vỉa hè"
+  },
+  {
+    "question": "Sử dụng điện thoại khi lái xe bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 800.000 đồng đến 1.000.000 đồng đối với người điều khiển xe mô tô dùng tay sử dụng điện thoại di động khi đang điều khiển xe"
+  },
+  {
+    "question": "Người lao động có thai được nghỉ thai sản bao nhiêu tháng?",
+    "ground_truth": "Lao động nữ được nghỉ thai sản 6 tháng"
+  },
+  {
+    "question": "Công ty cổ phần cần tối thiểu bao nhiêu cổ đông?",
+    "ground_truth": "Công ty cổ phần phải có tối thiểu 3 cổ đông"
+  },
+  {
+    "question": "Giấy phép lái xe hạng A1 được lái xe gì?",
+    "ground_truth": "Giấy phép lái xe hạng A1 cấp cho người lái xe mô tô hai bánh có dung tích xi lanh từ 50cc đến dưới 175cc"
+  },
+  {
+    "question": "Không có đèn xe khi đi ban đêm bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 100.000 đồng đến 200.000 đồng đối với người điều khiển xe mô tô không có đủ đèn chiếu sáng khi tham gia giao thông"
+  }
+]
