@@ -7,6 +7,6 @@ qa_chain = RetrievalQA.from_chain_type(
     llm=model,
     retriever=retriever,
     return_source_documents=True,
-    chain_type_kwargs={"verbose": True}
+    chain_type_kwargs={"verbose": False}
 )
 

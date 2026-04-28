@@ -2,7 +2,6 @@ import streamlit as st
 from retrieval import qa_chain
 st.set_page_config(page_title="Chatbot Tư Vấn Pháp Luật", page_icon="⚖️")
 st.title("⚖️ Chatbot Tư Vấn Pháp Luật Việt Nam")
-st.divider()
 st.write("Hỏi đáp về các quy định pháp luật Việt Nam dựa trên văn bản luật chính thức.")
 
 if "messages" not in st.session_state:
