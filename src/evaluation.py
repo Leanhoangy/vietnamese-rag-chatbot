@@ -16,7 +16,7 @@ ragas_embeddings = LangchainEmbeddingsWrapper(embeddings)
 # Bước 2: Load test set
 with open("test_set.json", "r", encoding="utf-8") as f:
     test_cases = json.load(f)
-test_cases = test_cases[:10] 
+test_cases = test_cases[:5] 
 # Bước 3: Chạy pipeline lấy câu trả lời
 questions, answers, contexts, ground_truths = [], [], [], []
 for i, case in enumerate(test_cases):
@@ -28,7 +28,7 @@ for i, case in enumerate(test_cases):
     answers.append(result["result"])
     contexts.append(context if context else [result["result"]])
     ground_truths.append(case["ground_truth"])
-    time.sleep(3)
+    time.sleep(1)
 
 # Bước 4: Tạo dataset
 dataset = Dataset.from_dict({
@@ -42,15 +42,16 @@ dataset = Dataset.from_dict({
 print("\nĐang chạy RAGAS evaluation...")
 result = evaluate(
     dataset,
-    metrics=[answer_relevancy, context_precision, context_recall],
+    metrics=[faithfulness,answer_relevancy, context_precision, context_recall],
     llm=ragas_llm,
     embeddings=ragas_embeddings,
-    run_config=RunConfig(max_workers=1, timeout=120)
+    run_config=RunConfig(max_workers=2, timeout=300)
 )
 
 # Bước 6: In và lưu kết quả
 print("\n=== KẾT QUẢ RAGAS ===")
 df = result.to_pandas()
+print(f"Faithfulness:     {df['faithfulness'].mean():.3f}")
 print(f"Answer Relevancy:  {df['answer_relevancy'].mean():.3f}")
 print(f"Context Precision: {df['context_precision'].mean():.3f}")
 print(f"Context Recall:    {df['context_recall'].mean():.3f}")
