@@ -16,3 +16,4 @@ pandas
 tqdm
 docx2txt
 langchain-groq
+torchvision
