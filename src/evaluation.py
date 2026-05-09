@@ -13,12 +13,12 @@ from langchain_groq import ChatGroq
 from dotenv import load_dotenv
 
 load_dotenv()
-# Bước 1: Config RAGAS dùng Groq
 
+# Fix: Tạo model riêng cho RAGAS với temperature cao hơn
 ragas_model = ChatGroq(
     model="llama-3.1-8b-instant",
     api_key=os.getenv("GROQ_API_KEY"),
-    temperature=0,
+    temperature=0.1,  # không phải 0!
     max_retries=2,
 )
 ragas_llm = LangchainLLMWrapper(ragas_model)

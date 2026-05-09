@@ -46,9 +46,10 @@ Câu hỏi → Embed → FAISS top-k → Prompt → Groq (Llama 3.1) → Câu tr
 
 | Metric | Score |
 |--------|-------|
-| Answer Relevancy | 0.757 |
-| Context Precision | 0.944 |
-| Context Recall | 1.000 |
+| Faithfulness | 0.867 |
+| Answer Relevancy | 1.000 |
+| Context Precision | 0.933 |
+| Context Recall | 0.800 |
 
 ## 🚀 Cài đặt và chạy
 
