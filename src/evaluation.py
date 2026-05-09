@@ -1,4 +1,5 @@
 import json
+import os
 import time
 from datasets import Dataset
 from ragas import evaluate
@@ -6,11 +7,21 @@ from ragas.metrics import faithfulness, answer_relevancy, context_precision, con
 from ragas.llms import LangchainLLMWrapper
 from ragas.embeddings import LangchainEmbeddingsWrapper
 from retrieval import qa_chain
-from llm_chain import model
 from embedder import embeddings
 from ragas.run_config import RunConfig
+from langchain_groq import ChatGroq
+from dotenv import load_dotenv
+
+load_dotenv()
 # Bước 1: Config RAGAS dùng Groq
-ragas_llm = LangchainLLMWrapper(model)
+
+ragas_model = ChatGroq(
+    model="llama-3.1-8b-instant",
+    api_key=os.getenv("GROQ_API_KEY"),
+    temperature=0,
+    max_retries=2,
+)
+ragas_llm = LangchainLLMWrapper(ragas_model)
 ragas_embeddings = LangchainEmbeddingsWrapper(embeddings)
 
 # Bước 2: Load test set
