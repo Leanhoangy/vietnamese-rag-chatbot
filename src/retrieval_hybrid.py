@@ -1,0 +1,307 @@
+"""
+Enhanced retrieval with hybrid search: BM25 + Dense + Cross-Encoder Re-ranking
+Combines sparse (BM25) and dense (FAISS) retrieval for better results
+"""
+
+import os
+from typing import Any, Dict, List, Protocol, Tuple
+
+import numpy as np
+from rank_bm25 import BM25Okapi
+from langchain_classic.chains import RetrievalQA
+
+
+class DocumentLike(Protocol):
+    """Minimal document contract used by the retriever."""
+
+    page_content: str
+    metadata: Dict[str, Any]
+
+try:
+    from .llm_chain import model
+    from .vector_store import vectorstore
+    from .chunker import splits
+except ImportError:
+    from llm_chain import model
+    from vector_store import vectorstore
+    from chunker import splits
+
+# Import cross-encoder for re-ranking
+try:
+    from sentence_transformers import CrossEncoder
+    CROSS_ENCODER_AVAILABLE = True
+except ImportError:
+    CROSS_ENCODER_AVAILABLE = False
+    print("Warning: CrossEncoder not available. Install with: pip install sentence-transformers")
+
+
+class HybridRetriever:
+    """Hybrid retriever combining BM25, dense vectors, and cross-encoder re-ranking"""
+    
+    def __init__(
+        self,
+        documents: List[DocumentLike],
+        use_cross_encoder: bool = True,
+        cross_encoder_model: str = "cross-encoder/ms-marco-MiniLM-L-12-v2",
+    ):
+        """
+        Initialize hybrid retriever
+        
+        Args:
+            documents: List of LangChain Document objects
+            use_cross_encoder: Whether to use cross-encoder re-ranking
+            cross_encoder_model: Model for cross-encoder
+        """
+        self.documents = documents
+        self.doc_texts = [doc.page_content for doc in documents]
+        
+        # Initialize BM25 (sparse retriever)
+        print("Initializing BM25 retriever...")
+        tokenized_docs = [doc.split() for doc in self.doc_texts]
+        self.bm25 = BM25Okapi(tokenized_docs)
+        
+        # Initialize cross-encoder if available
+        self.use_cross_encoder = use_cross_encoder and CROSS_ENCODER_AVAILABLE
+        if self.use_cross_encoder:
+            print(f"Loading cross-encoder: {cross_encoder_model}")
+            self.cross_encoder = CrossEncoder(cross_encoder_model, device="cpu")
+        else:
+            self.cross_encoder = None
+
+    @staticmethod
+    def _document_id(doc: DocumentLike) -> str:
+        """Build a stable ID so duplicate prefixes don't collapse distinct chunks."""
+        source = doc.metadata.get("source", "")
+        start_index = doc.metadata.get("start_index", -1)
+        return f"{source}:{start_index}:{hash(doc.page_content)}"
+
+    @staticmethod
+    def _normalize_scores(
+        results: List[Tuple[DocumentLike, float]],
+        higher_is_better: bool,
+    ) -> List[Tuple[DocumentLike, float]]:
+        if not results:
+            return []
+
+        raw_scores = [score for _, score in results]
+        min_score = min(raw_scores)
+        max_score = max(raw_scores)
+
+        if max_score == min_score:
+            return [(doc, 1.0) for doc, _ in results]
+
+        normalized = []
+        for doc, score in results:
+            value = (score - min_score) / (max_score - min_score)
+            if not higher_is_better:
+                value = 1.0 - value
+            normalized.append((doc, float(value)))
+        return normalized
+    
+    def retrieve_bm25(self, query: str, k: int = 5) -> List[Tuple[DocumentLike, float]]:
+        """Retrieve using BM25 (sparse lexical search)"""
+        query_tokens = query.split()
+        scores = self.bm25.get_scores(query_tokens)
+        top_indices = np.argsort(scores)[::-1][:k]
+        
+        results = []
+        for idx in top_indices:
+            if scores[idx] > 0:  # Only include documents with positive scores
+                results.append((self.documents[idx], float(scores[idx])))
+        
+        return results
+    
+    def retrieve_dense(self, query: str, k: int = 5) -> List[Tuple[DocumentLike, float]]:
+        """Retrieve using dense vectors (semantic search)"""
+        docs = vectorstore.similarity_search_with_scores(query, k=k)
+        return docs
+    
+    def rerank_with_cross_encoder(
+        self,
+        query: str,
+        candidates: List[Tuple[DocumentLike, float]],
+        k: int = 3,
+    ) -> List[Tuple[DocumentLike, float]]:
+        """Re-rank candidates using cross-encoder"""
+        if not self.cross_encoder or not candidates:
+            return candidates[:k]
+        
+        # Prepare pairs for cross-encoder
+        pairs = [(query, doc.page_content) for doc, _ in candidates]
+        
+        # Get cross-encoder scores
+        scores = self.cross_encoder.predict(pairs)
+        
+        # Combine documents with cross-encoder scores
+        reranked = list(zip(candidates, scores))
+        reranked.sort(key=lambda x: x[1], reverse=True)
+        
+        return [(doc, float(score)) for (doc, _), score in reranked[:k]]
+    
+    def hybrid_search(
+        self,
+        query: str,
+        k_bm25: int = 5,
+        k_dense: int = 5,
+        k_rerank: int = 3,
+        rerank: bool = True,
+        alpha: float = 0.5,  # Weight for combining BM25 and dense scores
+    ) -> List[Tuple[DocumentLike, float]]:
+        """
+        Hybrid search combining BM25, dense, and optionally cross-encoder
+        
+        Args:
+            query: User query
+            k_bm25: Number of results from BM25
+            k_dense: Number of results from dense retrieval
+            k_rerank: Final number of results after re-ranking
+            rerank: Whether to use cross-encoder re-ranking
+            alpha: Weight for combining scores (0 = pure BM25, 1 = pure dense)
+        
+        Returns:
+            List of (Document, score) sorted by final score
+        """
+        # Retrieve from both retrievers
+        bm25_results = self.retrieve_bm25(query, k=k_bm25)
+        dense_results = self.retrieve_dense(query, k=k_dense)
+        
+        # BM25 scores: higher is better. FAISS scores are distances: lower is better.
+        bm25_results_norm = self._normalize_scores(bm25_results, higher_is_better=True)
+        dense_results_norm = self._normalize_scores(dense_results, higher_is_better=False)
+        
+        # Combine results
+        combined = {}
+        for doc, score in bm25_results_norm:
+            doc_id = self._document_id(doc)
+            combined[doc_id] = {"doc": doc, "bm25_score": score, "dense_score": 0}
+        
+        for doc, score in dense_results_norm:
+            doc_id = self._document_id(doc)
+            if doc_id in combined:
+                combined[doc_id]["dense_score"] = score
+            else:
+                combined[doc_id] = {"doc": doc, "bm25_score": 0, "dense_score": score}
+        
+        # Fuse scores
+        fused_results = []
+        for doc_info in combined.values():
+            bm25_score = doc_info["bm25_score"]
+            dense_score = doc_info["dense_score"]
+            fused_score = alpha * dense_score + (1 - alpha) * bm25_score
+            fused_results.append((doc_info["doc"], fused_score))
+        
+        # Sort by fused score
+        fused_results.sort(key=lambda x: x[1], reverse=True)
+        
+        # Re-rank if enabled
+        if rerank and self.use_cross_encoder and len(fused_results) > 0:
+            # Take more candidates before re-ranking for better selection
+            candidates = fused_results[:max(k_rerank * 2, len(fused_results))]
+            fused_results = self.rerank_with_cross_encoder(query, candidates, k=k_rerank)
+        else:
+            fused_results = fused_results[:k_rerank]
+        
+        return fused_results
+    
+    def as_retriever(self, k: int = 3, **kwargs):
+        """
+        Return a callable retriever compatible with LangChain
+        
+        Usage: retriever = hybrid_retriever.as_retriever(k=3)
+               docs = retriever.get_relevant_documents(query)
+        """
+        def retrieve(query: str) -> List[DocumentLike]:
+            results = self.hybrid_search(
+                query,
+                k_bm25=k * 2,
+                k_dense=k * 2,
+                k_rerank=k,
+                rerank=True,
+                alpha=kwargs.get("alpha", 0.5),
+            )
+            return [doc for doc, _ in results]
+        
+        class SimpleRetriever:
+            search_kwargs = {"k": k}
+
+            def get_relevant_documents(self, query: str):
+                return retrieve(query)
+
+            def invoke(self, query: str):
+                return retrieve(query)
+        
+        return SimpleRetriever()
+
+
+class HybridQAChain:
+    """QA chain using hybrid retrieval"""
+    
+    def __init__(self, use_hybrid: bool = True, hybrid_alpha: float = 0.5):
+        """
+        Initialize QA chain
+        
+        Args:
+            use_hybrid: Whether to use hybrid retrieval (True) or just dense (False)
+            hybrid_alpha: Weight for score fusion (0 = BM25, 1 = dense)
+        """
+        self.use_hybrid = use_hybrid
+        self.hybrid_alpha = hybrid_alpha
+        
+        if use_hybrid:
+            print("Initializing Hybrid Retriever...")
+            self.hybrid_retriever = HybridRetriever(
+                splits,
+                use_cross_encoder=CROSS_ENCODER_AVAILABLE,
+            )
+            retriever = self.hybrid_retriever.as_retriever(
+                k=3,
+                alpha=hybrid_alpha,
+            )
+        else:
+            print("Using Dense Retriever only...")
+            retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
+        
+        # Create QA chain
+        self.qa_chain = RetrievalQA.from_chain_type(
+            llm=model,
+            retriever=retriever,
+            return_source_documents=True,
+            chain_type_kwargs={"verbose": False}
+        )
+    
+    def invoke(self, query_dict: Dict) -> Dict:
+        """Invoke the QA chain (compatible with LangChain interface)"""
+        return self.qa_chain.invoke(query_dict)
+    
+    def __call__(self, query: str) -> str:
+        """Simple call interface"""
+        result = self.qa_chain.invoke({"query": query})
+        return result["result"]
+
+
+# Export instances
+print("=" * 60)
+print("Initializing Hybrid Retrieval System")
+print("=" * 60)
+
+# Check if we should use hybrid retrieval (set via environment or default True)
+USE_HYBRID = os.getenv("USE_HYBRID_RETRIEVAL", "true").lower() == "true"
+
+if USE_HYBRID:
+    # Create hybrid retriever
+    print("\n✓ Using HYBRID retrieval (BM25 + Dense + Cross-Encoder)")
+    qa_chain = HybridQAChain(use_hybrid=True, hybrid_alpha=0.5).qa_chain
+    hybrid_retriever = True
+else:
+    # Fall back to dense retrieval
+    print("\n✓ Using DENSE retrieval only (default)")
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
+    qa_chain = RetrievalQA.from_chain_type(
+        llm=model,
+        retriever=retriever,
+        return_source_documents=True,
+        chain_type_kwargs={"verbose": False}
+    )
+    hybrid_retriever = False
+
+print("=" * 60)

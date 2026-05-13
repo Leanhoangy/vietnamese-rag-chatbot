@@ -1,4 +1,5 @@
 # Byte-compiled / optimized / DLL files
+.DS_Store
 __pycache__/
 *.py[codz]
 *$py.class
@@ -208,3 +209,10 @@ __marimo__/
 
 faiss_index/
 faiss_index_local/
+
+# Project artifacts
+models/
+checkpoints/
+logs/
+wandb/
+ragas_results.csv

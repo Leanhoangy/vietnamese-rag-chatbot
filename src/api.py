@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from retrieval import qa_chain
+
+try:
+    from .retrieval import qa_chain
+except ImportError:
+    from retrieval import qa_chain
 
 app = FastAPI()
 

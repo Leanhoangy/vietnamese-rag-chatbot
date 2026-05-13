@@ -28,7 +28,9 @@ Tài liệu .docx
       
 ── Khi user hỏi ──
 
-Câu hỏi → Embed → FAISS top-k → Prompt → Groq (Llama 3.1) → Câu trả lời
+Câu hỏi → BM25 + FAISS dense retrieval → Cross-Encoder re-rank
+      ↓
+Prompt → Groq (Llama 3.1) → Câu trả lời
 ```
 
 ## 🛠️ Tech Stack
@@ -37,10 +39,10 @@ Câu hỏi → Embed → FAISS top-k → Prompt → Groq (Llama 3.1) → Câu tr
 |-----------|-----------|
 | Framework | LangChain 0.3 |
 | Embedding | multilingual-e5-base (HuggingFace) |
-| Vector Store | FAISS |
+| Retrieval | Hybrid BM25 + FAISS + Cross-Encoder |
 | LLM | Llama 3.1-8b (Groq API) |
 | UI | Streamlit |
-| Evaluation | RAGAS |
+| Evaluation | RAGAS + Retrieval Metrics |
 
 ## 📊 Kết quả RAGAS Evaluation
 
@@ -65,8 +67,17 @@ pip install -r requirements.txt
 cp .env.example .env
 # Điền GROQ_API_KEY vào .env
 
+# Chạy API
+uvicorn src.api:app --reload
+
 # Chạy app
 streamlit run src/app.py
+```
+
+Mặc định hệ thống sẽ dùng hybrid retrieval. Nếu muốn quay về baseline dense retrieval:
+
+```bash
+USE_HYBRID_RETRIEVAL=false uvicorn src.api:app --reload
 ```
 
 ## 📁 Cấu trúc project
@@ -81,9 +92,13 @@ vietnamese-rag-chatbot/
 │   ├── embedder.py    # Load embedding model
 │   ├── vector_store.py # Build/load FAISS index
 │   ├── llm_chain.py   # Kết nối Groq API
-│   ├── retrieval.py   # RAG pipeline
-│   ├── evaluation.py  # RAGAS evaluation
+│   ├── retrieval.py   # Entry point cho retrieval (hybrid mặc định)
+│   ├── retrieval_hybrid.py # Hybrid BM25 + dense + re-ranking
+│   ├── evaluation_enhanced.py # Enhanced evaluation metrics
+│   ├── data_preparation.py # Chuẩn bị data fine-tuning
+│   ├── fine_tuner.py  # Fine-tune embedding model
 │   └── app.py         # Streamlit UI
+├── train.py           # Pipeline huấn luyện/evaluation
 ├── test_set.json      # 10 câu hỏi test
 ├── ragas_results.csv  # Kết quả evaluation
 └── requirements.txt
@@ -92,4 +107,3 @@ vietnamese-rag-chatbot/
 ## 👥 Nhóm thực hiện
 
 Đồ án môn Deep Learning — HUIT 2025
-

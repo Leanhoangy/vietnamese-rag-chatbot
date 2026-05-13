@@ -1,8 +1,11 @@
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from loader import data
-from pprint import pprint
-separators=["\n\n", "\n", ".", " ", ""]
 
+try:
+    from .loader import data
+except ImportError:
+    from loader import data
+
+separators = ["\n\n", "\n", ".", " ", ""]
 
 text_splitter = RecursiveCharacterTextSplitter(
     chunk_size=1000,

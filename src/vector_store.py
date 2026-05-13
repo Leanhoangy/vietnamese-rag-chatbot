@@ -1,7 +1,12 @@
 import os
 from langchain_community.vectorstores import FAISS
-from embedder import embeddings
-from chunker import splits
+
+try:
+    from .embedder import embeddings
+    from .chunker import splits
+except ImportError:
+    from embedder import embeddings
+    from chunker import splits
 
 INDEX_PATH = "faiss_index_local"
 
