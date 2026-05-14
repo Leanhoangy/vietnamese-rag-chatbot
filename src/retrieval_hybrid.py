@@ -7,8 +7,12 @@ import os
 from typing import Any, Dict, List, Protocol, Tuple
 
 import numpy as np
+from langchain_core.documents import Document
+from langchain_core.retrievers import BaseRetriever
+from langchain_core.prompts import PromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.output_parsers import StrOutputParser
 from rank_bm25 import BM25Okapi
-from langchain_classic.chains import RetrievalQA
 
 
 class DocumentLike(Protocol):
@@ -64,7 +68,12 @@ class HybridRetriever:
         self.use_cross_encoder = use_cross_encoder and CROSS_ENCODER_AVAILABLE
         if self.use_cross_encoder:
             print(f"Loading cross-encoder: {cross_encoder_model}")
-            self.cross_encoder = CrossEncoder(cross_encoder_model, device="cpu")
+            try:
+                self.cross_encoder = CrossEncoder(cross_encoder_model, device="cpu")
+            except Exception as exc:
+                print(f"Warning: could not load cross-encoder, falling back to BM25 + dense only: {exc}")
+                self.cross_encoder = None
+                self.use_cross_encoder = False
         else:
             self.cross_encoder = None
 
@@ -113,7 +122,7 @@ class HybridRetriever:
     
     def retrieve_dense(self, query: str, k: int = 5) -> List[Tuple[DocumentLike, float]]:
         """Retrieve using dense vectors (semantic search)"""
-        docs = vectorstore.similarity_search_with_scores(query, k=k)
+        docs = vectorstore.similarity_search_with_score(query, k=k)
         return docs
     
     def rerank_with_cross_encoder(
@@ -204,33 +213,33 @@ class HybridRetriever:
         return fused_results
     
     def as_retriever(self, k: int = 3, **kwargs):
-        """
-        Return a callable retriever compatible with LangChain
-        
-        Usage: retriever = hybrid_retriever.as_retriever(k=3)
-               docs = retriever.get_relevant_documents(query)
-        """
-        def retrieve(query: str) -> List[DocumentLike]:
-            results = self.hybrid_search(
-                query,
-                k_bm25=k * 2,
-                k_dense=k * 2,
-                k_rerank=k,
-                rerank=True,
-                alpha=kwargs.get("alpha", 0.5),
-            )
-            return [doc for doc, _ in results]
-        
-        class SimpleRetriever:
-            search_kwargs = {"k": k}
+        """Return a LangChain-compatible BaseRetriever wrapper."""
+        return LangChainHybridRetriever(
+            hybrid_retriever=self,
+            k=k,
+            alpha=kwargs.get("alpha", 0.5),
+        )
 
-            def get_relevant_documents(self, query: str):
-                return retrieve(query)
 
-            def invoke(self, query: str):
-                return retrieve(query)
-        
-        return SimpleRetriever()
+class LangChainHybridRetriever(BaseRetriever):
+    """Adapter so the custom hybrid retriever works with current LangChain."""
+
+    hybrid_retriever: HybridRetriever
+    k: int = 3
+    alpha: float = 0.5
+
+    model_config = {"arbitrary_types_allowed": True}
+
+    def _get_relevant_documents(self, query: str, *, run_manager=None) -> List[Document]:
+        results = self.hybrid_retriever.hybrid_search(
+            query,
+            k_bm25=self.k * 2,
+            k_dense=self.k * 2,
+            k_rerank=self.k,
+            rerank=True,
+            alpha=self.alpha,
+        )
+        return [doc for doc, _ in results]
 
 
 class HybridQAChain:
@@ -261,21 +270,57 @@ class HybridQAChain:
             print("Using Dense Retriever only...")
             retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
         
-        # Create QA chain
-        self.qa_chain = RetrievalQA.from_chain_type(
-            llm=model,
-            retriever=retriever,
-            return_source_documents=True,
-            chain_type_kwargs={"verbose": False}
+        # Custom prompt for better answer quality - SIMPLE & DIRECT
+        prompt_template = """Bạn là chuyên gia pháp luật Việt Nam. Trả lời dựa HOÀN TOÀN trên tài liệu được cung cấp.
+
+TÀI LIỆU:
+{context}
+
+CÂU HỎI: {question}
+
+TRẢ LỜI (trực tiếp, từ tài liệu, không giải thích):"""
+
+        prompt = PromptTemplate(
+            template=prompt_template,
+            input_variables=["context", "question"]
         )
+        
+        # Build chain using Runnable pattern (modern LangChain)
+        # Format documents into context string
+        def format_docs(docs):
+            return "\n\n".join([
+                f"[Tài liệu {i+1}]:\n{doc.page_content}"
+                for i, doc in enumerate(docs)
+            ])
+        
+        # Create RAG chain
+        self.chain = (
+            {"context": retriever | format_docs, "question": RunnablePassthrough()}
+            | prompt
+            | model
+            | StrOutputParser()
+        )
+        
+        self.retriever = retriever
     
     def invoke(self, query_dict: Dict) -> Dict:
         """Invoke the QA chain (compatible with LangChain interface)"""
-        return self.qa_chain.invoke(query_dict)
+        query = query_dict.get("query", "")
+        
+        # Get retrieved documents
+        docs = self.retriever.invoke(query)
+        
+        # Get answer using chain
+        answer = self.chain.invoke(query)
+        
+        return {
+            "result": answer,
+            "source_documents": docs
+        }
     
     def __call__(self, query: str) -> str:
         """Simple call interface"""
-        result = self.qa_chain.invoke({"query": query})
+        result = self.invoke({"query": query})
         return result["result"]
 
 
@@ -290,18 +335,13 @@ USE_HYBRID = os.getenv("USE_HYBRID_RETRIEVAL", "true").lower() == "true"
 if USE_HYBRID:
     # Create hybrid retriever
     print("\n✓ Using HYBRID retrieval (BM25 + Dense + Cross-Encoder)")
-    qa_chain = HybridQAChain(use_hybrid=True, hybrid_alpha=0.5).qa_chain
+    qa_chain = HybridQAChain(use_hybrid=True, hybrid_alpha=0.5)
     hybrid_retriever = True
 else:
-    # Fall back to dense retrieval
+    # Fall back to dense retrieval with custom prompt
     print("\n✓ Using DENSE retrieval only (default)")
     retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
-    qa_chain = RetrievalQA.from_chain_type(
-        llm=model,
-        retriever=retriever,
-        return_source_documents=True,
-        chain_type_kwargs={"verbose": False}
-    )
+    qa_chain = HybridQAChain(use_hybrid=False, hybrid_alpha=0.5)
     hybrid_retriever = False
 
 print("=" * 60)

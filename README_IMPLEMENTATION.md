@@ -1,10 +1,8 @@
-# 🎉 Vietnamese Legal RAG Chatbot - Implementation Complete!
+# Vietnamese Legal RAG Chatbot - Implementation Details
 
-## 📊 What Was Built
+## 📊 Các thành phần đã triển khai
 
-I've transformed your project from "API orchestration" into a **legitimate Deep Learning project** with:
-
-### ✅ **Deep Learning Components Added**
+### ✅ **Deep Learning Components**
 
 1. **Fine-Tuning Pipeline** (NEW)
    - `src/fine_tuner.py` - EmbeddingFineTuner class
@@ -39,24 +37,15 @@ I've transformed your project from "API orchestration" into a **legitimate Deep 
 
 ## 📁 Complete File Listing
 
-### **NEW FILES (7 files)**
 ```
-✨ train.py                      - Main training script
-✨ SUBMISSION_CHECKLIST.py       - Verification tool
-✨ README_IMPLEMENTATION.md      - Implementation notes and usage
-✨ src/fine_tuner.py             - Fine-tuning module (220 lines)
-✨ src/data_preparation.py       - Data preparation (250 lines)
-✨ src/retrieval_hybrid.py       - Hybrid retrieval (350 lines)
-✨ src/evaluation_enhanced.py    - Enhanced metrics (400 lines)
+train.py                        - Main training pipeline
+src/fine_tuner.py               - EmbeddingFineTuner class
+src/data_preparation.py         - Triplet dataset preparation
+src/augment_triplets.py         - LLM-based data augmentation
+src/generate_test_cases.py      - Sinh test cases từ raw docs
+src/retrieval_hybrid.py         - HybridRetriever (BM25 + Dense + CrossEncoder)
+src/evaluation_enhanced.py      - Metrics: NDCG, MRR, BLEU, ROUGE, RAGAS
 ```
-
-### **MODIFIED FILES (2 files)**
-```
-📝 src/embedder.py               - Auto-load fine-tuned model
-📝 requirements.txt              - Added: rank-bm25, rouge-score, scikit-learn, nltk
-```
-
-### **TOTAL: 9 files modified/created**
 
 ---
 
@@ -64,24 +53,25 @@ I've transformed your project from "API orchestration" into a **legitimate Deep 
 
 ### **Option 1: Fully Automated** (Recommended)
 ```bash
-cd "/Users/mac/RAG chatbot/vietnamese-rag-chatbot"
 python train.py
 ```
-This will:
-1. ✓ Install missing dependencies
-2. ✓ Prepare training data (5-10 min)
-3. ✓ Fine-tune embedding model (30-60 min)
-4. ✓ Update embedder configuration
-5. ✓ Run comprehensive evaluation (10-15 min)
-6. ✓ Display results and improvements
+Các bước tự động:
+1. Chuẩn bị triplet dataset (5-10 phút)
+2. Fine-tune embedding model (30-60 phút)
+3. Chạy comprehensive evaluation (10-15 phút)
 
-**Total time: 1-1.5 hours**
+**Tổng thời gian: ~1-1.5 giờ**
 
-### **Option 2: Step by Step**
+### **Option 2: Từng bước**
 ```bash
-python src/data_preparation.py    # Prepare triplet dataset
-python src/fine_tuner.py          # Fine-tune embeddings
-python train.py                   # Run full training + enhanced evaluation
+# Augment training data (93 → 366 triplets)
+python src/augment_triplets.py
+
+# Fine-tune embeddings
+python src/fine_tuner.py
+
+# Run full training + evaluation
+python train.py
 ```
 
 ---
@@ -195,11 +185,10 @@ After running python train.py, you'll get:
    ├── sentence_bert_config.json
    └── tokenizer/           # Tokenizer files
 
-2. legal_triplets_dataset/
-   ├── dataset_dict.json    # Metadata
-   ├── train/
-   │   ├── data-00000-of-00001.arrow
-   │   └── state.json
+2. legal_triplets_dataset/     (366 triplets sau augmentation)
+   ├── data-00000-of-00001.arrow
+   ├── dataset_info.json
+   └── state.json
 
 3. evaluation_results.json
    ├── ragas: {faithfulness, answer_relevancy, ...}
@@ -296,29 +285,27 @@ This checks:
 - ✓ Documentation complete
 - ✓ Code quality
 
-**Current status: 19/19 checks PASSED ✅**
+Chạy để kiểm tra trạng thái hiện tại của project.
 
 ---
 
 ## 📚 Next Steps
 
-### **Immediate (Before Submission)**
-1. Run `python train.py` to complete training
-2. Check `evaluation_results.json` for metrics
-3. Review `README_IMPLEMENTATION.md` for technical details
-4. Run `python SUBMISSION_CHECKLIST.py` again
+### **Trước khi nộp**
+1. Chạy `python train.py` để hoàn tất training
+2. Kiểm tra `evaluation_results.json` để lấy metrics
+3. Chạy `python SUBMISSION_CHECKLIST.py` để verify
 
-### **Presentation Preparation**
-1. Create architecture diagram (use draw.io or similar)
-2. Extract training metrics from `models/finetuned-embedder/`
-3. Prepare metric comparison table
-4. Code walkthrough of key functions
+### **Chuẩn bị thuyết trình**
+1. Vẽ architecture diagram (draw.io)
+2. Lấy training loss từ `models/finetuned-embedder/`
+3. Chuẩn bị bảng so sánh: baseline vs fine-tuned vs hybrid
+4. Code walkthrough các hàm chính
 
-### **Optional Enhancements**
-1. Try different loss functions (MultipleNegativesRankingLoss)
-2. Experiment with hybrid alpha parameter
-3. Fine-tune with more epochs if needed
-4. Add more evaluation metrics if desired
+### **Optional**
+1. Thử `loss_type="multiple_negatives"` trong `train.py`
+2. Thử các giá trị `alpha` khác nhau trong hybrid retrieval
+3. Tăng epochs nếu cần
 
 ---
 

@@ -63,9 +63,8 @@ cd vietnamese-rag-chatbot
 # Cài thư viện
 pip install -r requirements.txt
 
-# Tạo file .env
-cp .env.example .env
-# Điền GROQ_API_KEY vào .env
+# Tạo file .env và điền API key
+echo "GROQ_API_KEY=your_key_here" > .env
 
 # Chạy API
 uvicorn src.api:app --reload
@@ -87,20 +86,24 @@ vietnamese-rag-chatbot/
 ├── data/
 │   └── raw/          # Văn bản luật .docx
 ├── src/
-│   ├── loader.py      # Đọc file .docx
-│   ├── chunker.py     # Chia text thành chunks
-│   ├── embedder.py    # Load embedding model
-│   ├── vector_store.py # Build/load FAISS index
-│   ├── llm_chain.py   # Kết nối Groq API
-│   ├── retrieval.py   # Entry point cho retrieval (hybrid mặc định)
-│   ├── retrieval_hybrid.py # Hybrid BM25 + dense + re-ranking
-│   ├── evaluation_enhanced.py # Enhanced evaluation metrics
-│   ├── data_preparation.py # Chuẩn bị data fine-tuning
-│   ├── fine_tuner.py  # Fine-tune embedding model
-│   └── app.py         # Streamlit UI
-├── train.py           # Pipeline huấn luyện/evaluation
-├── test_set.json      # 10 câu hỏi test
-├── ragas_results.csv  # Kết quả evaluation
+│   ├── loader.py               # Đọc file .docx
+│   ├── chunker.py              # Chia text thành chunks
+│   ├── embedder.py             # Load embedding model
+│   ├── vector_store.py         # Build/load FAISS index
+│   ├── llm_chain.py            # Kết nối Groq API
+│   ├── retrieval.py            # Entry point cho retrieval (hybrid mặc định)
+│   ├── retrieval_hybrid.py     # Hybrid BM25 + dense + re-ranking
+│   ├── evaluation_enhanced.py  # Evaluation metrics (RAGAS, NDCG, MRR...)
+│   ├── data_preparation.py     # Chuẩn bị triplets fine-tuning
+│   ├── fine_tuner.py           # Fine-tune embedding model
+│   ├── augment_triplets.py     # Augment training data qua LLM
+│   ├── generate_test_cases.py  # Sinh test cases từ văn bản luật
+│   └── app.py                  # Streamlit UI
+│   └── api.py                  # FastAPI endpoint
+├── train.py                    # Pipeline huấn luyện/evaluation
+├── test_set.json               # 68 câu hỏi test
+├── legal_triplets_dataset/     # Dataset fine-tuning (366 triplets)
+├── evaluation_results.json     # Kết quả evaluation
 └── requirements.txt
 ```
 

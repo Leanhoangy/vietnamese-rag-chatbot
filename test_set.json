@@ -1,82 +1,342 @@
 [
   {
     "question": "Vượt đèn đỏ bị phạt bao nhiêu tiền?",
-    "ground_truth": "Phạt tiền từ 3.000.000 đồng đến 5.000.000 đồng đối với người điều khiển xe không chấp hành hiệu lệnh của đèn tín hiệu giao thông"
+    "ground_truth": "Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với người điều khiển xe mô tô không chấp hành hiệu lệnh của đèn tín hiệu giao thông",
+    "source": "Nghị định 168/2024"
   },
   {
     "question": "Uống rượu bia lái xe máy bị phạt bao nhiêu?",
-    "ground_truth": "Phạt tiền từ 2.000.000 đồng đến 3.000.000 đồng đối với người điều khiển xe mô tô có nồng độ cồn vượt quá mức quy định"
+    "ground_truth": "Phạt tiền từ 2.000.000 đồng đến 3.000.000 đồng đối với người điều khiển xe mô tô có nồng độ cồn chưa vượt quá 50 miligam/100 mililít máu hoặc chưa vượt quá 0,25 miligam/1 lít khí thở",
+    "source": "Nghị định 168/2024"
   },
   {
     "question": "Không đội mũ bảo hiểm khi đi xe máy bị phạt bao nhiêu?",
-    "ground_truth": "Phạt tiền từ 400.000 đồng đến 600.000 đồng đối với người điều khiển xe mô tô không đội mũ bảo hiểm"
+    "ground_truth": "Phạt tiền từ 400.000 đồng đến 600.000 đồng đối với người điều khiển xe mô tô không đội mũ bảo hiểm",
+    "source": "Nghị định 168/2024"
   },
   {
     "question": "Chạy quá tốc độ từ 10 đến 20 km/h bị phạt bao nhiêu?",
-    "ground_truth": "Phạt tiền từ 800.000 đồng đến 1.000.000 đồng đối với người điều khiển xe mô tô chạy quá tốc độ từ 10 đến 20 km/h"
+    "ground_truth": "Phạt tiền từ 800.000 đồng đến 1.000.000 đồng đối với người điều khiển xe mô tô chạy quá tốc độ từ 10 đến 20 km/h",
+    "source": "Nghị định 100/2019"
   },
   {
     "question": "Đi ngược chiều bị phạt bao nhiêu?",
-    "ground_truth": "Phạt tiền từ 3.000.000 đồng đến 5.000.000 đồng đối với người điều khiển xe đi ngược chiều đường một chiều"
+    "ground_truth": "Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với người điều khiển xe mô tô đi ngược chiều đường một chiều",
+    "source": "Nghị định 168/2024"
   },
   {
     "question": "Người lao động được nghỉ phép bao nhiêu ngày mỗi năm?",
-    "ground_truth": "Người lao động làm việc đủ 12 tháng được nghỉ hằng năm 12 ngày làm việc"
+    "ground_truth": "Người lao động làm việc đủ 12 tháng cho một người sử dụng lao động thì được nghỉ hằng năm 12 ngày làm việc đối với người làm công việc trong điều kiện bình thường",
+    "source": "Bộ luật Lao động - Điều 113"
   },
   {
     "question": "Tuổi nghỉ hưu của nam giới là bao nhiêu?",
-    "ground_truth": "Nam giới nghỉ hưu ở tuổi 62"
+    "ground_truth": "Nam giới nghỉ hưu ở tuổi 62",
+    "source": "Bộ luật Lao động - Điều 169"
   },
   {
     "question": "Tuổi nghỉ hưu của nữ giới là bao nhiêu?",
-    "ground_truth": "Nữ giới nghỉ hưu ở tuổi 60"
+    "ground_truth": "Nữ giới nghỉ hưu ở tuổi 60",
+    "source": "Bộ luật Lao động - Điều 169"
   },
   {
     "question": "Thời gian thử việc tối đa là bao nhiêu ngày?",
-    "ground_truth": "Thời gian thử việc không quá 180 ngày đối với công việc của người quản lý doanh nghiệp và không quá 60 ngày đối với công việc có chức danh nghề nghiệp cần trình độ chuyên môn kỹ thuật từ cao đẳng trở lên"
+    "ground_truth": "Thời gian thử việc không quá 180 ngày đối với công việc của người quản lý doanh nghiệp và không quá 60 ngày đối với công việc có chức danh nghề nghiệp cần trình độ chuyên môn kỹ thuật từ cao đẳng trở lên",
+    "source": "Bộ luật Lao động"
   },
   {
     "question": "Doanh nghiệp tư nhân do bao nhiêu người thành lập?",
-    "ground_truth": "Doanh nghiệp tư nhân do một cá nhân làm chủ"
+    "ground_truth": "Doanh nghiệp tư nhân do một cá nhân làm chủ",
+    "source": "Luật Doanh nghiệp"
   },
   {
     "question": "Công ty TNHH một thành viên do bao nhiêu người thành lập?",
-    "ground_truth": "Công ty TNHH một thành viên do một tổ chức hoặc một cá nhân làm chủ sở hữu"
+    "ground_truth": "Công ty TNHH một thành viên do một tổ chức hoặc một cá nhân làm chủ sở hữu",
+    "source": "Luật Doanh nghiệp"
   },
   {
     "question": "Vốn điều lệ của công ty là gì?",
-    "ground_truth": "Vốn điều lệ là tổng giá trị tài sản do các thành viên đã góp hoặc cam kết góp khi thành lập công ty"
+    "ground_truth": "Vốn điều lệ là tổng giá trị tài sản do các thành viên công ty, chủ sở hữu công ty đã góp hoặc cam kết góp khi thành lập công ty trách nhiệm hữu hạn, công ty hợp danh; là tổng mệnh giá cổ phần đã bán hoặc được đăng ký mua khi thành lập công ty cổ phần",
+    "source": "Luật Doanh nghiệp - Điều 4"
   },
   {
     "question": "Hợp đồng lao động phải được ký kết bằng hình thức gì?",
-    "ground_truth": "Hợp đồng lao động phải được giao kết bằng văn bản"
+    "ground_truth": "Hợp đồng lao động phải được giao kết bằng văn bản",
+    "source": "Bộ luật Lao động"
   },
   {
     "question": "Lái xe không có bằng lái bị phạt bao nhiêu?",
-    "ground_truth": "Phạt tiền từ 800.000 đồng đến 1.200.000 đồng đối với người điều khiển xe mô tô không có giấy phép lái xe"
+    "ground_truth": "Phạt tiền từ 800.000 đồng đến 1.200.000 đồng đối với người điều khiển xe mô tô không có giấy phép lái xe",
+    "source": "Nghị định 100/2019"
   },
   {
     "question": "Đỗ xe trên vỉa hè bị phạt bao nhiêu?",
-    "ground_truth": "Phạt tiền từ 100.000 đồng đến 200.000 đồng đối với người điều khiển xe mô tô dừng xe, đỗ xe trên vỉa hè"
+    "ground_truth": "Phạt tiền từ 400.000 đồng đến 600.000 đồng đối với người điều khiển xe mô tô dừng xe, đỗ xe trên vỉa hè",
+    "source": "Nghị định 168/2024"
   },
   {
     "question": "Sử dụng điện thoại khi lái xe bị phạt bao nhiêu?",
-    "ground_truth": "Phạt tiền từ 800.000 đồng đến 1.000.000 đồng đối với người điều khiển xe mô tô dùng tay sử dụng điện thoại di động khi đang điều khiển xe"
+    "ground_truth": "Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với người điều khiển xe mô tô dùng tay sử dụng điện thoại di động khi đang điều khiển xe",
+    "source": "Nghị định 168/2024"
   },
   {
     "question": "Người lao động có thai được nghỉ thai sản bao nhiêu tháng?",
-    "ground_truth": "Lao động nữ được nghỉ thai sản 6 tháng"
+    "ground_truth": "Lao động nữ được nghỉ thai sản 6 tháng",
+    "source": "Bộ luật Lao động"
   },
   {
     "question": "Công ty cổ phần cần tối thiểu bao nhiêu cổ đông?",
-    "ground_truth": "Công ty cổ phần phải có tối thiểu 3 cổ đông"
+    "ground_truth": "Công ty cổ phần phải có tối thiểu 3 cổ đông",
+    "source": "Luật Doanh nghiệp"
   },
   {
     "question": "Giấy phép lái xe hạng A1 được lái xe gì?",
-    "ground_truth": "Giấy phép lái xe hạng A1 cấp cho người lái xe mô tô hai bánh có dung tích xi lanh từ 50cc đến dưới 175cc"
+    "ground_truth": "Giấy phép lái xe hạng A1 cấp cho người lái xe mô tô hai bánh có dung tích xi lanh từ 50cc đến dưới 175cc",
+    "source": "Luật Đường bộ"
   },
   {
     "question": "Không có đèn xe khi đi ban đêm bị phạt bao nhiêu?",
-    "ground_truth": "Phạt tiền từ 100.000 đồng đến 200.000 đồng đối với người điều khiển xe mô tô không có đủ đèn chiếu sáng khi tham gia giao thông"
+    "ground_truth": "Phạt tiền từ 100.000 đồng đến 200.000 đồng đối với người điều khiển xe mô tô không có đủ đèn chiếu sáng khi tham gia giao thông",
+    "source": "Nghị định 100/2019"
+  },
+  {
+    "question": "Thời giờ làm việc bình thường tối đa là bao nhiêu giờ mỗi ngày?",
+    "ground_truth": "Thời giờ làm việc bình thường không quá 08 giờ trong 01 ngày và không quá 48 giờ trong 01 tuần",
+    "source": "Bộ luật Lao động - Điều 105"
+  },
+  {
+    "question": "Tiền lương thử việc tối thiểu là bao nhiêu phần trăm?",
+    "ground_truth": "Tiền lương của người lao động trong thời gian thử việc do hai bên thỏa thuận nhưng ít nhất phải bằng 85% mức lương của công việc đó",
+    "source": "Bộ luật Lao động - Điều 26"
+  },
+  {
+    "question": "Làm thêm giờ vào ngày thường được trả lương tối thiểu bằng bao nhiêu phần trăm?",
+    "ground_truth": "Người lao động làm thêm giờ vào ngày thường được trả lương ít nhất bằng 150% tiền lương tính theo đơn giá tiền lương hoặc tiền lương thực trả theo công việc đang làm",
+    "source": "Bộ luật Lao động - Điều 98"
+  },
+  {
+    "question": "Người lao động báo trước bao nhiêu ngày khi nghỉ việc theo hợp đồng không xác định thời hạn?",
+    "ground_truth": "Người lao động phải báo trước ít nhất 45 ngày nếu làm việc theo hợp đồng lao động không xác định thời hạn",
+    "source": "Bộ luật Lao động - Điều 35"
+  },
+  {
+    "question": "Người lao động kết hôn được nghỉ bao nhiêu ngày hưởng nguyên lương?",
+    "ground_truth": "Người lao động kết hôn được nghỉ 03 ngày hưởng nguyên lương",
+    "source": "Bộ luật Lao động - Điều 115"
+  },
+  {
+    "question": "Công ty TNHH hai thành viên trở lên có tối đa bao nhiêu thành viên?",
+    "ground_truth": "Công ty trách nhiệm hữu hạn hai thành viên trở lên là doanh nghiệp có từ 02 đến 50 thành viên là tổ chức, cá nhân",
+    "source": "Luật Doanh nghiệp - Điều 46"
+  },
+  {
+    "question": "Thành viên công ty TNHH phải góp vốn trong thời hạn bao nhiêu ngày?",
+    "ground_truth": "Thành viên phải góp vốn cho công ty đủ và đúng loại tài sản đã cam kết khi đăng ký thành lập doanh nghiệp trong thời hạn 90 ngày kể từ ngày được cấp Giấy chứng nhận đăng ký doanh nghiệp",
+    "source": "Luật Doanh nghiệp"
+  },
+  {
+    "question": "Người thành niên theo pháp luật dân sự là người từ bao nhiêu tuổi?",
+    "ground_truth": "Người thành niên là người từ đủ mười tám tuổi trở lên",
+    "source": "Bộ luật Dân sự - Điều 20"
+  },
+  {
+    "question": "Người chưa đủ 6 tuổi có thể tự mình xác lập giao dịch dân sự không?",
+    "ground_truth": "Giao dịch dân sự của người chưa đủ sáu tuổi do người đại diện theo pháp luật của người đó xác lập, thực hiện",
+    "source": "Bộ luật Dân sự - Điều 21"
+  },
+  {
+    "question": "Giao dịch dân sự có thể được xác lập bằng những hình thức nào?",
+    "ground_truth": "Giao dịch dân sự được thể hiện bằng lời nói, bằng văn bản hoặc bằng hành vi cụ thể",
+    "source": "Bộ luật Dân sự - Điều 119"
+  },
+  {
+    "question": "Nghỉ lễ Tết Âm lịch được nghỉ bao nhiêu ngày?",
+    "ground_truth": "Người lao động được nghỉ Tết Âm lịch 05 ngày",
+    "source": "Bộ luật Lao động - Điều 112"
+  },
+  {
+    "question": "Nếu con tôi chưa đủ 6 tuổi, có thể ký hợp đồng mua bán hàng hóa không?",
+    "ground_truth": "Giao dịch dân sự của người chưa đủ sáu tuổi, người mất năng lực hành vi dân sự nhằm đáp ứng nhu cầu thiết yếu hàng ngày của người đó;",
+    "source": "Bộ luật Dân sự - Điều 125. Giao dịch dân sự vô hiệu do người chưa thành niên, người mất năng lực hành vi dân sự, người có khó khăn trong nhận thức, làm chủ hành vi, người bị hạn chế năng lực hành vi dân sự xác lập, thực hiện"
+  },
+  {
+    "question": "Nếu tôi ký hợp đồng với người chưa thành niên, sau đó người đó thừa nhận hợp đồng là hợp pháp, thì hợp đồng đó có bị vô hiệu không?",
+    "ground_truth": "Giao dịch dân sự được người xác lập giao dịch thừa nhận hiệu lực sau khi đã thành niên hoặc sau khi khôi phục năng lực hành vi dân sự.",
+    "source": "Bộ luật Dân sự - Điều 125. Giao dịch dân sự vô hiệu do người chưa thành niên, người mất năng lực hành vi dân sự, người có khó khăn trong nhận thức, làm chủ hành vi, người bị hạn chế năng lực hành vi dân sự xác lập, thực hiện"
+  },
+  {
+    "question": "Tôi sinh ra ở Việt Nam, bố mẹ tôi thuộc hai dân tộc khác nhau, dân tộc của tôi được xác định như thế nào?",
+    "ground_truth": "Trường hợp cha đẻ, mẹ đẻ thuộc hai dân tộc khác nhau thì dân tộc của con được xác định theo dân tộc của cha đẻ hoặc mẹ đẻ theo thỏa thuận của cha đẻ, mẹ đẻ; trường hợp không có thỏa thuận thì dân tộc của con được xác định theo tập quán; trường hợp tập quán khác nhau thì dân tộc của con được xác định theo tập quán của dân tộc ít người hơn.",
+    "source": "Bộ luật Dân sự - Điều 29. Quyền xác định, xác định lại dân tộc"
+  },
+  {
+    "question": "Tôi muốn xác định lại dân tộc của mình, nhưng tôi chưa đủ 15 tuổi, có được không?",
+    "ground_truth": "Việc xác định lại dân tộc cho người từ đủ mười lăm tuổi đến dưới mười tám tuổi phải được sự đồng ý của người đó.",
+    "source": "Bộ luật Dân sự - Điều 29. Quyền xác định, xác định lại dân tộc"
+  },
+  {
+    "question": "Nếu tôi đã cho người khác cầm cố tài sản của mình, họ có thể yêu cầu tôi làm gì?",
+    "ground_truth": "Yêu cầu người đang chiếm hữu, sử dụng trái pháp luật tài sản cầm cố trả lại tài sản đó.",
+    "source": "Bộ luật Dân sự - Điều 314. Quyền của bên nhận cầm cố"
+  },
+  {
+    "question": "Tôi có thể xử lý tài sản cầm cố như thế nào?",
+    "ground_truth": "Xử lý tài sản cầm cố theo phương thức đã thỏa thuận hoặc theo quy định của pháp luật.",
+    "source": "Bộ luật Dân sự - Điều 314. Quyền của bên nhận cầm cố"
+  },
+  {
+    "question": "Nếu tôi có nghĩa vụ phải thực hiện một công việc thì nghĩa vụ đó là gì?",
+    "ground_truth": "Nghĩa vụ phải thực hiện một công việc là nghĩa vụ mà theo đó bên có nghĩa vụ phải thực hiện đúng công việc đó.",
+    "source": "Bộ luật Dân sự - Điều 281. Nghĩa vụ phải thực hiện hoặc không được thực hiện một công việc"
+  },
+  {
+    "question": "Nếu tôi có nghĩa vụ không được thực hiện một công việc thì nghĩa vụ đó là gì?",
+    "ground_truth": "Nghĩa vụ không được thực hiện một công việc là nghĩa vụ mà theo đó bên có nghĩa vụ không được thực hiện công việc đó.",
+    "source": "Bộ luật Dân sự - Điều 281. Nghĩa vụ phải thực hiện hoặc không được thực hiện một công việc"
+  },
+  {
+    "question": "Tôi có quyền yêu cầu chủ sở hữu bất động sản khác dành cho mình lối đi ra đường công cộng không?",
+    "ground_truth": "Chủ sở hữu có bất động sản bị vây bọc bởi các bất động sản của các chủ sở hữu khác mà không có hoặc không đủ lối đi ra đường công cộng, có quyền yêu cầu chủ sở hữu bất động sản vây bọc dành cho mình một lối đi hợp lý trên phần đất của họ.",
+    "source": "Bộ luật Dân sự - Điều 254. Quyền về lối đi qua"
+  },
+  {
+    "question": "Tôi phải đền bù cho chủ sở hữu bất động sản khác khi họ dành lối đi cho tôi không?",
+    "ground_truth": "Chủ sở hữu bất động sản hưởng quyền về lối đi qua phải đền bù cho chủ sở hữu bất động sản chịu hưởng quyền, trừ trường hợp có thỏa thuận khác.",
+    "source": "Bộ luật Dân sự - Điều 254. Quyền về lối đi qua"
+  },
+  {
+    "question": "Khi nào không áp dụng thời hiệu khởi kiện?",
+    "ground_truth": "Thời hiệu khởi kiện không áp dụng trong trường hợp sau đây:",
+    "source": "Bộ luật Dân sự - Điều 155. Không áp dụng thời hiệu khởi kiện"
+  },
+  {
+    "question": "Tôi có thể khởi kiện để bảo vệ quyền sở hữu tài sản được không?",
+    "ground_truth": "2. Yêu cầu bảo vệ quyền sở hữu, trừ trường hợp Bộ luật này, luật khác có liên quan quy định khác.",
+    "source": "Bộ luật Dân sự - Điều 155. Không áp dụng thời hiệu khởi kiện"
+  },
+  {
+    "question": "Hội đồng thành viên có thể thông qua nghị quyết, quyết định bằng cách nào?",
+    "ground_truth": "Hội đồng thành viên thông qua nghị quyết, quyết định thuộc thẩm quyền bằng biểu quyết tại cuộc họp, lấy ý kiến bằng văn bản hoặc hình thức khác do Điều lệ công ty quy định.",
+    "source": "Luật Doanh nghiệp - Điều 59. Nghị quyết, quyết định của Hội đồng thành viên"
+  },
+  {
+    "question": "Trường hợp nào nghị quyết, quyết định của Hội đồng thành viên phải được thông qua bằng biểu quyết tại cuộc họp?",
+    "ground_truth": "Trường hợp Điều lệ công ty không có quy định khác thì nghị quyết, quyết định về các vấn đề sau đây phải được thông qua bằng biểu quyết tại cuộc họp Hội đồng thành viên: Sửa đổi, bổ sung nội dung Điều lệ công ty; Quyết định phương hướng phát triển công ty; Bầu, miễn nhiệm, bãi nhiệm Chủ tịch Hội đồng thành viên; bổ nhiệm, miễn nhiệm, bãi nhiệm Giám đốc hoặc Tổng giám đốc; Thông qua báo cáo tài chính hằng năm; Tổ chức lại, giải thể công ty.",
+    "source": "Luật Doanh nghiệp - Điều 59. Nghị quyết, quyết định của Hội đồng thành viên"
+  },
+  {
+    "question": "Nếu tôi là thành viên hợp danh và không góp đủ vốn đúng hạn, tôi phải làm gì?",
+    "ground_truth": "Thành viên hợp danh không góp đủ và đúng hạn số vốn đã cam kết gây thiệt hại cho công ty phải chịu trách nhiệm bồi thường thiệt hại cho công ty.",
+    "source": "Luật Doanh nghiệp - Điều 178. Thực hiện góp vốn và cấp giấy chứng nhận phần vốn góp"
+  },
+  {
+    "question": "Tôi có thể bị khai trừ khỏi công ty khi nào?",
+    "ground_truth": "Trường hợp có thành viên góp vốn không góp đủ và đúng hạn số vốn đã cam kết thì số vốn chưa góp đủ được coi là khoản nợ của thành viên đó đối với công ty; trong trường hợp này, thành viên góp vốn có liên quan có thể bị khai trừ khỏi công ty theo quyết định của Hội đồng thành viên.",
+    "source": "Luật Doanh nghiệp - Điều 178. Thực hiện góp vốn và cấp giấy chứng nhận phần vốn góp"
+  },
+  {
+    "question": "Tôi là thành viên Hội đồng thành viên, tôi phải làm gì khi ký kết hợp đồng với công ty?",
+    "ground_truth": "Người nhân danh công ty ký kết hợp đồng, giao dịch phải thông báo cho Hội đồng thành viên hoặc Chủ tịch công ty, Giám đốc hoặc Tổng giám đốc và Kiểm soát viên về các đối tượng có liên quan và lợi ích có liên quan đối với hợp đồng, giao dịch đó; kèm theo dự thảo hợp đồng hoặc nội dung chủ yếu của giao dịch đó.",
+    "source": "Luật Doanh nghiệp - Điều 86. Hợp đồng, giao dịch của công ty với những người có liên quan"
+  },
+  {
+    "question": "Hợp đồng giữa công ty và người có liên quan phải được chấp thuận trong thời gian bao lâu?",
+    "ground_truth": "Trừ trường hợp Điều lệ công ty có quy định khác, thành viên Hội đồng thành viên hoặc Chủ tịch công ty, Giám đốc hoặc Tổng giám đốc và Kiểm soát viên phải quyết định việc chấp thuận hợp đồng, giao dịch trong thời hạn 10 ngày kể từ ngày nhận được thông báo theo nguyên tắc đa số, mỗi người có một phiếu biểu quyết; người có liên quan đến các bên không có quyền biểu quyết.",
+    "source": "Luật Doanh nghiệp - Điều 86. Hợp đồng, giao dịch của công ty với những người có liên quan"
+  },
+  {
+    "question": "Tôi muốn tách công ty của mình, nhưng tôi không biết bắt đầu từ đâu?",
+    "ground_truth": "Công ty trách nhiệm hữu hạn, công ty cổ phần có thể tách bằng cách chuyển một phần tài sản, quyền, nghĩa vụ, thành viên, cổ đông của công ty hiện có (sau đây gọi là công ty bị tách) để thành lập một hoặc một số công ty trách nhiệm hữu hạn, công ty cổ phần mới (sau đây gọi là công ty được tách) mà không chấm dứt tồn tại của công ty bị tách.",
+    "source": "Luật Doanh nghiệp - Điều 199. Tách công ty"
+  },
+  {
+    "question": "Sau khi tách công ty, công ty bị tách và công ty được tách có phải chịu trách nhiệm về các nghĩa vụ của công ty bị tách không?",
+    "ground_truth": "Sau khi đăng ký doanh nghiệp, công ty bị tách và công ty được tách phải cùng liên đới chịu trách nhiệm về các nghĩa vụ, các khoản nợ chưa thanh toán, hợp đồng lao động và nghĩa vụ tài sản khác của công ty bị tách, trừ trường hợp công ty bị tách, công ty được tách, chủ nợ, khách hàng và người lao động của công ty bị tách có thỏa thuận khác.",
+    "source": "Luật Doanh nghiệp - Điều 199. Tách công ty"
+  },
+  {
+    "question": "Khi nào công ty bị sáp nhập chấm dứt tồn tại?",
+    "ground_truth": "Sau khi công ty nhận sáp nhập đăng ký doanh nghiệp, công ty bị sáp nhập chấm dứt tồn tại; công ty nhận sáp nhập được hưởng các quyền và lợi ích hợp pháp, chịu trách nhiệm về các nghĩa vụ, các khoản nợ chưa thanh toán, hợp đồng lao động và nghĩa vụ tài sản khác của công ty bị sáp nhập.",
+    "source": "Luật Doanh nghiệp - Điều 201. Sáp nhập công ty"
+  },
+  {
+    "question": "Người lao động Việt Nam đi làm việc ở nước ngoài có phải tuân theo quy định của pháp luật Việt Nam?",
+    "ground_truth": "Người lao động Việt Nam đi làm việc ở nước ngoài phải tuân theo quy định của pháp luật Việt Nam, pháp luật nước sở tại, trừ trường hợp điều ước quốc tế mà nước Cộng hòa xã hội chủ nghĩa Việt Nam là thành viên có quy định khác.",
+    "source": "Bộ luật Lao động - Điều 150. Người lao động Việt Nam đi làm việc ở nước ngoài, lao động cho các tổ chức, cá nhân nước ngoài tại Việt Nam"
+  },
+  {
+    "question": "Công dân Việt Nam làm việc cho tổ chức nước ngoài tại Việt Nam được pháp luật bảo vệ như thế nào?",
+    "ground_truth": "Công dân Việt Nam làm việc cho các tổ chức nước ngoài tại Việt Nam, trong khu công nghiệp, khu kinh tế, khu chế xuất, khu công nghệ cao hoặc làm việc cho cá nhân là công dân nước ngoài tại Việt Nam phải tuân theo pháp luật Việt Nam và được pháp luật bảo vệ.",
+    "source": "Bộ luật Lao động - Điều 150. Người lao động Việt Nam đi làm việc ở nước ngoài, lao động cho các tổ chức, cá nhân nước ngoài tại Việt Nam"
+  },
+  {
+    "question": "Tôi đủ tuổi để làm việc không?",
+    "ground_truth": "Độ tuổi lao động tối thiểu của người lao động là đủ 15 tuổi, trừ trường hợp quy định tại Mục 1 Chương XI của Bộ luật này.",
+    "source": "Bộ luật Lao động - Điều 3. Giải thích từ ngữ"
+  },
+  {
+    "question": "Tôi có thể thành lập tổ chức đại diện người lao động tại cơ sở được không?",
+    "ground_truth": "Tổ chức đại diện người lao động tại cơ sở là tổ chức được thành lập trên cơ sở tự nguyện của người lao động tại một đơn vị sử dụng lao động nhằm mục đích bảo vệ quyền và lợi ích hợp pháp, chính đáng của người lao động trong quan hệ lao động thông qua thương lượng tập thể hoặc các hình thức khác theo quy định của pháp luật về lao động.",
+    "source": "Bộ luật Lao động - Điều 3. Giải thích từ ngữ"
+  },
+  {
+    "question": "Ai có quyền bổ nhiệm hòa giải viên lao động?",
+    "ground_truth": "Người do Chủ tịch Ủy ban nhân dân cấp tỉnh bổ nhiệm",
+    "source": "Bộ luật Lao động - Điều 184. Hòa giải viên lao động"
+  },
+  {
+    "question": "Chính phủ có quy định gì về hòa giải viên lao động?",
+    "ground_truth": "tiêu chuẩn, trình tự, thủ tục bổ nhiệm, chế độ, điều kiện hoạt động và việc quản lý hòa giải viên lao động",
+    "source": "Bộ luật Lao động - Điều 184. Hòa giải viên lao động"
+  },
+  {
+    "question": "Tôi muốn biết hoạt động đường bộ bao gồm những gì?",
+    "ground_truth": "Hoạt động đường bộ bao gồm: hoạt động về quy hoạch, đầu tư, xây dựng, quản lý, sử dụng, vận hành, khai thác, bảo trì, bảo vệ kết cấu hạ tầng đường bộ; vận tải đường bộ.",
+    "source": "Luật Đường bộ - Điều 2. Giải thích từ ngữ"
+  },
+  {
+    "question": "Hành lang an toàn đường bộ là gì?",
+    "ground_truth": "Hành lang an toàn đường bộ là dải đất dọc hai bên đất của đường bộ, tính từ mép ngoài phần đất để bảo vệ, bảo trì đường bộ ra hai bên để bảo đảm an toàn giao thông đường bộ, bảo đảm tầm nhìn xe chạy và hạn chế ảnh hưởng đến môi trường xung quanh.",
+    "source": "Luật Đường bộ - Điều 2. Giải thích từ ngữ"
+  },
+  {
+    "question": "Tôi muốn cho thuê xe ô tô để người thuê tự lái, tôi cần đáp ứng những yêu cầu nào?",
+    "ground_truth": "Đơn vị kinh doanh cho thuê phương tiện để tự lái phải đáp ứng các yêu cầu sau đây: a) Chỉ được cho thuê phương tiện khi người thuê có giấy phép lái xe đang còn điểm, còn hiệu lực phù hợp với loại xe cho thuê; b) Không được bố trí lái xe cho người thuê phương tiện; c) Phải ký kết hợp đồng cho thuê phương tiện để tự lái với người thuê kèm theo bản phô tô giấy phép lái xe của người thuê.",
+    "source": "Luật Đường bộ - Điều 78. Dịch vụ cho thuê phương tiện giao thông cơ giới đường bộ"
+  },
+  {
+    "question": "Tôi muốn thuê xe ô tô để tự lái, tôi có được sử dụng phương tiện đó để vận tải hành khách, hàng hóa có thu tiền không?",
+    "ground_truth": "Người thuê phương tiện để tự lái không được sử dụng phương tiện đi thuê để vận tải hành khách, hàng hóa có thu tiền.",
+    "source": "Luật Đường bộ - Điều 78. Dịch vụ cho thuê phương tiện giao thông cơ giới đường bộ"
+  },
+  {
+    "question": "Thanh toán điện tử giao thông đường bộ là gì?",
+    "ground_truth": "Thanh toán điện tử giao thông đường bộ là việc thanh toán các loại phí, giá, tiền dịch vụ liên quan đến hoạt động giao thông của phương tiện giao thông đường bộ thông qua tài khoản giao thông.",
+    "source": "Luật Đường bộ - Điều 43. Thanh toán điện tử giao thông đường bộ"
+  },
+  {
+    "question": "Nếu tôi vận chuyển hàng nguy hiểm mà dừng xe ở nơi đông người, khu dân cư, công trình quan trọng mà không có báo hiệu hàng nguy hiểm, tôi sẽ bị phạt bao nhiêu tiền?",
+    "ground_truth": "Phạt tiền từ 1.000.000 đồng đến 2.000.000 đồng đối với một trong các hành vi vi phạm sau đây: a) Vận chuyển hàng nguy hiểm mà dừng xe, đỗ xe ở nơi đông người, khu dân cư, công trình quan trọng; không có báo hiệu hàng nguy hiểm theo quy định, trừ các hành vi vi phạm quy định tại khoản 2 Điều này;",
+    "source": "Nghị định 100/2019 - Điều 26. Xử phạt người điều khiển xe ô tô thực hiện hành vi vi phạm quy định về vận chuyển chất gây ô nhiễm môi trường, hàng nguy hiểm"
+  },
+  {
+    "question": "Nếu tôi vận chuyển hàng nguy hiểm mà không có giấy phép, tôi sẽ bị phạt bao nhiêu tiền?",
+    "ground_truth": "2. Phạt tiền từ 2.000.000 đồng đến 3.000.000 đồng đối với hành vi vận chuyển hàng nguy hiểm không có giấy phép hoặc có nhưng không thực hiện đúng quy định trong giấy phép, trừ các hành vi vi phạm quy định tại điểm a khoản 6 Điều 23 Nghị định này.",
+    "source": "Nghị định 100/2019 - Điều 26. Xử phạt người điều khiển xe ô tô thực hiện hành vi vi phạm quy định về vận chuyển chất gây ô nhiễm môi trường, hàng nguy hiểm"
+  },
+  {
+    "question": "Nếu nhân viên khám xe không thực hiện việc khám, sửa chữa đoàn tàu đi, đến hoặc thực hiện khám, sửa chữa đoàn tàu đi, đến không đúng, không đủ nội dung theo quy định, thì họ sẽ bị xử phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 300.000 đồng đến 500.000 đồng đối với nhân viên khám xe thực hiện một trong các hành vi vi phạm sau đây: a) Không thực hiện việc khám, sửa chữa đoàn tàu đi, đến hoặc thực hiện khám, sửa chữa đoàn tàu đi, đến không đúng, không đủ nội dung theo quy định;",
+    "source": "Nghị định 100/2019 - Điều 40. Xử phạt các hành vi vi phạm quy định về khám, sửa chữa toa xe, lập tàu, thử hãm"
+  },
+  {
+    "question": "Nếu doanh nghiệp kinh doanh vận tải đường sắt không thực hiện các hành vi vi phạm nào, thì họ sẽ bị xử phạt bao nhiêu?",
+    "ground_truth": "5. Phạt tiền từ 3.000.000 đồng đến 4.000.000 đồng đối với doanh nghiệp kinh doanh vận tải đường sắt, doanh nghiệp kinh doanh kết cấu hạ tầng đường sắt, chủ sở hữu đường sắt chuyên dùng thực hiện một trong các hành vi vi phạm sau đây: a) Doanh nghiệp kinh doanh vận tải đường sắt không",
+    "source": "Nghị định 100/2019 - Điều 40. Xử phạt các hành vi vi phạm quy định về khám, sửa chữa toa xe, lập tàu, thử hãm"
+  },
+  {
+    "question": "Nếu xây dựng công trình gần đường sắt mà không đảm bảo an toàn, tôi sẽ bị xử phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 1.000.000 đồng đến 3.000.000 đồng đối với cá nhân, từ 2.000.000 đồng đến 6.000.000 đồng đối với tổ chức.",
+    "source": "Nghị định 100/2019 - Điều 52. Xử phạt các hành vi vi phạm quy định về xây dựng công trình, khai thác tài nguyên và các hoạt động khác ở vùng lân cận phạm vi bảo vệ công trình đường sắt"
   }
 ]

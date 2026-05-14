@@ -6,6 +6,7 @@ and RAGAS evaluation.
 
 import json
 import os
+import re
 import numpy as np
 from typing import List, Dict, Tuple
 import time
@@ -13,6 +14,7 @@ import time
 from datasets import Dataset
 from ragas import evaluate
 from ragas.metrics import faithfulness, answer_relevancy, context_precision, context_recall
+from ragas.metrics._answer_relevance import AnswerRelevancy
 from ragas.llms import LangchainLLMWrapper
 from ragas.embeddings import LangchainEmbeddingsWrapper
 from ragas.run_config import RunConfig
@@ -37,12 +39,6 @@ except:
     SENTENCE_TRANSFORMERS_AVAILABLE = False
 
 load_dotenv()
-
-# Download NLTK data
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt', quiet=True)
 
 
 class RetrievalMetrics:
@@ -118,6 +114,11 @@ class AnswerQualityMetrics:
             self.semantic_model = SentenceTransformer(
                 "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
             )
+
+    @staticmethod
+    def _simple_tokenize(text: str) -> List[str]:
+        """Tokenizer independent of NLTK punkt resources."""
+        return re.findall(r"\w+", text.lower(), flags=re.UNICODE)
     
     def bleu_score(self, reference: str, hypothesis: str) -> float:
         """
@@ -132,11 +133,10 @@ class AnswerQualityMetrics:
         """
         if not BLEU_AVAILABLE:
             return 0.0
-        
-        from nltk.tokenize import word_tokenize
-        ref_tokens = word_tokenize(reference.lower())
-        hyp_tokens = word_tokenize(hypothesis.lower())
-        
+
+        ref_tokens = self._simple_tokenize(reference)
+        hyp_tokens = self._simple_tokenize(hypothesis)
+
         try:
             score = sentence_bleu([ref_tokens], hyp_tokens, weights=(0.25, 0.25, 0.25, 0.25))
             return score
@@ -188,12 +188,14 @@ class RAGEvaluator:
         # Initialize metrics calculators
         self.retrieval_metrics = RetrievalMetrics()
         self.answer_metrics = AnswerQualityMetrics()
+        self.answer_relevancy_metric = AnswerRelevancy(strictness=1)
         
         # RAGAS setup
         self.ragas_model = ChatGroq(
             model="llama-3.1-8b-instant",
             api_key=os.getenv("GROQ_API_KEY"),
             temperature=0.1,
+            n=1,
         )
         self.ragas_llm = LangchainLLMWrapper(self.ragas_model)
         self.ragas_embeddings = LangchainEmbeddingsWrapper(embeddings)
@@ -212,15 +214,48 @@ class RAGEvaluator:
         return []
 
     @staticmethod
+    def _normalize_text(text: str) -> str:
+        text = text.lower()
+        text = re.sub(r"\s+", " ", text)
+        text = re.sub(r"[^\w\s]", " ", text, flags=re.UNICODE)
+        text = re.sub(r"\s+", " ", text)
+        return text.strip()
+
+    @staticmethod
     def _is_relevant(doc_text: str, ground_truths: List[str]) -> bool:
-        doc_text = doc_text.strip()
+        doc_text_norm = RAGEvaluator._normalize_text(doc_text)
+        doc_tokens = set(re.findall(r"\w+", doc_text_norm, flags=re.UNICODE))
+
         for gt in ground_truths:
-            gt = gt.strip()
-            if not gt:
+            gt_norm = RAGEvaluator._normalize_text(gt)
+            if not gt_norm:
                 continue
-            if gt in doc_text or doc_text in gt:
+
+            if gt_norm in doc_text_norm or doc_text_norm in gt_norm:
+                return True
+
+            gt_tokens = set(re.findall(r"\w+", gt_norm, flags=re.UNICODE))
+            if not gt_tokens or not doc_tokens:
+                continue
+
+            overlap = doc_tokens & gt_tokens
+            overlap_gt = len(overlap) / len(gt_tokens)
+            overlap_doc = len(overlap) / len(doc_tokens)
+
+            if len(overlap) >= 8 or overlap_gt >= 0.3 or overlap_doc >= 0.3:
                 return True
         return False
+
+    @staticmethod
+    def _safe_mean(values: List[float]) -> float:
+        if not values:
+            return 0.0
+
+        numeric_values = np.array(values, dtype=float)
+        if np.isnan(numeric_values).all():
+            return 0.0
+
+        return float(np.nanmean(numeric_values))
 
     def run_qa_pipeline(
         self,
@@ -309,6 +344,15 @@ class RAGEvaluator:
         print("\n" + "="*60)
         print("Running RAGAS Evaluation")
         print("="*60)
+
+        if not questions or not answers or not contexts:
+            print("No successful QA samples available. Skipping RAGAS evaluation.")
+            return {
+                "faithfulness": 0.0,
+                "answer_relevancy": 0.0,
+                "context_precision": 0.0,
+                "context_recall": 0.0,
+            }
         
         dataset = Dataset.from_dict({
             "question": questions,
@@ -319,7 +363,7 @@ class RAGEvaluator:
         
         result = evaluate(
             dataset,
-            metrics=[faithfulness, answer_relevancy, context_precision, context_recall],
+            metrics=[faithfulness, self.answer_relevancy_metric, context_precision, context_recall],
             llm=self.ragas_llm,
             embeddings=self.ragas_embeddings,
             run_config=RunConfig(max_workers=2, timeout=300)
@@ -327,10 +371,10 @@ class RAGEvaluator:
         
         df = result.to_pandas()
         scores = {
-            "faithfulness": float(df['faithfulness'].mean()),
-            "answer_relevancy": float(df['answer_relevancy'].mean()),
-            "context_precision": float(df['context_precision'].mean()),
-            "context_recall": float(df['context_recall'].mean()),
+            "faithfulness": self._safe_mean(df['faithfulness'].tolist()),
+            "answer_relevancy": self._safe_mean(df['answer_relevancy'].tolist()),
+            "context_precision": self._safe_mean(df['context_precision'].tolist()),
+            "context_recall": self._safe_mean(df['context_recall'].tolist()),
         }
         
         print("\n=== RAGAS Scores ===")
@@ -381,6 +425,12 @@ class RAGEvaluator:
             test_cases,
             limit=limit,
         )
+
+        if not questions:
+            raise RuntimeError(
+                "QA pipeline did not produce any successful samples. "
+                "Check retrieval and model configuration before evaluation."
+            )
         
         retrieval_scores = self.evaluate_retrieval(retrieved_docs, ground_truths)
         

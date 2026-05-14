@@ -17,11 +17,20 @@ if prompt := st.chat_input("Nhập câu hỏi về pháp luật Việt Nam..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("assistant"):
         with st.spinner("Đang tìm kiếm..."):
-            response = requests.post(
-                "http://localhost:8000/chat",
-                json={"message": prompt}
-            )
-            result = response.json()["reply"]
+            try:
+                response = requests.post(
+                    "http://localhost:8000/chat",
+                    json={"message": prompt},
+                    timeout=60,
+                )
+                response.raise_for_status()
+                result = response.json()["reply"]
+            except requests.exceptions.ConnectionError:
+                result = "❌ Không kết nối được API. Hãy chạy: `uvicorn src.api:app --reload`"
+            except requests.exceptions.Timeout:
+                result = "❌ API timeout. Thử lại sau."
+            except Exception as e:
+                result = f"❌ Lỗi: {e}"
         st.write(result)
     st.session_state.messages.append({"role": "assistant", "content": result})
 
