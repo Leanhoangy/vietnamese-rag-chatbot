@@ -4,14 +4,32 @@ This is the entry point for training the deep learning component
 """
 
 import os
+import subprocess
 import sys
 from pathlib import Path
+import traceback
 
 def install_dependencies():
     """Install required dependencies"""
     print("Installing dependencies...")
-    os.system("pip install -q rank-bm25 rouge-score scikit-learn nltk")
-    print("✓ Dependencies installed")
+    command = [
+        sys.executable,
+        "-m",
+        "pip",
+        "install",
+        "-q",
+        "accelerate>=1.1.0",
+        "rank-bm25",
+        "rouge-score",
+        "scikit-learn",
+        "nltk",
+    ]
+
+    result = subprocess.run(command, check=False)
+    if result.returncode == 0:
+        print("✓ Dependencies installed")
+    else:
+        print("⚠ Dependency installation had issues. Continuing with current environment...")
 
 
 def prepare_training_data():
@@ -19,22 +37,31 @@ def prepare_training_data():
     print("\n" + "="*70)
     print("STEP 1: Preparing Training Data")
     print("="*70)
-    
+
+    dataset_path = Path("legal_triplets_dataset")
+    if dataset_path.exists():
+        from datasets import load_from_disk
+        dataset = load_from_disk(str(dataset_path))
+        print(f"\n✓ Dataset already exists — skipping regeneration")
+        print(f"  - Triplets: {len(dataset)}")
+        print(f"  - Path: {dataset_path}/")
+        return True
+
     from src.data_preparation import LegalDataPreparator
-    
+
     print("\nInitializing data preparation...")
     preparator = LegalDataPreparator(
         test_set_path="test_set.json",
-        k_hard_negatives=3,  # Mine 3 hard negatives per query
+        k_hard_negatives=3,
     )
-    
+
     print("Loading and preparing data...")
     dataset = preparator.prepare_all(save_to_disk=True)
-    
+
     if dataset:
         print(f"\n✓ Dataset prepared successfully!")
         print(f"  - Triplets: {len(dataset)}")
-        print(f"  - Saved to: legal_triplets_dataset/")
+        print(f"  - Saved to: {dataset_path}/")
         return True
     else:
         print("✗ Failed to prepare dataset")
@@ -62,7 +89,7 @@ def finetune_embedding_model():
     try:
         tuner = run_finetuning_pipeline(
             dataset_path=dataset_path,
-            epochs=3,
+            epochs=5,
             batch_size=16,
         )
         print("-" * 70)
@@ -71,47 +98,24 @@ def finetune_embedding_model():
         return True
     except Exception as e:
         print(f"✗ Fine-tuning failed: {e}")
+        traceback.print_exc()
         return False
 
 
 def update_embedder():
-    """Step 3: Update embedder to use fine-tuned model"""
+    """Step 3: Confirm fine-tuned embedder is available"""
     print("\n" + "="*70)
-    print("STEP 3: Updating Embedder Configuration")
+    print("STEP 3: Verifying Embedder Configuration")
     print("="*70)
-    
-    embedder_path = "src/embedder.py"
-    
-    # Read current embedder
-    with open(embedder_path, "r", encoding="utf-8") as f:
-        content = f.read()
-    
-    # Update to use fine-tuned model
-    new_content = '''from langchain_huggingface import HuggingFaceEmbeddings
-from pathlib import Path
 
-# Try to load fine-tuned model, fall back to base model
-finetuned_path = Path("models/finetuned-embedder")
+    finetuned_path = Path("models/finetuned-embedder")
+    if finetuned_path.exists():
+        print(f"✓ Fine-tuned model found at: {finetuned_path}")
+        print("✓ src/embedder.py will auto-load it on the next import")
+        return True
 
-if finetuned_path.exists():
-    print("✓ Loading fine-tuned embedding model...")
-    model_name = "models/finetuned-embedder"
-else:
-    print("! Fine-tuned model not found. Using base model.")
-    model_name = "intfloat/multilingual-e5-base"
-
-embeddings = HuggingFaceEmbeddings(
-    model_name=model_name,
-    model_kwargs={"device": "cpu"},
-    encode_kwargs={"normalize_embeddings": True},
-)
-'''
-    
-    with open(embedder_path, "w", encoding="utf-8") as f:
-        f.write(new_content)
-    
-    print(f"✓ Updated {embedder_path} to use fine-tuned model")
-    return True
+    print("✗ Fine-tuned model directory not found")
+    return False
 
 
 def evaluate_system(hybrid: bool = True):
@@ -147,9 +151,9 @@ def evaluate_system(hybrid: bool = True):
             test_set_path="test_set.json",
         )
         
-        print("Running full evaluation (first 5 test cases)...")
+        print("Running full evaluation (first 20 test cases)...")
         print("-" * 70)
-        results = evaluator.run_full_evaluation(limit=5)
+        results = evaluator.run_full_evaluation(limit=20)
         print("-" * 70)
         
         print("\n✓ Evaluation completed!")

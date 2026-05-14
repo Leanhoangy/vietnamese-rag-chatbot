@@ -3,6 +3,7 @@ Fine-tuning multilingual-e5-base on legal domain Q&A pairs.
 Uses SentenceTransformers with TripletLoss and hard negative mining.
 """
 
+import inspect
 import os
 import numpy as np
 from importlib import import_module
@@ -17,6 +18,21 @@ from datasets import Dataset, load_from_disk
 from dotenv import load_dotenv
 
 load_dotenv()
+
+
+def _default_training_device() -> str:
+    """Prefer stability on Apple Silicon by defaulting to CPU unless overridden."""
+    device_override = os.getenv("FINETUNE_DEVICE")
+    if device_override:
+        return device_override
+
+    if torch.cuda.is_available():
+        return "cuda"
+
+    if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+        return "cpu"
+
+    return "cpu"
 
 
 def _load_ir_evaluator():
@@ -36,7 +52,7 @@ class EmbeddingFineTuner:
     ):
         self.model_name = model_name
         self.output_dir = output_dir
-        self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = device or _default_training_device()
         
         print(f"Device: {self.device}")
         
@@ -71,7 +87,12 @@ class EmbeddingFineTuner:
         return examples
     
     def create_triplet_loss(self, model, margin: float = 0.5) -> losses.TripletLoss:
-        """Create triplet loss for contrastive learning"""
+        """Create triplet loss while staying compatible across library versions."""
+        triplet_signature = inspect.signature(losses.TripletLoss.__init__)
+
+        if "triplet_margin" in triplet_signature.parameters:
+            return losses.TripletLoss(model=model, triplet_margin=margin)
+
         return losses.TripletLoss(model=model, margin=margin)
     
     def create_multiple_negatives_loss(self, model) -> losses.MultipleNegativesRankingLoss:
@@ -85,7 +106,12 @@ class EmbeddingFineTuner:
         shuffle: bool = True,
     ) -> DataLoader:
         """Create DataLoader for training"""
-        return DataLoader(examples, shuffle=shuffle, batch_size=batch_size)
+        return DataLoader(
+            examples,
+            shuffle=shuffle,
+            batch_size=batch_size,
+            pin_memory=self.device == "cuda",
+        )
     
     def create_evaluator(
         self,
@@ -150,24 +176,62 @@ class EmbeddingFineTuner:
         print(f"Batch size: {train_dataloader.batch_size}")
         print(f"Total steps: {len(train_dataloader) * epochs}")
         print("=" * 50)
+
+        if self.device == "cpu":
+            # Force Hugging Face Trainer / Accelerate to stay on CPU.
+            os.environ["ACCELERATE_USE_CPU"] = "true"
+            os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"
+        elif "ACCELERATE_USE_CPU" in os.environ:
+            del os.environ["ACCELERATE_USE_CPU"]
         
-        # Train
-        self.model.fit(
-            train_objectives=[(train_dataloader, loss)],
-            evaluator=evaluator,
-            epochs=epochs,
-            evaluation_steps=len(train_dataloader),  # Evaluate every epoch
-            warmup_steps=warmup_steps,
-            output_path=self.output_dir,
-            save_best_model=True,
-            show_progress_bar=True,
-            checkpoint_save_steps=-1,  # Don't save checkpoints
-            checkpoint_path_folder=None,
-            optimizer_params={
-                "lr": learning_rate,
-                "weight_decay": 1e-6,
-            },
-        )
+        has_evaluator = evaluator is not None
+        train_objectives = [(train_dataloader, loss)]
+
+        # Prefer the legacy training loop to avoid Trainer/Accelerate device issues on Mac.
+        if hasattr(self.model, "old_fit"):
+            self.model.old_fit(
+                train_objectives=train_objectives,
+                evaluator=evaluator,
+                epochs=epochs,
+                warmup_steps=warmup_steps,
+                output_path=self.output_dir,
+                save_best_model=has_evaluator,
+                show_progress_bar=True,
+                optimizer_params={"lr": learning_rate},
+                weight_decay=1e-6,
+                checkpoint_path=None,
+                checkpoint_save_steps=0,
+                checkpoint_save_total_limit=0,
+            )
+        else:
+            fit_signature = inspect.signature(self.model.fit)
+            fit_kwargs = {
+                "train_objectives": train_objectives,
+                "evaluator": evaluator,
+                "epochs": epochs,
+                "evaluation_steps": len(train_dataloader) if has_evaluator else 0,
+                "warmup_steps": warmup_steps,
+                "output_path": self.output_dir,
+                "save_best_model": has_evaluator,
+                "show_progress_bar": True,
+                "optimizer_params": {
+                    "lr": learning_rate,
+                },
+            }
+
+            if "weight_decay" in fit_signature.parameters:
+                fit_kwargs["weight_decay"] = 1e-6
+
+            if "checkpoint_path" in fit_signature.parameters:
+                fit_kwargs["checkpoint_path"] = None
+
+            if "checkpoint_save_steps" in fit_signature.parameters:
+                fit_kwargs["checkpoint_save_steps"] = -1
+
+            if "checkpoint_save_total_limit" in fit_signature.parameters:
+                fit_kwargs["checkpoint_save_total_limit"] = 0
+
+            self.model.fit(**fit_kwargs)
         
         print(f"\n✓ Fine-tuning complete!")
         print(f"Model saved to: {self.output_dir}")
@@ -266,14 +330,14 @@ def run_finetuning_pipeline(
     loss_type: str = "triplet",
 ):
     """End-to-end fine-tuning pipeline"""
-    
+
     print("Loading dataset...")
     dataset = load_from_disk(dataset_path)
     print(f"Loaded {len(dataset)} training examples")
-    
+
     # Initialize fine-tuner
     tuner = EmbeddingFineTuner(output_dir="models/finetuned-embedder")
-    
+
     # Prepare training data
     if loss_type == "triplet":
         examples = tuner.prepare_triplet_data(dataset)
@@ -283,12 +347,17 @@ def run_finetuning_pipeline(
         raise ValueError(f"Unsupported loss type: {loss_type}")
 
     train_dataloader = tuner.create_dataloader(examples, batch_size=batch_size)
-    
+
+    # warmup = 10% of total steps, minimum 1
+    total_steps = len(train_dataloader) * epochs
+    warmup_steps = max(1, int(total_steps * 0.1))
+    print(f"Total training steps: {total_steps}, warmup steps: {warmup_steps}")
+
     # Fine-tune
     tuner.fine_tune(
         train_dataloader=train_dataloader,
         epochs=epochs,
-        warmup_steps=100,
+        warmup_steps=warmup_steps,
         loss_type=loss_type,
         margin=0.5,
         learning_rate=2e-5,
