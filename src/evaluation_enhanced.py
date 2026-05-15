@@ -13,8 +13,7 @@ import time
 
 from datasets import Dataset
 from ragas import evaluate
-from ragas.metrics import faithfulness, answer_relevancy, context_precision, context_recall
-from ragas.metrics._answer_relevance import AnswerRelevancy
+from ragas.metrics import faithfulness, answer_relevancy, context_precision, context_recall  # noqa: F401
 from ragas.llms import LangchainLLMWrapper
 from ragas.embeddings import LangchainEmbeddingsWrapper
 from ragas.run_config import RunConfig
@@ -188,17 +187,26 @@ class RAGEvaluator:
         # Initialize metrics calculators
         self.retrieval_metrics = RetrievalMetrics()
         self.answer_metrics = AnswerQualityMetrics()
-        self.answer_relevancy_metric = AnswerRelevancy(strictness=1)
-        
+
         # RAGAS setup
         self.ragas_model = ChatGroq(
-            model="llama-3.1-8b-instant",
+            model="llama-3.3-70b-versatile",
             api_key=os.getenv("GROQ_API_KEY"),
-            temperature=0.1,
-            n=1,
+            temperature=0,
         )
         self.ragas_llm = LangchainLLMWrapper(self.ragas_model)
         self.ragas_embeddings = LangchainEmbeddingsWrapper(embeddings)
+
+        faithfulness.llm = self.ragas_llm
+        answer_relevancy.llm = self.ragas_llm
+        answer_relevancy.embeddings = self.ragas_embeddings
+        answer_relevancy.strictness = 1
+        context_precision.llm = self.ragas_llm
+        context_recall.llm = self.ragas_llm
+        self.faithfulness_metric = faithfulness
+        self.answer_relevancy_metric = answer_relevancy
+        self.context_precision_metric = context_precision
+        self.context_recall_metric = context_recall
     
     def load_test_set(self) -> List[Dict]:
         """Load test set"""
@@ -363,7 +371,7 @@ class RAGEvaluator:
         
         result = evaluate(
             dataset,
-            metrics=[faithfulness, self.answer_relevancy_metric, context_precision, context_recall],
+            metrics=[self.faithfulness_metric, self.answer_relevancy_metric, self.context_precision_metric, self.context_recall_metric],
             llm=self.ragas_llm,
             embeddings=self.ragas_embeddings,
             run_config=RunConfig(max_workers=2, timeout=300)

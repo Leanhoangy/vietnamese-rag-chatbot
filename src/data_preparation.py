@@ -22,17 +22,24 @@ load_dotenv()
 class LegalDataPreparator:
     """Prepare training data for embedding fine-tuning"""
     
-    def __init__(self, test_set_path: str = "test_set.json", k_hard_negatives: int = 5):
-        self.test_set_path = test_set_path
-        self.k_hard_negatives = k_hard_negatives
-        self.positive_pairs = []
-        self.triplets = []  # (query, positive, negative)
+    def __init__(self, test_set_path: str = "test_set.json",k_hard_negatives: int=5):
+        self.test_set_path= test_set_path
+        self.k_hard_negatives= k_hard_negatives
+        self.triplets=[]
+        self.positive_pairs=[]  # (query, positive, negative)
     
+
     def load_test_cases(self) -> List[Dict]:
-        """Load test cases from JSON"""
-        with open(self.test_set_path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    
+        """Load test cases from JSON file"""
+        try:
+            with open(self.test_set_path, "r", encoding="utf-8") as f:
+                test_cases = json.load(f)
+                return test_cases
+        except Exception as e:
+            print(f"Error loading test cases: {e}")
+            return []
+            
+
     def mine_hard_negatives(self, query: str, positive_doc_content: str, k: int = 5) -> List[str]:
         """
         Mine hard negatives: retrieve documents similar to query but NOT the ground truth
@@ -40,21 +47,21 @@ class LegalDataPreparator:
         """
         try:
             # Retrieve similar documents
-            docs = vectorstore.similarity_search(query, k=k*2)  # Get more to filter
+            docs = vectorstore.similarity_search(query, k=k*2) # Get more to filter
+            hard_negatives =[]
             
-            hard_negatives = []
-            for doc in docs:
-                # Filter out the positive document
+            for doc in docs: 
+                 # Filter out the positive document
                 if positive_doc_content.strip()[:100] not in doc.page_content[:100]:
                     hard_negatives.append(doc.page_content)
-                    if len(hard_negatives) >= k:
+                    if len(hard_negatives)>=k:
                         break
-            
             return hard_negatives
         except Exception as e:
             print(f"Error mining hard negatives: {e}")
             return []
-    
+
+
     def prepare_positive_pairs(self, test_cases: List[Dict]) -> List[Tuple[str, str]]:
         """
         Create (query, relevant_document) pairs from test set
@@ -63,7 +70,7 @@ class LegalDataPreparator:
         for i, case in enumerate(test_cases):
             query = case["question"]
             ground_truth = case.get("ground_truth", [])
-            
+
             if isinstance(ground_truth, list) and len(ground_truth) > 0:
                 for gt in ground_truth:
                     if isinstance(gt, str) and len(gt) > 10:

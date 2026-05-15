@@ -216,3 +216,11 @@ checkpoints/
 logs/
 wandb/
 ragas_results.csv
+
+# Evaluation & notes
+evaluation_results.json
+METRICS.md
+NOTES.md
+
+# Dataset artifacts
+legal_triplets_dataset/

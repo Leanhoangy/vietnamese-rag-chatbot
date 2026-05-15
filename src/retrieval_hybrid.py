@@ -46,7 +46,7 @@ class HybridRetriever:
         self,
         documents: List[DocumentLike],
         use_cross_encoder: bool = True,
-        cross_encoder_model: str = "cross-encoder/ms-marco-MiniLM-L-12-v2",
+        cross_encoder_model: str = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
     ):
         """
         Initialize hybrid retriever
@@ -263,22 +263,27 @@ class HybridQAChain:
                 use_cross_encoder=CROSS_ENCODER_AVAILABLE,
             )
             retriever = self.hybrid_retriever.as_retriever(
-                k=3,
+                k=5,
                 alpha=hybrid_alpha,
             )
         else:
             print("Using Dense Retriever only...")
-            retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
+            retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
         
-        # Custom prompt for better answer quality - SIMPLE & DIRECT
-        prompt_template = """Bạn là chuyên gia pháp luật Việt Nam. Trả lời dựa HOÀN TOÀN trên tài liệu được cung cấp.
+        prompt_template = """Bạn là chuyên gia pháp luật Việt Nam. Nhiệm vụ của bạn là trả lời câu hỏi DỰA HOÀN TOÀN vào các tài liệu pháp lý được cung cấp bên dưới.
 
-TÀI LIỆU:
+NGUYÊN TẮC BẮT BUỘC:
+- Chỉ sử dụng thông tin có trong TÀI LIỆU, tuyệt đối không thêm thông tin từ kiến thức bên ngoài.
+- Nếu tài liệu không chứa đủ thông tin để trả lời, hãy nói rõ: "Tài liệu không cung cấp đủ thông tin để trả lời câu hỏi này."
+- Trích dẫn con số, điều khoản, mức phạt chính xác như trong tài liệu.
+- Không suy luận hoặc ước đoán ngoài phạm vi tài liệu.
+
+TÀI LIỆU PHÁP LÝ:
 {context}
 
 CÂU HỎI: {question}
 
-TRẢ LỜI (trực tiếp, từ tài liệu, không giải thích):"""
+TRẢ LỜI (chỉ dựa trên tài liệu trên):"""
 
         prompt = PromptTemplate(
             template=prompt_template,
