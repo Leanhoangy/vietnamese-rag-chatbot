@@ -75,7 +75,7 @@ def finetune_embedding_model():
     print("="*70)
     
     from pathlib import Path
-    from src.fine_tuner import run_finetuning_pipeline
+    from src.finetuned_e5.trainer import run_finetuning_pipeline
     
     dataset_path = "legal_triplets_dataset"
     if not Path(dataset_path).exists():
@@ -238,17 +238,10 @@ def main():
     if not update_embedder():
         print("\n✗ Training pipeline failed at Step 3")
         sys.exit(1)
-    
-    # Step 4: Evaluate system
-    if not evaluate_system(hybrid=True):
-        print("\n⚠ Evaluation had issues but training completed")
-    
-    # Show summary
-    show_summary()
-    
+
     print("\n✓ Training pipeline completed successfully!")
     print("  - Fine-tuned embedding model: models/finetuned-embedder/")
-    print("  - Evaluation results: evaluation_results.json")
+    print("  - Chạy evaluation: python evaluate_finetuned.py")
 
 
 if __name__ == "__main__":
