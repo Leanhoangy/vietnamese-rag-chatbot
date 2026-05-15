@@ -5,6 +5,11 @@
 [![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://python.org)
 [![LangChain](https://img.shields.io/badge/LangChain-0.3-green.svg)](https://langchain.com)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.x-orange.svg)](https://pytorch.org)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://vietnamese-rag-chatbot-jemrcpipbmxd5bdugx5z2l.streamlit.app)
+
+## Live Demo
+
+👉 [vietnamese-rag-chatbot-jemrcpipbmxd5bdugx5z2l.streamlit.app](https://vietnamese-rag-chatbot-jemrcpipbmxd5bdugx5z2l.streamlit.app)
 
 ---
 
