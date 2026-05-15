@@ -39,7 +39,7 @@
 ```
 vietnamese-rag-chatbot/
 ├── data/
-│   └── raw/                          # 5 văn bản luật .docx
+│   └── raw/                          # 8 văn bản luật .docx
 ├── src/
 │   ├── custom_transformer/           # Model tự xây
 │   │   ├── __init__.py
