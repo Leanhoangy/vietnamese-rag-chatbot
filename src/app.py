@@ -42,7 +42,7 @@ if prompt := st.chat_input("Nhập câu hỏi về pháp luật Việt Nam..."):
 
         st.write(answer)
 
-        if source_docs:
+        if source_docs and len(answer) > 100:
             with st.expander("Nguồn tài liệu"):
                 for i, doc in enumerate(source_docs, 1):
                     source = doc.metadata.get("source", "Không rõ")
