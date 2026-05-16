@@ -8,6 +8,9 @@ st.write("Hỏi đáp về các quy định pháp luật Việt Nam dựa trên 
 @st.cache_resource(show_spinner="Đang tải mô hình...")
 def load_chain():
     import os
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).parent.parent))
     os.environ["USE_HYBRID_RETRIEVAL"] = "true"
     from src.retrieval_hybrid import qa_chain
     return qa_chain
