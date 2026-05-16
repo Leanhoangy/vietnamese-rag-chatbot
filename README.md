@@ -105,7 +105,7 @@ python -c "from src.vector_store import vectorstore; print('Done')"
 # Streamlit UI
 streamlit run src/app.py
 
-# FastAPI
+# FastAPI (tùy chọn — nếu muốn dùng REST API độc lập)
 uvicorn src.api:app --reload
 ```
 
