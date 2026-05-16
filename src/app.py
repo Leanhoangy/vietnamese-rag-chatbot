@@ -37,7 +37,7 @@ if prompt := st.chat_input("Nhập câu hỏi về pháp luật Việt Nam..."):
                 answer = result["result"]
                 source_docs = result.get("source_documents", [])
             except Exception as e:
-                answer = f"❌ Lỗi: {e}"
+                answer = f"❌ Lỗi: {type(e).__name__}: {e}"
                 source_docs = []
 
         st.write(answer)
