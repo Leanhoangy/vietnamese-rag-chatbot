@@ -26,5 +26,11 @@ pdf_loader = DirectoryLoader(
     use_multithreading=True,
 )
 
-data = docx_loader.load() + doc_loader.load() + pdf_loader.load()
+try:
+    doc_data = doc_loader.load()
+except Exception:
+    doc_data = []
+    print("Warning: .doc files skipped (unstructured not available)")
+
+data = docx_loader.load() + doc_data + pdf_loader.load()
 print(f"Loaded {len(data)} documents total")
