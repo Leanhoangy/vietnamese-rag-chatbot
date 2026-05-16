@@ -190,7 +190,7 @@ class RAGEvaluator:
 
         # RAGAS setup
         self.ragas_model = ChatGroq(
-            model="llama-3.3-70b-versatile",
+            model="gemma2-9b-it",
             api_key=os.getenv("GROQ_API_KEY"),
             temperature=0,
         )
