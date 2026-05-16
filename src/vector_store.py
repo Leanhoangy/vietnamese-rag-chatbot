@@ -3,13 +3,11 @@ from langchain_community.vectorstores import FAISS
 
 try:
     from .embedder import embeddings
-    from .chunker import splits
 except ImportError:
     from embedder import embeddings
-    from chunker import splits
 
 
-INDEX_PATH ="faiss_index_local"
+INDEX_PATH = "faiss_index_local"
 
 if os.path.exists(INDEX_PATH):
     vectorstore = FAISS.load_local(
@@ -19,6 +17,10 @@ if os.path.exists(INDEX_PATH):
     )
     print("Đã load FAISS index local!")
 else:
+    try:
+        from .chunker import splits
+    except ImportError:
+        from chunker import splits
     vectorstore = FAISS.from_documents(splits, embeddings)
     vectorstore.save_local(INDEX_PATH)
     print("Đã tạo và lưu FAISS index local!")
