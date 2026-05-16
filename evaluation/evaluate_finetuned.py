@@ -1,8 +1,11 @@
 """Evaluate hệ thống dùng fine-tuned e5 (bỏ qua custom transformer)."""
 
 import os
-import torch
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 from langchain_huggingface import HuggingFaceEmbeddings
 
 os.environ["USE_HYBRID_RETRIEVAL"] = "true"
