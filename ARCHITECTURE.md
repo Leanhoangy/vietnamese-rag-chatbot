@@ -314,8 +314,9 @@ MRR = (1/|Q|) × Σ 1/rank_i       # rank_i = vị trí document đúng đầu t
 - `GET /health` — kiểm tra server
 
 ### Streamlit (`src/app.py`)
-- Giao diện chat web
+- Giao diện chat web, gọi `qa_chain` trực tiếp (không qua FastAPI)
 - Hiển thị câu trả lời + tài liệu nguồn
+- Hỗ trợ deploy lên Streamlit Cloud
 
 ---
 
