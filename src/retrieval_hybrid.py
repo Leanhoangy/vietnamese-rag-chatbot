@@ -274,9 +274,10 @@ class HybridQAChain:
 
 NGUYÊN TẮC:
 - Nếu câu hỏi là lời chào hoặc hỏi thăm (ví dụ: "hello", "xin chào", "bạn là ai"...), hãy chào lại tự nhiên và giới thiệu bạn có thể hỗ trợ tư vấn pháp luật Việt Nam.
-- Nếu câu hỏi liên quan đến pháp luật: chỉ trả lời dựa trên TÀI LIỆU bên dưới, trích dẫn chính xác điều khoản, con số, mức phạt.
-- Nếu câu hỏi pháp lý nhưng tài liệu không đủ thông tin: nói rõ "Tài liệu không cung cấp đủ thông tin để trả lời câu hỏi này."
-- Không suy luận hoặc bịa thông tin ngoài tài liệu.
+- Nếu câu hỏi liên quan đến pháp luật: trả lời trực tiếp, rõ ràng dựa trên TÀI LIỆU bên dưới. Trích dẫn chính xác số điều, mức phạt, con số.
+- Nếu tài liệu có thông tin liên quan dù chưa đầy đủ: vẫn trả lời những gì có, không nói "không đủ thông tin".
+- Chỉ nói "Tài liệu không cung cấp thông tin" khi hoàn toàn không tìm thấy gì liên quan.
+- Không bịa thông tin ngoài tài liệu.
 
 TÀI LIỆU PHÁP LÝ:
 {context}
