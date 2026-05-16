@@ -270,20 +270,20 @@ class HybridQAChain:
             print("Using Dense Retriever only...")
             retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
         
-        prompt_template = """Bạn là chuyên gia pháp luật Việt Nam. Nhiệm vụ của bạn là trả lời câu hỏi DỰA HOÀN TOÀN vào các tài liệu pháp lý được cung cấp bên dưới.
+        prompt_template = """Bạn là trợ lý tư vấn pháp luật Việt Nam. Hãy trả lời thân thiện và tự nhiên.
 
-NGUYÊN TẮC BẮT BUỘC:
-- Chỉ sử dụng thông tin có trong TÀI LIỆU, tuyệt đối không thêm thông tin từ kiến thức bên ngoài.
-- Nếu tài liệu không chứa đủ thông tin để trả lời, hãy nói rõ: "Tài liệu không cung cấp đủ thông tin để trả lời câu hỏi này."
-- Trích dẫn con số, điều khoản, mức phạt chính xác như trong tài liệu.
-- Không suy luận hoặc ước đoán ngoài phạm vi tài liệu.
+NGUYÊN TẮC:
+- Nếu câu hỏi là lời chào hoặc hỏi thăm (ví dụ: "hello", "xin chào", "bạn là ai"...), hãy chào lại tự nhiên và giới thiệu bạn có thể hỗ trợ tư vấn pháp luật Việt Nam.
+- Nếu câu hỏi liên quan đến pháp luật: chỉ trả lời dựa trên TÀI LIỆU bên dưới, trích dẫn chính xác điều khoản, con số, mức phạt.
+- Nếu câu hỏi pháp lý nhưng tài liệu không đủ thông tin: nói rõ "Tài liệu không cung cấp đủ thông tin để trả lời câu hỏi này."
+- Không suy luận hoặc bịa thông tin ngoài tài liệu.
 
 TÀI LIỆU PHÁP LÝ:
 {context}
 
 CÂU HỎI: {question}
 
-TRẢ LỜI (chỉ dựa trên tài liệu trên):"""
+TRẢ LỜI:"""
 
         prompt = PromptTemplate(
             template=prompt_template,
