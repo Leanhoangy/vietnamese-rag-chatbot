@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 
 import torch
@@ -73,7 +74,9 @@ def _has_valid_finetuned_model() -> bool:
 
 
 # Ưu tiên: custom transformer → fine-tuned e5 → base e5
-custom = _load_custom_transformer()
+# Set USE_FINETUNED=true để bỏ qua custom transformer (dùng khi evaluate fine-tuned e5)
+use_finetuned = os.environ.get("USE_FINETUNED", "false").lower() == "true"
+custom = None if use_finetuned else _load_custom_transformer()
 if custom is not None:
     print("Loading custom transformer embedding model...")
     embeddings = custom
