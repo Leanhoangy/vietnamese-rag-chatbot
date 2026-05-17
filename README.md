@@ -24,7 +24,7 @@ Hệ thống chatbot cho phép người dùng hỏi đáp về pháp luật Vi�
 ```
 Tài liệu .docx
       ↓
-[Chunking] RecursiveCharacterTextSplitter (chunk_size=1000, overlap=200)
+[Chunking] RecursiveCharacterTextSplitter (chunk_size=1000, overlap=300)
       ↓
 [Embedding] Custom Transformer (tự xây) hoặc Fine-tuned multilingual-e5-base
       ↓
