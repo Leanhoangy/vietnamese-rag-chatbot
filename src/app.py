@@ -25,6 +25,16 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
+def format_chat_history(messages: list, max_turns: int = 3) -> str:
+    """Format last N conversation turns for context."""
+    recent = messages[-(max_turns * 2):]
+    lines = []
+    for msg in recent:
+        role = "Người dùng" if msg["role"] == "user" else "Trợ lý"
+        lines.append(f"{role}: {msg['content'][:200]}")
+    return "\n".join(lines)
+
+
 if prompt := st.chat_input("Nhập câu hỏi về pháp luật Việt Nam..."):
     with st.chat_message("user"):
         st.write(prompt)
@@ -33,7 +43,8 @@ if prompt := st.chat_input("Nhập câu hỏi về pháp luật Việt Nam..."):
     with st.chat_message("assistant"):
         with st.spinner("Đang tìm kiếm..."):
             try:
-                result = qa_chain.invoke({"query": prompt})
+                chat_history = format_chat_history(st.session_state.messages[:-1])
+                result = qa_chain.invoke({"query": prompt, "chat_history": chat_history})
                 answer = result["result"]
                 source_docs = result.get("source_documents", [])
             except Exception as e:
