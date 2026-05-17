@@ -263,12 +263,12 @@ class HybridQAChain:
                 use_cross_encoder=CROSS_ENCODER_AVAILABLE,
             )
             retriever = self.hybrid_retriever.as_retriever(
-                k=5,
+                k=7,
                 alpha=hybrid_alpha,
             )
         else:
             print("Using Dense Retriever only...")
-            retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
+            retriever = vectorstore.as_retriever(search_kwargs={"k": 7})
         
         prompt_template = """Bạn là trợ lý tư vấn pháp luật Việt Nam.
 
