@@ -278,6 +278,10 @@ NGUYÊN TẮC:
 - Nếu tài liệu có thông tin liên quan: trả lời những gì có, không nói "không đủ thông tin".
 - Chỉ nói "Tài liệu không cung cấp thông tin" khi hoàn toàn không tìm thấy gì liên quan.
 - Không bịa thông tin ngoài tài liệu.
+- Dựa vào LỊCH SỬ HỘI THOẠI để hiểu ngữ cảnh các câu hỏi tiếp theo.
+
+LỊCH SỬ HỘI THOẠI:
+{chat_history}
 
 TÀI LIỆU PHÁP LÝ:
 {context}
@@ -288,37 +292,38 @@ TRẢ LỜI:"""
 
         prompt = PromptTemplate(
             template=prompt_template,
-            input_variables=["context", "question"]
+            input_variables=["chat_history", "context", "question"]
         )
-        
-        # Build chain using Runnable pattern (modern LangChain)
-        # Format documents into context string
+
         def format_docs(docs):
             return "\n\n".join([
                 f"[Tài liệu {i+1}]:\n{doc.page_content}"
                 for i, doc in enumerate(docs)
             ])
-        
-        # Create RAG chain
-        self.chain = (
-            {"context": retriever | format_docs, "question": RunnablePassthrough()}
-            | prompt
-            | model
-            | StrOutputParser()
-        )
-        
+
+        self.format_docs = format_docs
+        self.prompt = prompt
+        self.model = model
         self.retriever = retriever
-    
+
     def invoke(self, query_dict: Dict) -> Dict:
         """Invoke the QA chain (compatible with LangChain interface)"""
         query = query_dict.get("query", "")
-        
-        # Get retrieved documents
+        chat_history = query_dict.get("chat_history", "")
+
         docs = self.retriever.invoke(query)
-        
-        # Get answer using chain
-        answer = self.chain.invoke(query)
-        
+        context = self.format_docs(docs)
+
+        answer = (
+            self.prompt
+            | self.model
+            | StrOutputParser()
+        ).invoke({
+            "chat_history": chat_history,
+            "context": context,
+            "question": query,
+        })
+
         return {
             "result": answer,
             "source_documents": docs
