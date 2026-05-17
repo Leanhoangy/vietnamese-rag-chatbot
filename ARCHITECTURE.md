@@ -26,9 +26,9 @@ Vector (128 hoặc 768 chiều)
         ├─ BM25 → top-10 chunks (lexical)
         ├─ FAISS → top-10 chunks (semantic)
         ├─ Score fusion (alpha=0.5)
-        └─ Cross-Encoder rerank → top-5 chunks
+        └─ Cross-Encoder rerank → top-7 chunks
         ↓ llm_chain.py — tạo prompt
-Prompt = [System] + [Context: top-5 chunks] + [Question]
+Prompt = [System] + [Context: top-7 chunks] + [Question]
         ↓ Groq API (Llama 3.3-70b)
 Câu trả lời
 ```
@@ -56,7 +56,7 @@ Output: `List[Document]` — mỗi Document chứa `page_content` (text) và `me
 **Thuật toán:** `RecursiveCharacterTextSplitter`
 - Ưu tiên cắt theo `\n\n` → `\n` → `.` → ` `
 - `chunk_size=1000` — tối đa 1000 ký tự/chunk
-- `chunk_overlap=200` — 200 ký tự chồng lấp giữa các chunk (tránh mất ngữ cảnh ở biên)
+- `chunk_overlap=300` — 300 ký tự chồng lấp giữa các chunk (tránh mất ngữ cảnh ở biên)
 
 **Lý do overlap:** Thông tin pháp lý thường trải dài qua nhiều câu, overlap giúp không bỏ sót câu quan trọng nằm ở ranh giới 2 chunk.
 
@@ -294,7 +294,7 @@ Mỗi paraphrase + positive + negatives gốc = triplets mới.
 | `evaluate_answer_quality()` | Tính BLEU, ROUGE-L, Semantic Similarity |
 | `run_full_evaluation()` | Chạy tất cả, lưu `evaluation_results.json` |
 
-**NDCG@5 (Normalized Discounted Cumulative Gain):**
+**NDCG@7 (Normalized Discounted Cumulative Gain):**
 ```
 DCG@k = Σ rel_i / log2(i+1)      # i = vị trí trong top-k
 NDCG@k = DCG@k / IDCG@k          # chuẩn hóa về [0,1]
