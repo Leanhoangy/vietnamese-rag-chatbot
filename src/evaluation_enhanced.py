@@ -323,16 +323,16 @@ class RAGEvaluator:
                 if self._is_relevant(doc_text, truths):
                     relevant_indices.append(idx)
 
-            ndcg_scores.append(self.retrieval_metrics.ndcg_at_k(relevant_indices, rank, k=5))
+            ndcg_scores.append(self.retrieval_metrics.ndcg_at_k(relevant_indices, rank, k=7))
             mrr_scores.append(self.retrieval_metrics.mrr_at_k(relevant_indices, rank, k=10))
-            recall_scores.append(self.retrieval_metrics.recall_at_k(relevant_indices, rank, k=5))
-            precision_scores.append(self.retrieval_metrics.precision_at_k(relevant_indices, rank, k=5))
+            recall_scores.append(self.retrieval_metrics.recall_at_k(relevant_indices, rank, k=7))
+            precision_scores.append(self.retrieval_metrics.precision_at_k(relevant_indices, rank, k=7))
 
         scores = {
-            "ndcg@5": float(np.mean(ndcg_scores)) if ndcg_scores else 0.0,
+            "ndcg@7": float(np.mean(ndcg_scores)) if ndcg_scores else 0.0,
             "mrr@10": float(np.mean(mrr_scores)) if mrr_scores else 0.0,
-            "recall@5": float(np.mean(recall_scores)) if recall_scores else 0.0,
-            "precision@5": float(np.mean(precision_scores)) if precision_scores else 0.0,
+            "recall@7": float(np.mean(recall_scores)) if recall_scores else 0.0,
+            "precision@7": float(np.mean(precision_scores)) if precision_scores else 0.0,
         }
 
         print("\n=== Retrieval Scores ===")
