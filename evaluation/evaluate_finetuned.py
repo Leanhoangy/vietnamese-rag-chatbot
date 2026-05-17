@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from langchain_huggingface import HuggingFaceEmbeddings
 
 os.environ["USE_HYBRID_RETRIEVAL"] = "true"
+os.environ["USE_FINETUNED"] = "true"  # skip custom transformer, dùng fine-tuned e5
 
 # Load fine-tuned e5 trực tiếp, bỏ qua custom transformer
 FINETUNED_PATH = Path("models/finetuned-embedder")

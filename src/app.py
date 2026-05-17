@@ -25,7 +25,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-def format_chat_history(messages: list, max_turns: int = 3) -> str:
+def format_chat_history(messages: list, max_turns: int = 5) -> str:
     """Format last N conversation turns for context."""
     recent = messages[-(max_turns * 2):]
     lines = []
