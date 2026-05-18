@@ -190,12 +190,21 @@ class RAGEvaluator:
 
         # RAGAS setup
         self.ragas_model = ChatGroq(
-            model="llama3-groq-8b-8192-tool-use-preview",
+            model="llama-3.1-8b-instant",
             api_key=os.getenv("GROQ_API_KEY"),
             temperature=0,
         )
         self.ragas_llm = LangchainLLMWrapper(self.ragas_model)
-        self.ragas_embeddings = LangchainEmbeddingsWrapper(embeddings)
+
+        # RAGAS requires a HuggingFace embedding with a string model name.
+        # Always use e5-base regardless of what the QA chain uses.
+        from langchain_huggingface import HuggingFaceEmbeddings
+        ragas_embed = HuggingFaceEmbeddings(
+            model_name="intfloat/multilingual-e5-base",
+            model_kwargs={"device": "cpu"},
+            encode_kwargs={"normalize_embeddings": True},
+        )
+        self.ragas_embeddings = LangchainEmbeddingsWrapper(ragas_embed)
 
         faithfulness.llm = self.ragas_llm
         answer_relevancy.llm = self.ragas_llm
