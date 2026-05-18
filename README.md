@@ -156,6 +156,33 @@ vietnamese-rag-chatbot/
 
 ---
 
+## Kết quả Evaluation (Fine-tuned e5 + Hybrid Retrieval)
+
+### Retrieval Metrics
+| Metric | Score |
+|---|---|
+| NDCG@7 | **0.9950** |
+| MRR@10 | **1.0000** |
+| Recall@7 | **1.0000** |
+| Precision@7 | **0.9857** |
+
+### RAGAS Metrics
+| Metric | Score |
+|---|---|
+| Faithfulness | **0.8854** |
+| Answer Relevancy | **0.9104** |
+| Context Precision | 0.6820 |
+| Context Recall | **0.9000** |
+
+### Answer Quality
+| Metric | Score |
+|---|---|
+| BLEU | 0.1684 |
+| ROUGE-L | 0.3682 |
+| Semantic Similarity | **0.8049** |
+
+---
+
 ## Nhóm thực hiện
 
 Đồ án môn Deep Learning — HUIT 2025
