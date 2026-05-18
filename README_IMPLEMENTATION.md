@@ -24,11 +24,11 @@
 - **File:** `src/retrieval_hybrid.py`
 - BM25 (sparse) + FAISS dense retrieval → score fusion (alpha=0.5)
 - Cross-Encoder reranking: `mmarco-mMiniLMv2-L12-H384-v1` (multilingual)
-- k_bm25=10, k_dense=10, k_rerank=5
+- k=7, k_bm25=14, k_dense=14, k_rerank=7
 
 ### 4. Evaluation Framework
 - **File:** `src/evaluation_enhanced.py`
-- Retrieval: NDCG@5, MRR@10, Recall@5, Precision@5
+- Retrieval: NDCG@7, MRR@10, Recall@7, Precision@7
 - Answer quality: BLEU, ROUGE-L, Semantic Similarity
 - RAGAS: Faithfulness, Answer Relevancy, Context Precision, Context Recall
 
@@ -57,6 +57,7 @@ vietnamese-rag-chatbot/
 │   ├── retrieval_hybrid.py           # Hybrid BM25 + Dense + Cross-Encoder
 │   ├── data_preparation.py           # Tạo triplets từ test set
 │   ├── augment_triplets.py           # Augment data qua LLM paraphrase
+│   ├── generate_test_cases.py        # Tạo test_set.json từ văn bản luật
 │   ├── evaluation_enhanced.py        # RAGAS + Retrieval metrics
 │   ├── app.py                        # Streamlit UI
 │   └── api.py                        # FastAPI endpoint
@@ -73,20 +74,48 @@ vietnamese-rag-chatbot/
 
 ## Thứ tự chạy
 
-### Custom Transformer
+### Bước 1 — Tạo test set (chỉ cần chạy 1 lần)
 ```bash
-python train_custom.py              # data prep → augment → tokenizer → train
-rm -rf faiss_index_local/
-python -c "from src.vector_store import vectorstore"
-python evaluation/evaluate_custom.py
+python src/generate_test_cases.py
+# Đọc data/raw/*.docx → hỏi Groq LLM tạo Q&A → lưu test_set.json (68 câu hỏi)
 ```
 
-### Fine-tuned e5
+### Bước 2 — Build FAISS index lần đầu (dùng base e5)
 ```bash
-python train_finetuned.py           # data prep → fine-tune e5
+python -c "from src.vector_store import vectorstore"
+# loader.py đọc .docx → chunker.py chia chunks → embedder.py embed → lưu faiss_index_local/
+```
+
+### Bước 3 — Chuẩn bị training data
+```bash
+# Được gọi tự động bên trong train_custom.py / train_finetuned.py, bao gồm:
+# data_preparation.py  → đọc test_set.json + dùng FAISS mine hard negatives → legal_triplets_dataset/
+# augment_triplets.py  → paraphrase câu hỏi qua LLM → 68 → 807 triplets
+```
+
+### Bước 4 — Train model (chọn 1 trong 2)
+```bash
+python train_custom.py      # tự động: data prep → augment → build tokenizer → train (711K params)
+# HOẶC
+python train_finetuned.py   # tự động: data prep → augment → fine-tune e5 (278M params)
+```
+
+### Bước 5 — Rebuild FAISS với model mới
+```bash
 rm -rf faiss_index_local/
 python -c "from src.vector_store import vectorstore"
-python evaluation/evaluate_finetuned.py
+# embedder.py tự chọn: fine-tuned e5 > custom transformer > base e5
+```
+
+### Bước 6 — Đánh giá
+```bash
+python evaluation/evaluate_custom.py      # custom transformer: retrieval + RAGAS metrics
+python evaluation/evaluate_finetuned.py   # fine-tuned e5: retrieval + RAGAS metrics
+```
+
+### Bước 7 — Chạy chatbot
+```bash
+streamlit run src/app.py
 ```
 
 ---
@@ -109,9 +138,10 @@ CONFIG = {
 
 ### Hybrid Retrieval (`src/retrieval_hybrid.py`)
 ```python
-k_bm25 = 10        # BM25 candidates
-k_dense = 10       # Dense candidates
-k_rerank = 5       # Sau reranking
+k = 7              # Final top-k results
+k_bm25 = k * 2    # BM25 candidates (14)
+k_dense = k * 2   # Dense candidates (14)
+k_rerank = k      # Sau reranking (7)
 alpha = 0.5        # 0=pure BM25, 1=pure dense
 ```
 
