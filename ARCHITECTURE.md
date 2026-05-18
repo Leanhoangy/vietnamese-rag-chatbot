@@ -10,7 +10,7 @@ data/raw/*.docx, *.doc, *.pdf
         ↓ loader.py — đọc file
 List[Document]
         ↓ chunker.py — chia nhỏ
-List[Document] (chunks ~1000 ký tự, overlap 200)
+List[Document] (chunks ~1000 ký tự, overlap 300)
         ↓ embedder.py — chuyển text → vector
 List[Vector] (128 chiều hoặc 768 chiều)
         ↓ vector_store.py — lưu vào FAISS
@@ -23,8 +23,8 @@ Câu hỏi user
         ↓ embedder.py — embed câu hỏi
 Vector (128 hoặc 768 chiều)
         ↓ retrieval_hybrid.py
-        ├─ BM25 → top-10 chunks (lexical)
-        ├─ FAISS → top-10 chunks (semantic)
+        ├─ BM25 → top-14 chunks (lexical)
+        ├─ FAISS → top-14 chunks (semantic)
         ├─ Score fusion (alpha=0.5)
         └─ Cross-Encoder rerank → top-7 chunks
         ↓ llm_chain.py — tạo prompt
