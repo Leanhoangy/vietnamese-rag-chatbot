@@ -5,6 +5,7 @@ Visualize evaluation results: 3 charts
   3. Bar chart: Dense only vs Hybrid retrieval
 """
 
+import json
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
@@ -84,47 +85,61 @@ print("✓ Saved: charts/chart1_model_comparison.png")
 # ══════════════════════════════════════════════════════════════════════════
 # BIỂU ĐỒ 2 — Training Loss curve
 # ══════════════════════════════════════════════════════════════════════════
-# Fine-tuned E5: 5 epochs, ~252 steps tổng
-# Custom Transformer: 3 epochs
+# Fine-tuned E5: dùng loss_log.json thật (500 steps, 5 epochs)
+# Custom Transformer: simulated (không có log thật)
 
-steps_ft = np.linspace(0, 252, 50)
-# Loss giảm exponential + noise nhỏ (phản ánh thực tế)
-np.random.seed(42)
-loss_ft = 0.85 * np.exp(-steps_ft / 60) + 0.08 + np.random.normal(0, 0.015, 50)
-loss_ft = np.clip(loss_ft, 0.06, 1.0)
+def _smooth(arr, w=5):
+    out = np.convolve(arr, np.ones(w)/w, mode="valid")
+    pad = np.full(w - 1, arr[:w].mean())
+    return np.concatenate([pad, out])
 
-steps_ct = np.linspace(0, 150, 35)
-loss_ct = 1.1 * np.exp(-steps_ct / 45) + 0.15 + np.random.normal(0, 0.02, 35)
-loss_ct = np.clip(loss_ct, 0.12, 1.2)
+with open("loss_log.json") as _f:
+    _log_ft = json.load(_f)
+steps_ft = np.array([e["step"] for e in _log_ft])
+loss_ft  = np.array([e["loss"] for e in _log_ft])
+loss_ft_s = _smooth(loss_ft)
+
+with open("loss_log_custom.json") as _f:
+    _log_ct = json.load(_f)
+steps_ct = np.array([e["step"] for e in _log_ct])
+loss_ct  = np.array([e["loss"] for e in _log_ct])
+# Custom Transformer: dùng epoch average để tránh spike
+_ct_epochs = sorted(set(e["epoch"] for e in _log_ct))
+steps_ct_ep = np.array([np.mean([e["step"] for e in _log_ct if e["epoch"] == ep]) for ep in _ct_epochs])
+loss_ct_ep  = np.array([np.mean([e["loss"] for e in _log_ct if e["epoch"] == ep]) for ep in _ct_epochs])
+loss_ct_s = _smooth(loss_ct, w=15)  # kept for fill_between reference
 
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
-# Fine-tuned E5
-axes[0].plot(steps_ft, loss_ft, color=COLOR_FINETUNE, linewidth=2)
-axes[0].fill_between(steps_ft, loss_ft, alpha=0.15, color=COLOR_FINETUNE)
-# Đánh dấu từng epoch (252 steps / 5 epochs = ~50 steps/epoch)
-for ep in range(1, 6):
-    axes[0].axvline(x=ep*50, color="gray", linestyle=":", linewidth=0.8, alpha=0.6)
-    axes[0].text(ep*50, 0.88, f"Ep{ep}", ha="center", fontsize=8, color="gray")
-axes[0].set_title("Fine-tuned E5 — TripletLoss\n(807 triplets, 5 epochs, batch=16)",
+# Fine-tuned E5 — epoch average (nhất quán với Custom Transformer)
+_ft_epochs = sorted(set(e["epoch"] for e in _log_ft))
+steps_ft_ep = np.array([np.mean([e["step"] for e in _log_ft if e["epoch"] == ep]) for ep in _ft_epochs])
+loss_ft_ep  = np.array([np.mean([e["loss"] for e in _log_ft if e["epoch"] == ep]) for ep in _ft_epochs])
+
+_ymax_ft = max(float(loss_ft_ep.max()) * 1.3, 0.05)
+axes[0].plot(steps_ft_ep, loss_ft_ep, color=COLOR_FINETUNE, linewidth=2, marker="o", markersize=6)
+axes[0].fill_between(steps_ft_ep, loss_ft_ep, alpha=0.15, color=COLOR_FINETUNE)
+axes[0].set_ylim(0, _ymax_ft)
+for ep, sx in zip(_ft_epochs, steps_ft_ep):
+    axes[0].text(sx, _ymax_ft * 0.88, f"Ep{ep}", ha="center", fontsize=8, color="gray")
+axes[0].set_title("Fine-tuned E5 — TripletLoss (Real)\n(807 triplets, 5 epochs, batch=16, 278M params)",
                   fontsize=11, fontweight="bold")
 axes[0].set_xlabel("Training Steps", fontsize=10)
 axes[0].set_ylabel("Triplet Loss", fontsize=10)
-axes[0].set_ylim(0, 1.0)
 axes[0].yaxis.grid(True, linestyle="--", alpha=0.4)
 axes[0].set_axisbelow(True)
 
-# Custom Transformer
-axes[1].plot(steps_ct, loss_ct, color=COLOR_CUSTOM, linewidth=2)
-axes[1].fill_between(steps_ct, loss_ct, alpha=0.15, color=COLOR_CUSTOM)
-for ep in range(1, 4):
-    axes[1].axvline(x=ep*50, color="gray", linestyle=":", linewidth=0.8, alpha=0.6)
-    axes[1].text(ep*50, 1.08, f"Ep{ep}", ha="center", fontsize=8, color="gray")
-axes[1].set_title("Custom Transformer — TripletLoss\n(807 triplets, 3 epochs, 711K params)",
+# Custom Transformer (real data) — epoch average để tránh spike
+_ymax_ct = max(float(loss_ct_ep.max()) * 2.0, 0.005)
+axes[1].plot(steps_ct_ep, loss_ct_ep, color=COLOR_CUSTOM, linewidth=2, marker="o", markersize=6)
+axes[1].fill_between(steps_ct_ep, loss_ct_ep, alpha=0.15, color=COLOR_CUSTOM)
+axes[1].set_ylim(0, _ymax_ct)
+for ep, sx in zip(_ct_epochs, steps_ct_ep):
+    axes[1].text(sx, _ymax_ct * 0.88, f"Ep{ep}", ha="center", fontsize=8, color="gray")
+axes[1].set_title("Custom Transformer — TripletLoss (Real)\n(807 triplets, 5 epochs, batch=16, 711K params)",
                   fontsize=11, fontweight="bold")
 axes[1].set_xlabel("Training Steps", fontsize=10)
 axes[1].set_ylabel("Triplet Loss", fontsize=10)
-axes[1].set_ylim(0, 1.25)
 axes[1].yaxis.grid(True, linestyle="--", alpha=0.4)
 axes[1].set_axisbelow(True)
 
@@ -191,8 +206,6 @@ print("\nDone! Xem ảnh trong thư mục charts/")
 # ══════════════════════════════════════════════════════════════════════════
 # BIỂU ĐỒ 4 — Phân phối test set theo nguồn văn bản
 # ══════════════════════════════════════════════════════════════════════════
-import json
-
 with open("test_set.json", encoding="utf-8") as f:
     test_data = json.load(f)
 
