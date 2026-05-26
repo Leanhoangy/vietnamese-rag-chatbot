@@ -62,6 +62,22 @@ def _load_custom_transformer() -> CustomTransformerEmbeddings | None:
     return CustomTransformerEmbeddings(model, tokenizer, cfg["max_len"])
 
 
+def _download_finetuned_model() -> None:
+    """Download fine-tuned model từ HuggingFace Hub nếu chưa có."""
+    if _has_valid_finetuned_model():
+        return
+    try:
+        from huggingface_hub import snapshot_download
+        print("Downloading fine-tuned model from HuggingFace Hub...")
+        snapshot_download(
+            repo_id="Hoangy2005/vietnamese-legal-embedder",
+            local_dir=str(FINETUNED_MODEL_PATH),
+        )
+        print("Download complete.")
+    except Exception as e:
+        print(f"Could not download fine-tuned model: {e}")
+
+
 def _has_valid_finetuned_model() -> bool:
     if not FINETUNED_MODEL_PATH.exists() or not FINETUNED_CONFIG_PATH.exists():
         return False
@@ -76,6 +92,7 @@ def _has_valid_finetuned_model() -> bool:
 # Ưu tiên: custom transformer → fine-tuned e5 → base e5
 # Set USE_FINETUNED=true để bỏ qua custom transformer (dùng khi evaluate fine-tuned e5)
 use_finetuned = os.environ.get("USE_FINETUNED", "false").lower() == "true"
+_download_finetuned_model()
 custom = None if use_finetuned else _load_custom_transformer()
 if custom is not None:
     print("Loading custom transformer embedding model...")
