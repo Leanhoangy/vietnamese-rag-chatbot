@@ -15,7 +15,7 @@
 
 ## Giới thiệu
 
-Hệ thống chatbot cho phép người dùng hỏi đáp về pháp luật Việt Nam dựa trên các văn bản luật chính thức (Luật Đường bộ 2024, Bộ luật Lao động, Luật Doanh nghiệp, Luật Dân sự, Nghị định 100/2019).
+Hệ thống chatbot cho phép người dùng hỏi đáp về pháp luật Việt Nam dựa trên các văn bản luật chính thức (Luật Đường bộ 2024, Bộ luật Lao động, Luật Doanh nghiệp, Bộ luật Dân sự, Nghị định 100/2019, Nghị định 168/2024).
 
 ---
 
@@ -64,8 +64,10 @@ Prompt → Groq (Llama 3.3-70b) → Câu trả lời
 
 ### 2. Fine-tuned multilingual-e5-base (transfer learning)
 - Base model: `intfloat/multilingual-e5-base` (278M params)
-- Fine-tune: trên legal triplets với hard negative mining
-- Data augmentation: paraphrase câu hỏi qua Groq LLM (~807 triplets)
+- Fine-tune: trên legal triplets với hard negative mining, TripletLoss (margin=0.5)
+- Data augmentation: paraphrase câu hỏi qua Groq LLM (~807 triplets thêm)
+- Training: 15 epochs, batch=32, 1,710 steps trên Colab GPU
+- HuggingFace Hub: [`Hoangy2005/vietnamese-legal-embedder`](https://huggingface.co/Hoangy2005/vietnamese-legal-embedder)
 
 ---
 
@@ -161,15 +163,15 @@ vietnamese-rag-chatbot/
 So sánh 2 embedding model với Hybrid Retrieval (BM25 + FAISS + Cross-Encoder, k=7):
 
 ### Retrieval Metrics
-| Metric           | Custom Transformer | Fine-tuned e5 |
+| Metric           | Custom Transformer | Fine-tuned E5 |
 |:-----------------|:------------------:|:-------------:|
-| NDCG@7           | 0.9937             | **0.9899**    |
-| MRR@10           | 1.0000             | **0.9914**    |
-| Recall@7         | 1.0000             | **1.0000**    |
-| Precision@7      | 0.9821             | **0.9511**    |
+| NDCG@7           | **0.9937**         | 0.9899        |
+| MRR@10           | **1.0000**         | 0.9914        |
+| Recall@7         | 1.0000             | 1.0000        |
+| Precision@7      | **0.9821**         | 0.9511        |
 
 ### RAGAS Metrics
-| Metric            | Custom Transformer | Fine-tuned e5 |
+| Metric            | Custom Transformer | Fine-tuned E5 |
 |:------------------|:------------------:|:-------------:|
 | Faithfulness      | 0.7738             | **0.8854**    |
 | Answer Relevancy  | 0.8654             | **0.9104**    |
@@ -177,13 +179,13 @@ So sánh 2 embedding model với Hybrid Retrieval (BM25 + FAISS + Cross-Encoder,
 | Context Recall    | 0.7500             | **0.9000**    |
 
 ### Answer Quality
-| Metric             | Custom Transformer | Fine-tuned e5 |
+| Metric             | Custom Transformer | Fine-tuned E5 |
 |:-------------------|:------------------:|:-------------:|
 | BLEU               | 0.1423             | **0.1684**    |
 | ROUGE-L            | 0.3539             | **0.3682**    |
 | Semantic Similarity| 0.7428             | **0.8049**    |
 
-> Fine-tuned e5 (278M params) vượt trội Custom Transformer (711K params) trên toàn bộ metrics.
+> Fine-tuned E5 (278M params) vượt trội trên RAGAS & Answer Quality. Custom Transformer cạnh tranh tốt về Retrieval Precision dù chỉ 711K params.
 
 ---
 
