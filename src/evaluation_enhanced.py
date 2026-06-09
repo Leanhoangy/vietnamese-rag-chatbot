@@ -189,12 +189,11 @@ class RAGEvaluator:
         self.retrieval_metrics = RetrievalMetrics()
         self.answer_metrics = AnswerQualityMetrics()
 
-        # RAGAS setup
-        self.ragas_model = ChatGroq(
-            model="llama-3.1-8b-instant",
-            api_key=os.getenv("GROQ_API_KEY"),
-            temperature=0,
-        )
+        # RAGAS setup — hỗ trợ key rotation
+        from src.llm_chain import GROQ_KEYS, make_groq_model
+        self._groq_keys = GROQ_KEYS
+        self._key_idx = 0
+        self.ragas_model = make_groq_model(0, model_name="llama-3.1-8b-instant")
         self.ragas_llm = LangchainLLMWrapper(self.ragas_model)
 
         # RAGAS requires a HuggingFace embedding with a string model name.
@@ -292,21 +291,32 @@ class RAGEvaluator:
         
         for i, case in enumerate(test_cases):
             print(f"[{i+1}/{len(test_cases)}] {case['question'][:60]}...")
-            
-            try:
-                result = self.qa_chain.invoke({"query": case["question"]})
-                source_docs = result.get("source_documents", [])
-                context = [doc.page_content for doc in source_docs]
-                
-                questions.append(case["question"])
-                answers.append(result["result"])
-                contexts.append(context if context else [result["result"]])
-                ground_truths.append(self._normalize_ground_truths(case.get("ground_truth", "")))
-                retrieved_docs.append(context)
-                
-                time.sleep(0.5)  # Rate limiting
-            except Exception as e:
-                print(f"  Error: {e}")
+
+            for _ in range(len(self._groq_keys)):
+                try:
+                    result = self.qa_chain.invoke({"query": case["question"]})
+                    source_docs = result.get("source_documents", [])
+                    context = [doc.page_content for doc in source_docs]
+
+                    questions.append(case["question"])
+                    answers.append(result["result"])
+                    contexts.append(context if context else [result["result"]])
+                    ground_truths.append(self._normalize_ground_truths(case.get("ground_truth", "")))
+                    retrieved_docs.append(context)
+
+                    time.sleep(0.5)
+                    break
+                except Exception as e:
+                    if "429" in str(e) or "rate_limit" in str(e).lower():
+                        self._key_idx = (self._key_idx + 1) % len(self._groq_keys)
+                        from src.llm_chain import make_groq_model
+                        new_model = make_groq_model(self._key_idx)
+                        self.qa_chain.model = new_model
+                        print(f"  [Rate limit] Rotated to key {self._key_idx + 1}/{len(self._groq_keys)}, retrying...")
+                        time.sleep(2)
+                    else:
+                        print(f"  Error: {e}")
+                        break
         
         return questions, answers, contexts, ground_truths, retrieved_docs
 
@@ -372,7 +382,6 @@ class RAGEvaluator:
                 "context_recall": 0.0,
             }
         
-        # Limit to 50 samples for RAGAS to stay within token quota
         ragas_limit = 50
         questions = questions[:ragas_limit]
         answers = answers[:ragas_limit]
@@ -380,28 +389,59 @@ class RAGEvaluator:
         ground_truths = ground_truths[:ragas_limit]
         print(f"Evaluating {len(questions)} samples with RAGAS...")
 
-        dataset = Dataset.from_dict({
-            "question": questions,
-            "answer": answers,
-            "contexts": contexts,
-            "ground_truth": [truths[0] if truths else "" for truths in ground_truths],
-        })
-        
-        result = evaluate(
-            dataset,
-            metrics=[self.faithfulness_metric, self.answer_relevancy_metric, self.context_precision_metric, self.context_recall_metric],
-            llm=self.ragas_llm,
-            embeddings=self.ragas_embeddings,
-            run_config=RunConfig(max_workers=2, timeout=300)
-        )
-        
-        df = result.to_pandas()
-        scores = {
-            "faithfulness": self._safe_mean(df['faithfulness'].tolist()),
-            "answer_relevancy": self._safe_mean(df['answer_relevancy'].tolist()),
-            "context_precision": self._safe_mean(df['context_precision'].tolist()),
-            "context_recall": self._safe_mean(df['context_recall'].tolist()),
-        }
+        # Chạy từng sample — 429 thì rotate key + retry sample đó, không restart từ đầu
+        from src.llm_chain import make_groq_model
+
+        def _rotate_ragas_key(self):
+            self._key_idx = (self._key_idx + 1) % len(self._groq_keys)
+            self.ragas_model = make_groq_model(self._key_idx, model_name="llama-3.1-8b-instant")
+            self.ragas_llm = LangchainLLMWrapper(self.ragas_model)
+            self.faithfulness_metric.llm = self.ragas_llm
+            self.answer_relevancy_metric.llm = self.ragas_llm
+            self.context_precision_metric.llm = self.ragas_llm
+            self.context_recall_metric.llm = self.ragas_llm
+            print(f"[RAGAS] Rotated to key {self._key_idx + 1}/{len(self._groq_keys)}")
+
+        all_scores = {"faithfulness": [], "answer_relevancy": [], "context_precision": [], "context_recall": []}
+        ground_truth_list = [truths[0] if truths else "" for truths in ground_truths]
+
+        for i, (q, a, c, gt) in enumerate(zip(questions, answers, contexts, ground_truth_list)):
+            print(f"  [RAGAS {i+1}/{len(questions)}]", end=" ", flush=True)
+            single = Dataset.from_dict({"question": [q], "answer": [a], "contexts": [c], "ground_truth": [gt]})
+            success = False
+            for _ in range(len(self._groq_keys)):
+                try:
+                    res = evaluate(
+                        single,
+                        metrics=[self.faithfulness_metric, self.answer_relevancy_metric,
+                                 self.context_precision_metric, self.context_recall_metric],
+                        llm=self.ragas_llm,
+                        embeddings=self.ragas_embeddings,
+                        run_config=RunConfig(max_workers=1, timeout=120)
+                    )
+                    df = res.to_pandas()
+                    for metric in all_scores:
+                        val = df[metric].iloc[0] if metric in df.columns else float("nan")
+                        all_scores[metric].append(float(val) if val == val else float("nan"))
+                    print("✓")
+                    success = True
+                    break
+                except Exception as e:
+                    if "429" in str(e) or "rate_limit" in str(e).lower():
+                        print(f"429→rotate", end=" ", flush=True)
+                        _rotate_ragas_key(self)
+                        time.sleep(2)
+                    else:
+                        print(f"skip({e})")
+                        for metric in all_scores:
+                            all_scores[metric].append(float("nan"))
+                        success = True
+                        break
+            if not success:
+                for metric in all_scores:
+                    all_scores[metric].append(float("nan"))
+
+        scores = {metric: float(np.nanmean(vals)) if vals else 0.0 for metric, vals in all_scores.items()}
         
         print("\n=== RAGAS Scores ===")
         for metric, score in scores.items():
