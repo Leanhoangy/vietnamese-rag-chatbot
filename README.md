@@ -15,7 +15,7 @@
 
 ## Giới thiệu
 
-Hệ thống chatbot cho phép người dùng hỏi đáp về pháp luật Việt Nam dựa trên các văn bản luật chính thức (Luật Đường bộ 2024, Bộ luật Lao động, Luật Doanh nghiệp, Bộ luật Dân sự, Nghị định 100/2019, Nghị định 168/2024).
+Hệ thống chatbot cho phép người dùng hỏi đáp về pháp luật Việt Nam dựa trên các văn bản luật chính thức (Luật Đường bộ 2024, Bộ luật Lao động, Luật Doanh nghiệp, Bộ luật Dân sự, Bộ luật Hình sự, Luật Đất đai, Luật Hôn nhân và Gia đình, Nghị định 100/2019).
 
 ---
 
