@@ -19,6 +19,7 @@ from ragas.embeddings import LangchainEmbeddingsWrapper
 from ragas.run_config import RunConfig
 
 from langchain_groq import ChatGroq
+from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 from rouge_score import rouge_scorer
 import nltk
@@ -371,6 +372,14 @@ class RAGEvaluator:
                 "context_recall": 0.0,
             }
         
+        # Limit to 50 samples for RAGAS to stay within token quota
+        ragas_limit = 50
+        questions = questions[:ragas_limit]
+        answers = answers[:ragas_limit]
+        contexts = contexts[:ragas_limit]
+        ground_truths = ground_truths[:ragas_limit]
+        print(f"Evaluating {len(questions)} samples with RAGAS...")
+
         dataset = Dataset.from_dict({
             "question": questions,
             "answer": answers,

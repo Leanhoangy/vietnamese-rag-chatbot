@@ -3,6 +3,7 @@ Main training pipeline: Fine-tune embedding model
 This is the entry point for training the deep learning component
 """
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -34,8 +35,9 @@ def prepare_training_data():
         print(f"  - Triplets: {len(dataset)}")
         return True
 
+    os.environ["USE_FINETUNED"] = "true"
     from src.data_preparation import LegalDataPreparator
-    preparator = LegalDataPreparator(test_set_path="test_set.json", k_hard_negatives=3)
+    preparator = LegalDataPreparator(test_set_path="train_set.json", k_hard_negatives=3)
     dataset = preparator.prepare_all(save_to_disk=True)
 
     if dataset:
@@ -57,7 +59,7 @@ def finetune_embedding_model():
         return False
 
     try:
-        tuner = run_finetuning_pipeline(dataset_path="legal_triplets_dataset", epochs=5, batch_size=16)
+        tuner = run_finetuning_pipeline(dataset_path="legal_triplets_dataset", epochs=15, batch_size=32)
         print(f"✓ Fine-tuning completed! Model saved to: {tuner.output_dir}")
         return True
     except Exception as e:

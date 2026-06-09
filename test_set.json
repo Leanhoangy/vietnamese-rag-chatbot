@@ -1,18 +1,33 @@
 [
   {
-    "question": "Vượt đèn đỏ bị phạt bao nhiêu tiền?",
-    "ground_truth": "Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với người điều khiển xe mô tô không chấp hành hiệu lệnh của đèn tín hiệu giao thông",
-    "source": "Nghị định 168/2024"
+    "question": "Người sử dụng đất có thể yêu cầu cơ quan có thẩm quyền giải quyết theo quy định của Luật nào?",
+    "ground_truth": "của Luật này",
+    "source": "Luatdatdai"
   },
   {
-    "question": "Uống rượu bia lái xe máy bị phạt bao nhiêu?",
-    "ground_truth": "Phạt tiền từ 2.000.000 đồng đến 3.000.000 đồng đối với người điều khiển xe mô tô có nồng độ cồn chưa vượt quá 50 miligam/100 mililít máu hoặc chưa vượt quá 0,25 miligam/1 lít khí thở",
-    "source": "Nghị định 168/2024"
+    "question": "Bên nhận cầm cố có nghĩa vụ gì đối với tài sản cầm cố?",
+    "ground_truth": "Bảo quản, giữ gìn tài sản cầm cố; nếu làm mất, thất lạc hoặc hư hỏng tài sản cầm cố phải bồi thường thiệt hại.",
+    "source": "Luatdansu"
   },
   {
-    "question": "Không đội mũ bảo hiểm khi đi xe máy bị phạt bao nhiêu?",
-    "ground_truth": "Phạt tiền từ 400.000 đồng đến 600.000 đồng đối với người điều khiển xe mô tô không đội mũ bảo hiểm",
-    "source": "Nghị định 168/2024"
+    "question": "Ai có thẩm quyền quyết định trưng dụng đất?",
+    "ground_truth": "Bộ trưởng Bộ Quốc phòng, Bộ trưởng Bộ Công an, Bộ trưởng Bộ Giao thông vận tải, Bộ trưởng Bộ Nông nghiệp và Phát triển nông thôn, Bộ trưởng Bộ Y tế, Bộ trưởng Bộ Công Thương, Bộ trưởng Bộ Tài nguyên và Môi trường, Bộ trưởng Bộ Tài chính, Chủ tịch Ủy ban nhân dân cấp tỉnh, Chủ tịch Ủy ban nhân dân cấp huyện",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Chủ sở hữu bất động sản có nước chảy qua phải làm gì?",
+    "ground_truth": "phải dành một lối cấp, thoát nước thích hợp, không được cản trở hoặc ngăn chặn dòng nước chảy",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Cơ sở giáo dục, đào tạo được Nhà nước thành lập hoặc cho phép hoạt động bao gồm những loại cơ sở nào?",
+    "ground_truth": "nhà trẻ, trường mẫu giáo, trường mầm non, cơ sở giáo dục phổ thông, cơ sở giáo dục thường xuyên, trường chuyên biệt, cơ sở giáo dục đại học, cơ sở giáo dục nghề nghiệp",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Chủ sở hữu công ty có những quyền gì?",
+    "ground_truth": "Chủ sở hữu công ty là cá nhân có quyền quy định tại các điểm a, h, l, m, n và o khoản 1 Điều này; quyết định đầu tư, kinh doanh và quản trị nội bộ công ty, trừ trường hợp Điều lệ công ty có quy định khác.",
+    "source": "Luatdoanhnghiep"
   },
   {
     "question": "Chạy quá tốc độ từ 10 đến 20 km/h bị phạt bao nhiêu?",
@@ -20,9 +35,184 @@
     "source": "Nghị định 100/2019"
   },
   {
-    "question": "Đi ngược chiều bị phạt bao nhiêu?",
-    "ground_truth": "Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với người điều khiển xe mô tô đi ngược chiều đường một chiều",
-    "source": "Nghị định 168/2024"
+    "question": "Giao phương tiện cho người khác để họ vi phạm quy định về tốc độ như thế nào?",
+    "ground_truth": "Giao phương tiện hoặc để cho người làm công, người đại diện điều khiển phương tiện thực hiện hành vi vi phạm quy định tại điểm a khoản 4 Điều 33 Nghị định này hoặc trực tiếp điều khiển phương tiện thực hiện hành vi vi phạm quy định tại điểm a khoản 4 Điều 33 Nghị định này;",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Phạt tiền bao nhiêu đối với người điều khiển xe không chấp hành hiệu lệnh, chỉ dẫn của biển báo hiệu, vạch kẻ đường?",
+    "ground_truth": "từ 100.000 đồng đến 200.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Thời hạn trưng dụng đất là bao lâu?",
+    "ground_truth": "không quá 30 ngày kể từ khi quyết định trưng dụng đất có hiệu lực thi hành",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Đất do cơ quan, tổ chức của Nhà nước quản lý bao gồm những loại đất nào?",
+    "ground_truth": "Đất do cơ quan, tổ chức của Nhà nước quản lý là đất chưa giao, chưa cho thuê hoặc đã được giao đất để quản lý, bao gồm: Đất sử dụng vào mục đích công cộng; Đất sông, ngòi, kênh, rạch, suối, ao, hồ, đầm, phá; Đất nghĩa trang, nhà tang lễ, cơ sở hỏa táng; đất cơ sở lưu giữ tro cốt; Đất có mặt nước chuyên dùng; Đất rừng đặc dụng, đất rừng phòng hộ, đất rừng sản xuất; Đất do Nhà nước thu hồi và giao cho tổ chức phát triển quỹ đất quản lý; Đất do Nhà nước thu hồi và giao Ủy ban nhân dân cấp xã quản lý.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Sở hữu chung chấm dứt trong trường hợp nào?",
+    "ground_truth": "Sở hữu chung chấm dứt trong trường hợp sau đây:",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Khi nào thì việc trông nom, chăm sóc, giáo dục con được giao cho người giám hộ?",
+    "ground_truth": "trong các trường hợp sau đây: cha và mẹ đều bị Tòa án hạn chế quyền đối với con chưa thành niên; một bên cha, mẹ không bị hạn chế quyền đối với con chưa thành niên nhưng không đủ điều kiện để thực hiện quyền, nghĩa vụ đối với con; một bên cha, mẹ bị hạn chế quyền đối với con chưa thành niên và chưa xác định",
+    "source": "Luathonnhan"
+  },
+  {
+    "question": "Trình tự, thủ tục hòa giải tranh chấp lao động tập thể về lợi ích được thực hiện như thế nào?",
+    "ground_truth": "Trình tự, thủ tục hòa giải tranh chấp lao động tập thể về lợi ích được thực hiện theo quy định tại các khoản 2, 3, 4 và 5 Điều 188 của Bộ luật này.",
+    "source": "Bộ luật Lao động - Điều 196. Trình tự, thủ tục giải quyết tranh chấp lao động tập thể về lợi ích"
+  },
+  {
+    "question": "Ai quản lý tài sản riêng của con dưới 15 tuổi?",
+    "ground_truth": "Tài sản riêng của con dưới 15 tuổi, con mất năng lực hành vi dân sự do cha mẹ quản lý.",
+    "source": "Luathonnhan"
+  },
+  {
+    "question": "Hành vi nào bị phạt tiền từ 5.000.000 đồng đến 10.000.000 đồng?",
+    "ground_truth": "đào, lấy, san, lấp đất, đá hoặc các vật liệu khác trái phép trong phạm vi bảo vệ công trình đường sắt, hành lang an toàn giao thông đường sắt",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Thực hiện hành vi nào buộc phải nộp lại số lợi bất hợp pháp có được do thực hiện vi phạm?",
+    "ground_truth": "điểm d khoản 6 Điều này",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Tuổi kết hôn tối thiểu của nữ là bao nhiêu?",
+    "ground_truth": "Nữ từ đủ 18 tuổi trở lên được phép kết hôn",
+    "source": "Luật Hôn nhân và Gia đình - Điều 8"
+  },
+  {
+    "question": "Lãi suất cho vay khi không có thỏa thuận là bao nhiêu?",
+    "ground_truth": "Trường hợp các bên có thỏa thuận về lãi suất thì lãi suất theo thỏa thuận không được vượt quá 20%/năm của khoản tiền vay",
+    "source": "Bộ luật Dân sự - Điều 468"
+  },
+  {
+    "question": "Nhựa thuốc phiện có khối lượng bao nhiêu thì bị xử lý?",
+    "ground_truth": "Nhựa thuốc phiện, nhựa cần sa hoặc cao côca có khối lượng từ 01 kilôgam đến dưới 05 kilôgam;",
+    "source": "Luathinhsu"
+  },
+  {
+    "question": "Phạt tiền bao nhiêu cho hành vi đưa phương tiện không gắn biển số tham gia giao thông?",
+    "ground_truth": "Phạt tiền từ 1.000.000 đồng đến 2.000.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Giám đốc hoặc Tổng giám đốc chịu trách nhiệm trước ai về việc thực hiện quyền, nghĩa vụ được giao?",
+    "ground_truth": "trước Hội đồng quản trị và trước pháp luật",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Ai phải chịu chi phí khi phương tiện bị tạm giữ?",
+    "ground_truth": "chủ phương tiện phải chịu mọi chi phí (nếu có) cho việc sử dụng phương tiện khác thay thế để vận chuyển người, hàng hóa được chở trên phương tiện bị tạm giữ",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Ai là người bảo đảm kinh phí bồi thường, hỗ trợ, tái định cư?",
+    "ground_truth": "Kinh phí bồi thường, hỗ trợ, tái định cư do Nhà nước bảo đảm.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Làm thế nào để bên nhận bảo đảm thông báo về việc xử lý tài sản bảo đảm?",
+    "ground_truth": "bên nhận bảo đảm phải thông báo bằng văn bản trong một thời hạn hợp lý về việc xử lý tài sản bảo đảm cho bên bảo đảm và các bên cùng nhận bảo đảm khác.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Không thắt dây an toàn khi ngồi trên ô tô bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 800.000 đồng đến 1.000.000 đồng đối với người điều khiển xe ô tô không thắt dây an toàn khi điều khiển xe",
+    "source": "Nghị định 100/2019"
+  },
+  {
+    "question": "Ai quyết định thành lập Hội đồng thẩm định giá đất cụ thể cấp tỉnh?",
+    "ground_truth": "Ủy ban nhân dân cấp tỉnh quyết định thành lập Hội đồng thẩm định giá đất cụ thể cấp tỉnh",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Chế độ quản lý, sử dụng đất cho dự án đầu tư theo phương thức đối tác công tư được quy định như thế nào?",
+    "ground_truth": "Chế độ quản lý, sử dụng đất, nghĩa vụ tài chính để thực hiện dự án đầu tư theo phương thức đối tác công tư phải tuân theo quy định của Luật này và Luật Đầu tư theo phương thức đối tác công tư.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Con từ đủ 15 tuổi trở lên có nghĩa vụ gì?",
+    "ground_truth": "phải có nghĩa vụ chăm lo đời sống chung của gia đình; đóng góp vào việc đáp ứng nhu cầu thiết yếu của gia đình nếu có thu nhập.",
+    "source": "Luathonnhan"
+  },
+  {
+    "question": "Nếu bên được đề nghị giao kết hợp đồng chết sau khi chấp nhận giao kết hợp đồng thì việc trả lời chấp nhận giao kết hợp đồng có còn giá trị không?",
+    "ground_truth": "việc trả lời chấp nhận giao kết hợp đồng vẫn có giá trị, trừ trường hợp nội dung giao kết gắn liền với nhân thân bên được đề nghị",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Tổng mức phạt tiền tối đa cho chủ phương tiện là tổ chức khi để cho người làm công, người đại diện điều khiển phương tiện thực hiện hành vi vi phạm?",
+    "ground_truth": "tối đa không vượt quá 80.000.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Tôi cần làm gì để đăng ký hoạt động chi nhánh?",
+    "ground_truth": "Hồ sơ bao gồm: Thông báo thành lập chi nhánh, văn phòng đại diện; Bản sao quyết định thành lập và bản sao biên bản họp về việc thành lập chi nhánh, văn phòng đại diện của doanh nghiệp; bản sao giấy tờ pháp lý của cá nhân đối với người đứng đầu chi nhánh, văn phòng đại diện.",
+    "source": "Luật Doanh nghiệp - Điều 45. Đăng ký hoạt động chi nhánh, văn phòng đại diện của doanh nghiệp; thông báo địa điểm kinh doanh"
+  },
+  {
+    "question": "Bên cầm giữ có quyền yêu cầu gì đối với bên có nghĩa vụ?",
+    "ground_truth": "Yêu cầu bên có nghĩa vụ phải thực hiện đầy đủ nghĩa vụ phát sinh từ hợp đồng song vụ",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Tôi muốn mở chi nhánh của công ty ở đâu?",
+    "ground_truth": "Doanh nghiệp có thể đặt một hoặc nhiều chi nhánh, văn phòng đại diện tại một địa phương theo địa giới đơn vị hành chính.",
+    "source": "Luật Doanh nghiệp - Điều 45. Đăng ký hoạt động chi nhánh, văn phòng đại diện của doanh nghiệp; thông báo địa điểm kinh doanh"
+  },
+  {
+    "question": "Khối lượng nhựa thuốc phiện, nhựa cần sa hoặc cao côca bị quy định là bao nhiêu?",
+    "ground_truth": "Nhựa thuốc phiện, nhựa cần sa hoặc cao côca có khối lượng từ 01 kilôgam đến dưới 05 kilôgam;",
+    "source": "Luathinhsu"
+  },
+  {
+    "question": "Kinh phí thực hiện thống kê, kiểm kê đất đai được bảo đảm bằng gì?",
+    "ground_truth": "do ngân sách nhà nước bảo đảm",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Luật Đường bộ quy định về những hoạt động nào?",
+    "ground_truth": "Luật này quy định về hoạt động đường bộ và quản lý nhà nước về hoạt động đường bộ.",
+    "source": "Luatduongbo2024"
+  },
+  {
+    "question": "Nếu tôi là lái tàu và không kéo còi làm tín hiệu hô đáp khi đã xác nhận được các tín hiệu dồn, tôi sẽ bị phạt bao nhiêu tiền?",
+    "ground_truth": "Phạt tiền từ 300.000 đồng đến 500.000 đồng đối với lái tàu, trưởng dồn, nhân viên ghép nối đầu máy toa xe thực hiện một trong các hành vi vi phạm sau đây: a) Đã xác nhận được các tín hiệu dồn nhưng không kéo còi làm tín hiệu hô đáp;",
+    "source": "Nghị định 100/2019 - Điều 44. Xử phạt các hành vi vi phạm quy định về chấp hành tín hiệu giao thông đường sắt"
+  },
+  {
+    "question": "Hành vi dừng xe đột ngột bị phạt như thế nào?",
+    "ground_truth": "Phạt tiền từ 80.000 đồng đến 100.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam, cơ quan nhà nước ở Trung ương, ở địa phương khi tham gia quan hệ dân sự thì bình đẳng như thế nào với các chủ thể khác?",
+    "ground_truth": "bình đẳng với các chủ thể khác",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Người điều khiển xe không nhường đường cho xe xin vượt khi có đủ điều kiện an toàn sẽ bị phạt như thế nào?",
+    "ground_truth": "h) Không nhường đường cho xe xin vượt khi có đủ điều kiện an toàn;",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Đất nuôi trồng thủy sản thuộc nhóm đất nào?",
+    "ground_truth": "d) Đất nuôi trồng thủy sản;",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Nội dung quản lý nhà nước về hoạt động đường bộ bao gồm những gì?",
+    "ground_truth": "Xây dựng, ban hành hoặc trình cơ quan có thẩm quyền ban hành và tổ chức thực hiện chính sách, pháp luật; quy chuẩn, tiêu chuẩn kỹ thuật, định mức kinh tế - kỹ thuật về hoạt động đường bộ.",
+    "source": "Luatduongbo2024"
   },
   {
     "question": "Người lao động được nghỉ phép bao nhiêu ngày mỗi năm?",
@@ -30,164 +220,119 @@
     "source": "Bộ luật Lao động - Điều 113"
   },
   {
-    "question": "Tuổi nghỉ hưu của nam giới là bao nhiêu?",
-    "ground_truth": "Nam giới nghỉ hưu ở tuổi 62",
-    "source": "Bộ luật Lao động - Điều 169"
+    "question": "Sau khi chấm dứt tư cách thành viên hợp danh, người đó có thể yêu cầu công ty chấm dứt việc sử dụng tên nào?",
+    "ground_truth": "tên của thành viên đó đã được sử dụng thành một phần hoặc toàn bộ tên công ty",
+    "source": "Luatdoanhnghiep"
   },
   {
-    "question": "Tuổi nghỉ hưu của nữ giới là bao nhiêu?",
-    "ground_truth": "Nữ giới nghỉ hưu ở tuổi 60",
-    "source": "Bộ luật Lao động - Điều 169"
+    "question": "Ủy ban nhân dân cấp xã có trách nhiệm gì?",
+    "ground_truth": "quản lý, bảo vệ đất chưa sử dụng tại địa phương, đăng ký vào hồ sơ địa chính và báo cáo Ủy ban nhân dân cấp trên trực tiếp về tình hình quản lý, khai thác quỹ đất chưa sử dụng.",
+    "source": "Luatdatdai"
   },
   {
-    "question": "Thời gian thử việc tối đa là bao nhiêu ngày?",
-    "ground_truth": "Thời gian thử việc không quá 180 ngày đối với công việc của người quản lý doanh nghiệp và không quá 60 ngày đối với công việc có chức danh nghề nghiệp cần trình độ chuyên môn kỹ thuật từ cao đẳng trở lên",
-    "source": "Bộ luật Lao động"
+    "question": "Tổ chức tư vấn xác định giá đất có trách nhiệm gì với cơ quan nhà nước?",
+    "ground_truth": "Chịu sự thanh tra, kiểm tra của cơ quan nhà nước có thẩm quyền; báo cáo kết quả tư vấn xác định giá đất khi có yêu cầu gửi cơ quan có chức năng quản lý đất đai cấp tỉnh nơi đăng ký trụ sở chính hoặc nơi thực hiện tư vấn xác định giá đất;",
+    "source": "Luatdatdai"
   },
   {
-    "question": "Doanh nghiệp tư nhân do bao nhiêu người thành lập?",
-    "ground_truth": "Doanh nghiệp tư nhân do một cá nhân làm chủ",
-    "source": "Luật Doanh nghiệp"
+    "question": "Hành vi vượt quá tốc độ dồn cho phép sẽ bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 500.000 đồng đến 1.000.000 đồng",
+    "source": "Nghidinh 100:2019"
   },
   {
-    "question": "Công ty TNHH một thành viên do bao nhiêu người thành lập?",
-    "ground_truth": "Công ty TNHH một thành viên do một tổ chức hoặc một cá nhân làm chủ sở hữu",
-    "source": "Luật Doanh nghiệp"
+    "question": "Khi nào cần thay đổi thành viên Hội đồng thành viên, Chủ tịch công ty?",
+    "ground_truth": "d) Thay đổi thành viên Hội đồng thành viên, Chủ tịch công ty, Giám đốc, Phó giám đốc hoặc Tổng giám đốc, Phó Tổng giám đốc, Kế toán trưởng, Trưởng phòng tài chính kế toán, Trưởng Ban kiểm soát hoặc Kiểm soát viên;",
+    "source": "Luatdoanhnghiep"
   },
   {
-    "question": "Vốn điều lệ của công ty là gì?",
-    "ground_truth": "Vốn điều lệ là tổng giá trị tài sản do các thành viên công ty, chủ sở hữu công ty đã góp hoặc cam kết góp khi thành lập công ty trách nhiệm hữu hạn, công ty hợp danh; là tổng mệnh giá cổ phần đã bán hoặc được đăng ký mua khi thành lập công ty cổ phần",
-    "source": "Luật Doanh nghiệp - Điều 4"
+    "question": "Xe ô tô kinh doanh vận tải hành khách cần đáp ứng yêu cầu gì về dây an toàn?",
+    "ground_truth": "Sử dụng xe ô tô kinh doanh vận tải hành khách không có dây an toàn tại các vị trí ghế ngồi, giường nằm theo quy định (trừ xe buýt nội tỉnh)",
+    "source": "Nghidinh 100:2019"
   },
   {
-    "question": "Hợp đồng lao động phải được ký kết bằng hình thức gì?",
-    "ground_truth": "Hợp đồng lao động phải được giao kết bằng văn bản",
-    "source": "Bộ luật Lao động"
+    "question": "Phạt tiền bao nhiêu đối với người điều khiển, dẫn dắt súc vật, điều khiển xe súc vật kéo đi vào đường cao tốc trái quy định?",
+    "ground_truth": "Phạt tiền từ 400.000 đồng đến 600.000 đồng",
+    "source": "Nghidinh 100:2019"
   },
   {
-    "question": "Lái xe không có bằng lái bị phạt bao nhiêu?",
-    "ground_truth": "Phạt tiền từ 800.000 đồng đến 1.200.000 đồng đối với người điều khiển xe mô tô không có giấy phép lái xe",
-    "source": "Nghị định 100/2019"
+    "question": "Tôi đưa phương tiện tự tạo chạy trên đường sắt có bị phạt không?",
+    "ground_truth": "Phạt tiền từ 500.000 đồng đến 1.000.000 đồng đối với cá nhân, từ 1.000.000 đồng đến 2.000.000 đồng đối với tổ chức đưa phương tiện tự tạo chạy trên đường sắt.",
+    "source": "Nghị định 100/2019 - Điều 58. Xử phạt các hành vi vi phạm quy định về điều kiện lưu hành của phương tiện giao thông đường sắt"
   },
   {
-    "question": "Đỗ xe trên vỉa hè bị phạt bao nhiêu?",
-    "ground_truth": "Phạt tiền từ 400.000 đồng đến 600.000 đồng đối với người điều khiển xe mô tô dừng xe, đỗ xe trên vỉa hè",
-    "source": "Nghị định 168/2024"
+    "question": "Cơ quan nhà nước có thẩm quyền được quyết định điều chỉnh, gia hạn sử dụng đất?",
+    "ground_truth": "4. Cơ quan nhà nước có thẩm quyền giao đất, cho thuê đất, cho phép chuyển mục đích sử dụng đất quy định tại khoản 1 và khoản 2 Điều này là cơ quan có thẩm quyền quyết định điều chỉnh, gia hạn sử dụng đất đối với trường hợp người sử dụng đất đã có quyết định giao đất, cho thuê đất, cho phép chuyển mục đích sử dụng đất trước ngày Luật này có hiệu lực thi hành và các trường hợp quyết định giao đất, cho thuê đất, cho phép chuyển mục đích sử dụng đất theo quy định của Luật này.",
+    "source": "Luatdatdai"
   },
   {
-    "question": "Sử dụng điện thoại khi lái xe bị phạt bao nhiêu?",
-    "ground_truth": "Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với người điều khiển xe mô tô dùng tay sử dụng điện thoại di động khi đang điều khiển xe",
-    "source": "Nghị định 168/2024"
+    "question": "Nhân viên khám xe sẽ bị phạt bao nhiêu nếu không thực hiện việc khám, sửa chữa đoàn tàu đi, đến?",
+    "ground_truth": "Phạt tiền từ 300.000 đồng đến 500.000 đồng",
+    "source": "Nghidinh 100:2019"
   },
   {
-    "question": "Người lao động có thai được nghỉ thai sản bao nhiêu tháng?",
-    "ground_truth": "Lao động nữ được nghỉ thai sản 6 tháng",
-    "source": "Bộ luật Lao động"
+    "question": "Thành viên Hội đồng quản trị có thể đồng thời là thành viên Hội đồng quản trị của công ty khác không?",
+    "ground_truth": "Thành viên Hội đồng quản trị công ty có thể đồng thời là thành viên Hội đồng quản trị của công ty khác;",
+    "source": "Luatdoanhnghiep"
   },
   {
-    "question": "Công ty cổ phần cần tối thiểu bao nhiêu cổ đông?",
-    "ground_truth": "Công ty cổ phần phải có tối thiểu 3 cổ đông",
-    "source": "Luật Doanh nghiệp"
+    "question": "Mức phạt nếu không mang Giấy chứng nhận bảo hiểm trách nhiệm dân sự?",
+    "ground_truth": "Phạt tiền từ 100.000 đồng đến 200.000 đồng đối với một trong các hành vi vi phạm sau đây: a) Người điều khiển xe mô tô, xe gắn máy, các loại xe tương tự xe mô tô và các loại xe tương tự xe gắn máy không có hoặc không mang theo Giấy chứng nhận bảo hiểm trách nhiệm dân sự của chủ xe cơ giới còn hiệu lực;",
+    "source": "Nghidinh 100:2019"
   },
   {
-    "question": "Giấy phép lái xe hạng A1 được lái xe gì?",
-    "ground_truth": "Giấy phép lái xe hạng A1 cấp cho người lái xe mô tô hai bánh có dung tích xi lanh từ 50cc đến dưới 175cc",
+    "question": "Tội trộm cắp tài sản bị phạt như thế nào?",
+    "ground_truth": "Người nào trộm cắp tài sản của người khác trị giá từ 2.000.000 đồng đến dưới 50.000.000 đồng thì bị phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng đến 03 năm",
+    "source": "Bộ luật Hình sự - Điều 173"
+  },
+  {
+    "question": "Cách xác định mức bồi thường thiệt hại thu nhập?",
+    "ground_truth": "căn cứ vào mức thiệt hại thu nhập thực tế tính từ ngày giao đất trưng dụng đến ngày hoàn trả đất trưng dụng được ghi trong quyết định hoàn trả đất trưng dụng.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Lái tàu điều khiển máy dồn sẽ bị phạt tiền bao nhiêu nếu cho đầu máy dịch chuyển khi chưa nhận được kế hoạch dồn hoặc tín hiệu của người chỉ huy dồn cho phép?",
+    "ground_truth": "Phạt tiền từ 500.000 đồng đến 1.000.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Ai có trách nhiệm bảo vệ trật tự, an toàn trong quá trình tổ chức thi hành quyết định cưỡng chế?",
+    "ground_truth": "Lực lượng công an có trách nhiệm bảo vệ trật tự, an toàn trong quá trình tổ chức thi hành quyết định cưỡng chế thực hiện quyết định kiểm đếm bắt buộc.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Tốc độ tối đa trong khu dân cư là bao nhiêu km/h?",
+    "ground_truth": "Trong khu dân cư tốc độ tối đa cho phép đối với xe mô tô, xe gắn máy là 40 km/h",
     "source": "Luật Đường bộ"
   },
   {
-    "question": "Không có đèn xe khi đi ban đêm bị phạt bao nhiêu?",
-    "ground_truth": "Phạt tiền từ 100.000 đồng đến 200.000 đồng đối với người điều khiển xe mô tô không có đủ đèn chiếu sáng khi tham gia giao thông",
-    "source": "Nghị định 100/2019"
+    "question": "Thời hạn chịu trách nhiệm của thành viên hợp danh sau khi chấm dứt tư cách là bao lâu?",
+    "ground_truth": "02 năm kể từ ngày chấm dứt tư cách thành viên hợp danh",
+    "source": "Luatdoanhnghiep"
   },
   {
-    "question": "Thời giờ làm việc bình thường tối đa là bao nhiêu giờ mỗi ngày?",
-    "ground_truth": "Thời giờ làm việc bình thường không quá 08 giờ trong 01 ngày và không quá 48 giờ trong 01 tuần",
-    "source": "Bộ luật Lao động - Điều 105"
+    "question": "Hành vi nào bị tịch thu phương tiện?",
+    "ground_truth": "Thực hiện hành vi quy định tại điểm b, điểm c khoản 5 Điều này bị tịch thu phương tiện (trừ trường hợp xe ô tô từ 10 chỗ ngồi trở lên kinh doanh vận tải hành khách có niên hạn sử dụng vượt quá quy định về điều kiện kinh doanh của hì",
+    "source": "Nghidinh 100:2019"
   },
   {
-    "question": "Tiền lương thử việc tối thiểu là bao nhiêu phần trăm?",
-    "ground_truth": "Tiền lương của người lao động trong thời gian thử việc do hai bên thỏa thuận nhưng ít nhất phải bằng 85% mức lương của công việc đó",
-    "source": "Bộ luật Lao động - Điều 26"
+    "question": "Tài sản của pháp nhân được giải quyết như thế nào khi pháp nhân chấm dứt tồn tại?",
+    "ground_truth": "Khi pháp nhân chấm dứt tồn tại, tài sản của pháp nhân được giải quyết theo quy định của Bộ luật này, quy định khác của pháp luật có liên quan.",
+    "source": "Bộ luật Dân sự - Điều 96. Chấm dứt tồn tại pháp nhân"
   },
   {
-    "question": "Làm thêm giờ vào ngày thường được trả lương tối thiểu bằng bao nhiêu phần trăm?",
-    "ground_truth": "Người lao động làm thêm giờ vào ngày thường được trả lương ít nhất bằng 150% tiền lương tính theo đơn giá tiền lương hoặc tiền lương thực trả theo công việc đang làm",
-    "source": "Bộ luật Lao động - Điều 98"
+    "question": "Ai được hưởng khoản tiền bù đắp tổn thất về tinh thần?",
+    "ground_truth": "những người thân thích thuộc hàng thừa kế thứ nhất của người bị thiệt hại, nếu không có những người này thì người mà người bị thiệt hại đã trực tiếp nuôi dưỡng, người đã trực tiếp nuôi dưỡng người bị thiệt hại được hưởng khoản tiền này.",
+    "source": "Luatdansu"
   },
   {
-    "question": "Người lao động báo trước bao nhiêu ngày khi nghỉ việc theo hợp đồng không xác định thời hạn?",
-    "ground_truth": "Người lao động phải báo trước ít nhất 45 ngày nếu làm việc theo hợp đồng lao động không xác định thời hạn",
-    "source": "Bộ luật Lao động - Điều 35"
-  },
-  {
-    "question": "Người lao động kết hôn được nghỉ bao nhiêu ngày hưởng nguyên lương?",
-    "ground_truth": "Người lao động kết hôn được nghỉ 03 ngày hưởng nguyên lương",
-    "source": "Bộ luật Lao động - Điều 115"
-  },
-  {
-    "question": "Công ty TNHH hai thành viên trở lên có tối đa bao nhiêu thành viên?",
-    "ground_truth": "Công ty trách nhiệm hữu hạn hai thành viên trở lên là doanh nghiệp có từ 02 đến 50 thành viên là tổ chức, cá nhân",
-    "source": "Luật Doanh nghiệp - Điều 46"
-  },
-  {
-    "question": "Thành viên công ty TNHH phải góp vốn trong thời hạn bao nhiêu ngày?",
-    "ground_truth": "Thành viên phải góp vốn cho công ty đủ và đúng loại tài sản đã cam kết khi đăng ký thành lập doanh nghiệp trong thời hạn 90 ngày kể từ ngày được cấp Giấy chứng nhận đăng ký doanh nghiệp",
-    "source": "Luật Doanh nghiệp"
-  },
-  {
-    "question": "Người thành niên theo pháp luật dân sự là người từ bao nhiêu tuổi?",
-    "ground_truth": "Người thành niên là người từ đủ mười tám tuổi trở lên",
-    "source": "Bộ luật Dân sự - Điều 20"
-  },
-  {
-    "question": "Người chưa đủ 6 tuổi có thể tự mình xác lập giao dịch dân sự không?",
-    "ground_truth": "Giao dịch dân sự của người chưa đủ sáu tuổi do người đại diện theo pháp luật của người đó xác lập, thực hiện",
+    "question": "Người từ đủ 15 tuổi đến chưa đủ 18 tuổi có được tự xác lập giao dịch dân sự không?",
+    "ground_truth": "Người từ đủ mười lăm tuổi đến chưa đủ mười tám tuổi tự mình xác lập, thực hiện giao dịch dân sự, trừ giao dịch dân sự liên quan đến bất động sản, động sản phải đăng ký",
     "source": "Bộ luật Dân sự - Điều 21"
   },
   {
-    "question": "Giao dịch dân sự có thể được xác lập bằng những hình thức nào?",
-    "ground_truth": "Giao dịch dân sự được thể hiện bằng lời nói, bằng văn bản hoặc bằng hành vi cụ thể",
-    "source": "Bộ luật Dân sự - Điều 119"
-  },
-  {
-    "question": "Nghỉ lễ Tết Âm lịch được nghỉ bao nhiêu ngày?",
-    "ground_truth": "Người lao động được nghỉ Tết Âm lịch 05 ngày",
-    "source": "Bộ luật Lao động - Điều 112"
-  },
-  {
-    "question": "Nếu con tôi chưa đủ 6 tuổi, có thể ký hợp đồng mua bán hàng hóa không?",
-    "ground_truth": "Giao dịch dân sự của người chưa đủ sáu tuổi, người mất năng lực hành vi dân sự nhằm đáp ứng nhu cầu thiết yếu hàng ngày của người đó;",
-    "source": "Bộ luật Dân sự - Điều 125. Giao dịch dân sự vô hiệu do người chưa thành niên, người mất năng lực hành vi dân sự, người có khó khăn trong nhận thức, làm chủ hành vi, người bị hạn chế năng lực hành vi dân sự xác lập, thực hiện"
-  },
-  {
-    "question": "Nếu tôi ký hợp đồng với người chưa thành niên, sau đó người đó thừa nhận hợp đồng là hợp pháp, thì hợp đồng đó có bị vô hiệu không?",
-    "ground_truth": "Giao dịch dân sự được người xác lập giao dịch thừa nhận hiệu lực sau khi đã thành niên hoặc sau khi khôi phục năng lực hành vi dân sự.",
-    "source": "Bộ luật Dân sự - Điều 125. Giao dịch dân sự vô hiệu do người chưa thành niên, người mất năng lực hành vi dân sự, người có khó khăn trong nhận thức, làm chủ hành vi, người bị hạn chế năng lực hành vi dân sự xác lập, thực hiện"
-  },
-  {
-    "question": "Tôi sinh ra ở Việt Nam, bố mẹ tôi thuộc hai dân tộc khác nhau, dân tộc của tôi được xác định như thế nào?",
-    "ground_truth": "Trường hợp cha đẻ, mẹ đẻ thuộc hai dân tộc khác nhau thì dân tộc của con được xác định theo dân tộc của cha đẻ hoặc mẹ đẻ theo thỏa thuận của cha đẻ, mẹ đẻ; trường hợp không có thỏa thuận thì dân tộc của con được xác định theo tập quán; trường hợp tập quán khác nhau thì dân tộc của con được xác định theo tập quán của dân tộc ít người hơn.",
-    "source": "Bộ luật Dân sự - Điều 29. Quyền xác định, xác định lại dân tộc"
-  },
-  {
-    "question": "Tôi muốn xác định lại dân tộc của mình, nhưng tôi chưa đủ 15 tuổi, có được không?",
-    "ground_truth": "Việc xác định lại dân tộc cho người từ đủ mười lăm tuổi đến dưới mười tám tuổi phải được sự đồng ý của người đó.",
-    "source": "Bộ luật Dân sự - Điều 29. Quyền xác định, xác định lại dân tộc"
-  },
-  {
-    "question": "Nếu tôi đã cho người khác cầm cố tài sản của mình, họ có thể yêu cầu tôi làm gì?",
-    "ground_truth": "Yêu cầu người đang chiếm hữu, sử dụng trái pháp luật tài sản cầm cố trả lại tài sản đó.",
-    "source": "Bộ luật Dân sự - Điều 314. Quyền của bên nhận cầm cố"
-  },
-  {
-    "question": "Tôi có thể xử lý tài sản cầm cố như thế nào?",
-    "ground_truth": "Xử lý tài sản cầm cố theo phương thức đã thỏa thuận hoặc theo quy định của pháp luật.",
-    "source": "Bộ luật Dân sự - Điều 314. Quyền của bên nhận cầm cố"
-  },
-  {
-    "question": "Nếu tôi có nghĩa vụ phải thực hiện một công việc thì nghĩa vụ đó là gì?",
-    "ground_truth": "Nghĩa vụ phải thực hiện một công việc là nghĩa vụ mà theo đó bên có nghĩa vụ phải thực hiện đúng công việc đó.",
-    "source": "Bộ luật Dân sự - Điều 281. Nghĩa vụ phải thực hiện hoặc không được thực hiện một công việc"
+    "question": "Thành viên Hội đồng quản trị công ty có thể đồng thời là thành viên Hội đồng quản trị của công ty khác không?",
+    "ground_truth": "Thành viên Hội đồng quản trị công ty có thể đồng thời là thành viên Hội đồng quản trị của công ty khác;",
+    "source": "Luatdoanhnghiep"
   },
   {
     "question": "Nếu tôi có nghĩa vụ không được thực hiện một công việc thì nghĩa vụ đó là gì?",
@@ -195,94 +340,264 @@
     "source": "Bộ luật Dân sự - Điều 281. Nghĩa vụ phải thực hiện hoặc không được thực hiện một công việc"
   },
   {
-    "question": "Tôi có quyền yêu cầu chủ sở hữu bất động sản khác dành cho mình lối đi ra đường công cộng không?",
-    "ground_truth": "Chủ sở hữu có bất động sản bị vây bọc bởi các bất động sản của các chủ sở hữu khác mà không có hoặc không đủ lối đi ra đường công cộng, có quyền yêu cầu chủ sở hữu bất động sản vây bọc dành cho mình một lối đi hợp lý trên phần đất của họ.",
-    "source": "Bộ luật Dân sự - Điều 254. Quyền về lối đi qua"
+    "question": "Khi nào Tòa án có quyền hủy quyết định cá biệt trái pháp luật?",
+    "ground_truth": "Khi giải quyết yêu cầu bảo vệ quyền dân sự",
+    "source": "Luatdansu"
   },
   {
-    "question": "Tôi phải đền bù cho chủ sở hữu bất động sản khác khi họ dành lối đi cho tôi không?",
-    "ground_truth": "Chủ sở hữu bất động sản hưởng quyền về lối đi qua phải đền bù cho chủ sở hữu bất động sản chịu hưởng quyền, trừ trường hợp có thỏa thuận khác.",
-    "source": "Bộ luật Dân sự - Điều 254. Quyền về lối đi qua"
+    "question": "Thời kỳ hôn nhân được tính từ khi nào?",
+    "ground_truth": "Thời kỳ hôn nhân là khoảng thời gian tồn tại quan hệ vợ chồng, được tính từ ngày đăng ký kết hôn đến ngày chấm dứt hôn nhân",
+    "source": "Luật Hôn nhân và Gia đình - Điều 3"
   },
   {
-    "question": "Khi nào không áp dụng thời hiệu khởi kiện?",
-    "ground_truth": "Thời hiệu khởi kiện không áp dụng trong trường hợp sau đây:",
-    "source": "Bộ luật Dân sự - Điều 155. Không áp dụng thời hiệu khởi kiện"
+    "question": "Giao phương tiện cho người khác để họ vi phạm quy định về tải trọng như thế nào?",
+    "ground_truth": "Giao phương tiện hoặc để cho người làm công, người đại diện điều khiển phương tiện thực hiện hành vi vi phạm quy định tại điểm b khoản 4 Điều 33 Nghị định này hoặc trực tiếp điều khiển phương tiện thực hiện hành vi vi phạm quy định tại điểm b khoản 4 Điều 33 Nghị định này;",
+    "source": "Nghidinh 100:2019"
   },
   {
-    "question": "Tôi có thể khởi kiện để bảo vệ quyền sở hữu tài sản được không?",
-    "ground_truth": "2. Yêu cầu bảo vệ quyền sở hữu, trừ trường hợp Bộ luật này, luật khác có liên quan quy định khác.",
-    "source": "Bộ luật Dân sự - Điều 155. Không áp dụng thời hiệu khởi kiện"
+    "question": "Trách nhiệm của thành viên công ty là gì khi nhận tiền hoặc tài sản từ hoạt động kinh doanh của công ty?",
+    "ground_truth": "Hoàn trả cho công ty số tiền, tài sản đã nhận và bồi thường thiệt hại gây ra đối với công ty",
+    "source": "Luatdoanhnghiep"
   },
   {
-    "question": "Hội đồng thành viên có thể thông qua nghị quyết, quyết định bằng cách nào?",
-    "ground_truth": "Hội đồng thành viên thông qua nghị quyết, quyết định thuộc thẩm quyền bằng biểu quyết tại cuộc họp, lấy ý kiến bằng văn bản hoặc hình thức khác do Điều lệ công ty quy định.",
-    "source": "Luật Doanh nghiệp - Điều 59. Nghị quyết, quyết định của Hội đồng thành viên"
+    "question": "Người tiến hành hoạt động sáng tạo có quyền sở hữu đối với tài sản không?",
+    "ground_truth": "theo quy định của Luật sở hữu trí tuệ",
+    "source": "Luatdansu"
   },
   {
-    "question": "Trường hợp nào nghị quyết, quyết định của Hội đồng thành viên phải được thông qua bằng biểu quyết tại cuộc họp?",
-    "ground_truth": "Trường hợp Điều lệ công ty không có quy định khác thì nghị quyết, quyết định về các vấn đề sau đây phải được thông qua bằng biểu quyết tại cuộc họp Hội đồng thành viên: Sửa đổi, bổ sung nội dung Điều lệ công ty; Quyết định phương hướng phát triển công ty; Bầu, miễn nhiệm, bãi nhiệm Chủ tịch Hội đồng thành viên; bổ nhiệm, miễn nhiệm, bãi nhiệm Giám đốc hoặc Tổng giám đốc; Thông qua báo cáo tài chính hằng năm; Tổ chức lại, giải thể công ty.",
-    "source": "Luật Doanh nghiệp - Điều 59. Nghị quyết, quyết định của Hội đồng thành viên"
+    "question": "Người đại diện theo pháp luật của công ty có thể là bao nhiêu người?",
+    "ground_truth": "Công ty trách nhiệm hữu hạn và công ty cổ phần có thể có một hoặc nhiều người đại diện theo pháp luật",
+    "source": "Luật Doanh nghiệp - Điều 12"
   },
   {
-    "question": "Nếu tôi là thành viên hợp danh và không góp đủ vốn đúng hạn, tôi phải làm gì?",
-    "ground_truth": "Thành viên hợp danh không góp đủ và đúng hạn số vốn đã cam kết gây thiệt hại cho công ty phải chịu trách nhiệm bồi thường thiệt hại cho công ty.",
-    "source": "Luật Doanh nghiệp - Điều 178. Thực hiện góp vốn và cấp giấy chứng nhận phần vốn góp"
+    "question": "Lực lượng nào có trách nhiệm bảo vệ trật tự, an toàn trong quá trình tổ chức thi hành quyết định cưỡng chế thực hiện quyết định kiểm đếm bắt buộc?",
+    "ground_truth": "Lực lượng công an",
+    "source": "Luatdatdai"
   },
   {
-    "question": "Tôi có thể bị khai trừ khỏi công ty khi nào?",
-    "ground_truth": "Trường hợp có thành viên góp vốn không góp đủ và đúng hạn số vốn đã cam kết thì số vốn chưa góp đủ được coi là khoản nợ của thành viên đó đối với công ty; trong trường hợp này, thành viên góp vốn có liên quan có thể bị khai trừ khỏi công ty theo quyết định của Hội đồng thành viên.",
-    "source": "Luật Doanh nghiệp - Điều 178. Thực hiện góp vốn và cấp giấy chứng nhận phần vốn góp"
+    "question": "Kinh phí thực hiện thống kê, kiểm kê đất đai được đảm bảo bởi nguồn nào?",
+    "ground_truth": "ngân sách nhà nước",
+    "source": "Luatdatdai"
   },
   {
-    "question": "Tôi là thành viên Hội đồng thành viên, tôi phải làm gì khi ký kết hợp đồng với công ty?",
-    "ground_truth": "Người nhân danh công ty ký kết hợp đồng, giao dịch phải thông báo cho Hội đồng thành viên hoặc Chủ tịch công ty, Giám đốc hoặc Tổng giám đốc và Kiểm soát viên về các đối tượng có liên quan và lợi ích có liên quan đối với hợp đồng, giao dịch đó; kèm theo dự thảo hợp đồng hoặc nội dung chủ yếu của giao dịch đó.",
-    "source": "Luật Doanh nghiệp - Điều 86. Hợp đồng, giao dịch của công ty với những người có liên quan"
+    "question": "Mặt trận Tổ quốc Việt Nam và các tổ chức thành viên của Mặt trận có trách nhiệm gì?",
+    "ground_truth": "tuyên truyền, phổ biến chính sách, pháp luật về đất đai tới Nhân dân, vận động Nhân dân thực hiện và chấp hành tốt chính sách, pháp luật về đất đai.",
+    "source": "Luatdatdai"
   },
   {
-    "question": "Hợp đồng giữa công ty và người có liên quan phải được chấp thuận trong thời gian bao lâu?",
-    "ground_truth": "Trừ trường hợp Điều lệ công ty có quy định khác, thành viên Hội đồng thành viên hoặc Chủ tịch công ty, Giám đốc hoặc Tổng giám đốc và Kiểm soát viên phải quyết định việc chấp thuận hợp đồng, giao dịch trong thời hạn 10 ngày kể từ ngày nhận được thông báo theo nguyên tắc đa số, mỗi người có một phiếu biểu quyết; người có liên quan đến các bên không có quyền biểu quyết.",
-    "source": "Luật Doanh nghiệp - Điều 86. Hợp đồng, giao dịch của công ty với những người có liên quan"
+    "question": "Trường hợp nào thì được cấp đổi Giấy chứng nhận quyền sử dụng đất?",
+    "ground_truth": "Trường hợp Giấy chứng nhận quyền sử dụng đất, Giấy chứng nhận quyền sở hữu nhà ở và quyền sử dụng đất ở, Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất đã cấp cho đại diện hộ gia đình trước ngày Luật này có hiệu lực thi hành, nếu các thành viên có chung quyền sử dụng đất của hộ gia đình có nhu cầu thì được cấp đổi sang Giấy chứng nhận quyền sử dụng đất, quyền sở hữu tài sản gắn liền với đất và ghi đầy đủ tên các thành viên có chung quyền sử dụng đất.",
+    "source": "Luatdatdai"
   },
   {
-    "question": "Tôi muốn tách công ty của mình, nhưng tôi không biết bắt đầu từ đâu?",
-    "ground_truth": "Công ty trách nhiệm hữu hạn, công ty cổ phần có thể tách bằng cách chuyển một phần tài sản, quyền, nghĩa vụ, thành viên, cổ đông của công ty hiện có (sau đây gọi là công ty bị tách) để thành lập một hoặc một số công ty trách nhiệm hữu hạn, công ty cổ phần mới (sau đây gọi là công ty được tách) mà không chấm dứt tồn tại của công ty bị tách.",
-    "source": "Luật Doanh nghiệp - Điều 199. Tách công ty"
+    "question": "Tôi muốn biết chính sách phát triển đường cao tốc ở Việt Nam?",
+    "ground_truth": "Chính sách phát triển đường cao tốc thực hiện theo quy định tại Điều 4 của Luật này và các quy định sau đây:",
+    "source": "Luật Đường bộ - Điều 46. Chính sách phát triển đường cao tốc"
   },
   {
-    "question": "Sau khi tách công ty, công ty bị tách và công ty được tách có phải chịu trách nhiệm về các nghĩa vụ của công ty bị tách không?",
-    "ground_truth": "Sau khi đăng ký doanh nghiệp, công ty bị tách và công ty được tách phải cùng liên đới chịu trách nhiệm về các nghĩa vụ, các khoản nợ chưa thanh toán, hợp đồng lao động và nghĩa vụ tài sản khác của công ty bị tách, trừ trường hợp công ty bị tách, công ty được tách, chủ nợ, khách hàng và người lao động của công ty bị tách có thỏa thuận khác.",
-    "source": "Luật Doanh nghiệp - Điều 199. Tách công ty"
+    "question": "Giao dịch dân sự không rõ ràng được giải thích như thế nào?",
+    "ground_truth": "Theo ý chí đích thực",
+    "source": "Luatdansu"
   },
   {
-    "question": "Khi nào công ty bị sáp nhập chấm dứt tồn tại?",
-    "ground_truth": "Sau khi công ty nhận sáp nhập đăng ký doanh nghiệp, công ty bị sáp nhập chấm dứt tồn tại; công ty nhận sáp nhập được hưởng các quyền và lợi ích hợp pháp, chịu trách nhiệm về các nghĩa vụ, các khoản nợ chưa thanh toán, hợp đồng lao động và nghĩa vụ tài sản khác của công ty bị sáp nhập.",
-    "source": "Luật Doanh nghiệp - Điều 201. Sáp nhập công ty"
+    "question": "Người điều khiển phương tiện không có phù hiệu kiểm soát sẽ bị xử phạt như thế nào?",
+    "ground_truth": "Điều khiển xe không có phù hiệu kiểm soát theo quy định hoặc có nhưng đã hết giá trị sử dụng hoặc sử dụng phù hiệu không do cơ quan có thẩm quyền cấp.",
+    "source": "Nghidinh 100:2019"
   },
   {
-    "question": "Người lao động Việt Nam đi làm việc ở nước ngoài có phải tuân theo quy định của pháp luật Việt Nam?",
-    "ground_truth": "Người lao động Việt Nam đi làm việc ở nước ngoài phải tuân theo quy định của pháp luật Việt Nam, pháp luật nước sở tại, trừ trường hợp điều ước quốc tế mà nước Cộng hòa xã hội chủ nghĩa Việt Nam là thành viên có quy định khác.",
-    "source": "Bộ luật Lao động - Điều 150. Người lao động Việt Nam đi làm việc ở nước ngoài, lao động cho các tổ chức, cá nhân nước ngoài tại Việt Nam"
+    "question": "Thời gian tham gia các phiên họp thương lượng tập thể của đại diện bên người lao động được tính là thời gian làm việc có hưởng lương hay không?",
+    "ground_truth": "được tính là thời gian làm việc có hưởng lương",
+    "source": "Luatlaodong"
   },
   {
-    "question": "Công dân Việt Nam làm việc cho tổ chức nước ngoài tại Việt Nam được pháp luật bảo vệ như thế nào?",
-    "ground_truth": "Công dân Việt Nam làm việc cho các tổ chức nước ngoài tại Việt Nam, trong khu công nghiệp, khu kinh tế, khu chế xuất, khu công nghệ cao hoặc làm việc cho cá nhân là công dân nước ngoài tại Việt Nam phải tuân theo pháp luật Việt Nam và được pháp luật bảo vệ.",
-    "source": "Bộ luật Lao động - Điều 150. Người lao động Việt Nam đi làm việc ở nước ngoài, lao động cho các tổ chức, cá nhân nước ngoài tại Việt Nam"
+    "question": "Người lao động không đồng ý tạm thời làm công việc khác so với hợp đồng lao động quá bao nhiêu ngày làm việc cộng dồn trong 01 năm mà phải ngừng việc?",
+    "ground_truth": "60 ngày làm việc cộng dồn trong 01 năm",
+    "source": "Luatlaodong"
   },
   {
-    "question": "Tôi đủ tuổi để làm việc không?",
-    "ground_truth": "Độ tuổi lao động tối thiểu của người lao động là đủ 15 tuổi, trừ trường hợp quy định tại Mục 1 Chương XI của Bộ luật này.",
-    "source": "Bộ luật Lao động - Điều 3. Giải thích từ ngữ"
+    "question": "Thỏa ước lao động tập thể có hiệu lực áp dụng đối với đối tượng nào?",
+    "ground_truth": "Người sử dụng lao động và toàn bộ người lao động của doanh nghiệp",
+    "source": "Luatlaodong"
   },
   {
-    "question": "Tôi có thể thành lập tổ chức đại diện người lao động tại cơ sở được không?",
-    "ground_truth": "Tổ chức đại diện người lao động tại cơ sở là tổ chức được thành lập trên cơ sở tự nguyện của người lao động tại một đơn vị sử dụng lao động nhằm mục đích bảo vệ quyền và lợi ích hợp pháp, chính đáng của người lao động trong quan hệ lao động thông qua thương lượng tập thể hoặc các hình thức khác theo quy định của pháp luật về lao động.",
-    "source": "Bộ luật Lao động - Điều 3. Giải thích từ ngữ"
+    "question": "Kể từ khi có quyết định giải thể doanh nghiệp, doanh nghiệp có được phép ký kết hợp đồng mới không?",
+    "ground_truth": "kể từ khi có quyết định giải thể doanh nghiệp, doanh nghiệp bị nghiêm cấm thực hiện các hoạt động sau đây: d) Ký kết hợp đồng mới",
+    "source": "Luatdoanhnghiep"
   },
   {
-    "question": "Ai có quyền bổ nhiệm hòa giải viên lao động?",
-    "ground_truth": "Người do Chủ tịch Ủy ban nhân dân cấp tỉnh bổ nhiệm",
-    "source": "Bộ luật Lao động - Điều 184. Hòa giải viên lao động"
+    "question": "Ủy ban nhân dân cấp tỉnh, cấp huyện có trách nhiệm gì?",
+    "ground_truth": "Hằng năm phải công bố kế hoạch, danh mục các khu đất thực hiện đấu giá quyền sử dụng đất trên Cổng thông tin đấu giá quyền sử dụng đất quốc gia, cổng thông tin điện tử của Ủy ban nhân dân cấp tỉnh, cổng thông tin điện tử của Ủy ban nhân dân cấp huyện",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Nồng độ cồn trong máu hoặc hơi thở của người điều khiển xe được phép ở mức bao nhiêu?",
+    "ground_truth": "chưa vượt quá 50 miligam/100 mililít máu hoặc chưa vượt quá 0,25 miligam/1 lít khí thở.",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Người lao động làm việc không trọn thời gian được hưởng lương không?",
+    "ground_truth": "Người lao động làm việc không trọn thời gian được hưởng lương; bình đẳng trong thực hiện quyền và nghĩa vụ với người lao động làm việc trọn thời gian; bình đẳng về cơ hội, không bị phân biệt đối xử, bảo đảm an toàn, vệ sinh lao động.",
+    "source": "Bộ luật Lao động - Điều 32. Làm việc không trọn thời gian"
+  },
+  {
+    "question": "Trường hợp nào cơ quan cấp Giấy chứng nhận quyền sử dụng đất không thu hồi giấy chứng nhận đã cấp?",
+    "ground_truth": "người được cấp giấy chứng nhận đã thực hiện chuyển quyền sử dụng đất, quyền sở hữu tài sản gắn liền với đất theo quy định của pháp luật về đất đai.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Ô tô chở hàng quá tải bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với người điều khiển xe ô tô chở hàng vượt trọng tải cho phép từ 20% đến dưới 50%",
+    "source": "Nghị định 100/2019"
+  },
+  {
+    "question": "Quy hoạch sử dụng đất quốc gia cần bảo đảm những yếu tố gì?",
+    "ground_truth": "bảo đảm tính đặc thù, liên kết vùng; bảo đảm sự cân bằng giữa nhu cầu sử dụng đất của các ngành, lĩnh vực, địa phương và phù hợp với tiềm năng đất đai của quốc gia nhằm sử dụng đất tiết kiệm, hiệu quả",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Mức phạt đối với hành vi chở hàng siêu trường, siêu trọng không có Giấy phép lưu hành là bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 5.000.000 đồng đến 7.000.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Ai phải ký vào phiếu lấy ý kiến?",
+    "ground_truth": "đ) Họ, tên, chữ ký của Chủ tịch Hội đồng thành viên;",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Người gốc Việt Nam định cư ở nước ngoài có thể chuyển quyền sử dụng đất ở khi bán, tặng cho, để thừa kế, đổi nhà ở cho tổ chức, cá nhân như thế nào?",
+    "ground_truth": "b) Chuyển quyền sử dụng đất ở khi bán, tặng cho, để thừa kế, đổi nhà ở cho tổ chức, cá nhân, người gốc Việt Nam định cư ở nước ngoài thuộc đối tượng được sở hữu nhà ở tại Việt Nam; tặng cho nhà ở gắn liền với quyền sử dụng đất ở cho Nhà nước, cộng đồng dân cư, tặng cho để làm nhà tình nghĩa, nhà tình thương, nhà đại đoàn kết.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Khi nào áp dụng quy định tương ứng của các văn bản quy phạm pháp luật về hình sự có hiệu lực trước?",
+    "ground_truth": "trong trường hợp này, áp dụng quy định tương ứng của các văn bản quy phạm pháp luật về hình sự có hiệu lực trước 0 giờ 00 phút ngày 01 tháng 7 năm 2025",
+    "source": "Luathinhsu"
+  },
+  {
+    "question": "Tôi là cổ đông sáng lập, cần phải nộp giấy tờ gì?",
+    "ground_truth": "b) Giấy tờ pháp lý của cá nhân đối với cổ đông sáng lập và cổ đông là nhà đầu tư nước ngoài là cá nhân, người đại diện theo pháp luật;",
+    "source": "Luật Doanh nghiệp - Điều 22. Hồ sơ đăng ký công ty cổ phần"
+  },
+  {
+    "question": "Nếu bên đề nghị giao kết hợp đồng chết sau khi bên được đề nghị trả lời chấp nhận thì đề nghị giao kết hợp đồng có còn giá trị không?",
+    "ground_truth": "đề nghị giao kết hợp đồng vẫn có giá trị, trừ trường hợp nội dung giao kết gắn liền với nhân thân bên đề nghị",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Đối tượng nào được ưu tiên giao đất nông nghiệp?",
+    "ground_truth": "cá nhân cư trú tại địa phương mà chưa được giao đất hoặc thiếu đất sản xuất.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Xử lý tài sản bảo đảm mà không thông báo có thể dẫn đến hậu quả gì?",
+    "ground_truth": "phải bồi thường cho bên bảo đảm, các bên cùng nhận bảo đảm khác",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Thành viên hợp danh phải chịu trách nhiệm như thế nào sau khi chấm dứt tư cách thành viên?",
+    "ground_truth": "phải liên đới chịu trách nhiệm bằng toàn bộ tài sản của mình đối với các khoản nợ của công ty đã phát sinh trước ngày chấm dứt tư cách thành viên",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Bên nào có trách nhiệm bảo mật thông tin bí mật của bên kia trong quá trình giao kết hợp đồng?",
+    "ground_truth": "một bên nhận được thông tin bí mật của bên kia trong quá trình giao kết hợp đồng thì có trách nhiệm bảo mật thông tin và không được sử dụng thông tin đó cho mục đích riêng của mình hoặc cho mục đích trái pháp luật khác.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Giám đốc công ty có thể ký kết hợp đồng nhân danh công ty khi nào?",
+    "ground_truth": "Giám đốc hoặc Tổng giám đốc có quyền và nghĩa vụ sau đây: e) Ký kết hợp đồng nhân danh công ty, trừ trường hợp thuộc thẩm quyền của Chủ tịch Hội đồng thành viên;",
+    "source": "Luật Doanh nghiệp - Điều 63. Giám đốc, Tổng giám đốc"
+  },
+  {
+    "question": "Người điều khiển máy kéo, xe máy chuyên dùng vi phạm quy tắc giao thông đường bộ bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 100.000 đồng đến 200.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Phạt bao nhiêu nếu người từ đủ 14 tuổi đến dưới 16 tuổi điều khiển xe mô tô?",
+    "ground_truth": "Phạt cảnh cáo người từ đủ 14 tuổi đến dưới 16 tuổi điều khiển xe mô tô, xe gắn máy (kể cả xe máy điện) và các loại xe tương tự xe mô tô hoặc điều khiển xe ô tô, máy kéo và các loại xe tương tự xe ô tô.",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Sở hữu chung của vợ chồng có thể phân chia theo cách nào?",
+    "ground_truth": "phân chia theo thỏa thuận hoặc theo quyết định của Tòa án.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Hộ gia đình, cá nhân được Nhà nước cho thuê đất trước ngày 01 tháng 7 năm 2004 có quyền và nghĩa vụ gì?",
+    "ground_truth": "hộ gia đình, cá nhân có quyền và nghĩa vụ quy định tại khoản 1 Điều 37 của Luật này",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Nếu tôi không niêm yết tên và số điện thoại của đơn vị kinh doanh vận tải trên xe ô tô chở hành khách, tôi sẽ bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 1.000.000 đồng đến 2.000.000 đồng đối với cá nhân, từ 2.000.000 đồng đến 4.000.000 đồng đối với tổ chức kinh doanh vận tải, dịch vụ hỗ trợ vận tải thực hiện một trong các hành vi vi phạm sau đây: a) Không niêm yết hoặc niêm yết không chính xác, đầy đủ tên, số điện thoại của đơn vị kinh doanh vận tải ở phần đầu mặt ngoài hai bên thân hoặc mặt ngoài hai bên cánh cửa xe ô tô chở hành khách theo quy định, trừ hành vi vi phạm quy định tại điểm d khoản 4 Điều này;",
+    "source": "Nghị định 100/2019 - Điều 28. Xử phạt các hành vi vi phạm quy định về vận tải đường bộ, dịch vụ hỗ trợ vận tải đường bộ"
+  },
+  {
+    "question": "Hội đồng thẩm định quy hoạch sử dụng đất có trách nhiệm gì?",
+    "ground_truth": "thẩm định và gửi thông báo kết quả thẩm định quy hoạch, kế hoạch sử dụng đất đến cơ quan tổ chức lập quy hoạch, kế hoạch sử dụng đất quy định tại Điều 69 của Luật này;",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Người nào tuyên truyền, kích động chiến tranh xâm lược có thể bị phạt tù đến bao nhiêu năm?",
+    "ground_truth": "từ 12 năm đến 20 năm hoặc tù chung thân",
+    "source": "Luathinhsu"
+  },
+  {
+    "question": "Xe đạp máy là gì?",
+    "ground_truth": "Xe đạp máy là xe thô sơ hai bánh có lắp động cơ, vận tốc thiết kế lớn nhất không lớn hơn 25 km/h và khi tắt máy thì đạp xe đi được",
+    "source": "Nghị định 100/2019 - Điều 3"
+  },
+  {
+    "question": "Phạt tiền bao nhiêu đối với tổ chức thực hiện hành vi thi công công trình trong phạm vi đất dành cho đường bộ?",
+    "ground_truth": "từ 6.000.000 đồng đến 10.000.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Tôi phải làm gì khi cơ quan nhà nước yêu cầu?",
+    "ground_truth": "Lập, cập nhật, quản lý, sử dụng sổ quản lý lao động bằng bản giấy hoặc bản điện tử và xuất trình khi cơ quan nhà nước có thẩm quyền yêu cầu.",
+    "source": "Bộ luật Lao động - Điều 12. Trách nhiệm quản lý lao động của người sử dụng lao động"
+  },
+  {
+    "question": "Phân biệt đối xử trong lao động là gì?",
+    "ground_truth": "Phân biệt đối xử trong lao động là hành vi phân biệt, loại trừ hoặc ưu tiên dựa trên chủng tộc, màu da, nguồn gốc quốc gia hoặc nguồn gốc xã hội, dân tộc, giới tính, độ tuổi, tình trạng thai sản, tình trạng hôn nhân, tôn giáo, tín ngưỡng, chính kiến, khuyết tật, trách nhiệm gia đình hoặc trên cơ sở tình trạng nhiễm HIV",
+    "source": "Bộ luật Lao động - Điều 3"
+  },
+  {
+    "question": "Nếu xây nhà, công trình trái phép trong phạm vi bảo vệ công trình thủy lợi, đê điều, công trình phòng, chống thiên tai thì tôi sẽ bị xử lý như thế nào?",
+    "ground_truth": "a) Xây nhà, công trình trái phép trong phạm vi bảo vệ công trình thủy lợi, đê điều, công trình phòng, chống thiên tai;",
+    "source": "Luathinhsu"
+  },
+  {
+    "question": "Nguyên tắc xác định thẩm quyền xử phạt vi phạm hành chính được quy định ở đâu?",
+    "ground_truth": "theo quy định tại Điều 52 của Luật Xử lý vi phạm hành chính",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Chủ sở hữu công ty là cá nhân bị tạm giam thì sẽ xử lý như thế nào?",
+    "ground_truth": "ủy quyền cho người khác thực hiện một số hoặc tất cả quyền và nghĩa vụ của chủ sở hữu công ty",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Những trường hợp nào không được bù trừ nghĩa vụ?",
+    "ground_truth": "Nghĩa vụ đang có tranh chấp; Nghĩa vụ bồi thường thiệt hại do xâm phạm tính mạng, sức khỏe, danh dự, nhân phẩm, uy tín; Nghĩa vụ cấp dưỡng; Nghĩa vụ khác do luật quy định.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Mặt trận Tổ quốc Việt Nam tham gia vào quá trình thu hồi đất như thế nào?",
+    "ground_truth": "Tham gia ý kiến về trường hợp thu hồi đất, phương án bồi thường, hỗ trợ, tái định cư, trường hợp cưỡng chế khi thực hiện thu hồi đất",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Vợ hoặc chồng có thể tự mình xác lập giao dịch với người thứ ba khi nào?",
+    "ground_truth": "trừ trường hợp theo quy định của pháp luật mà người thứ ba ngay tình được bảo vệ quyền lợi",
+    "source": "Luathonnhan"
+  },
+  {
+    "question": "Trường hợp nào tổ chức được giao đất để thực hiện dự án đầu tư xây dựng nhà ở xã hội?",
+    "ground_truth": "Trường hợp được Nhà nước giao đất để thực hiện dự án đầu tư xây dựng nhà ở xã hội, nhà ở cho lực lượng vũ trang nhân dân, dự án đầu tư cải tạo, xây dựng lại nhà chung cư mà được miễn hoặc giảm tiền sử dụng đất",
+    "source": "Luatdatdai"
   },
   {
     "question": "Chính phủ có quy định gì về hòa giải viên lao động?",
@@ -290,29 +605,264 @@
     "source": "Bộ luật Lao động - Điều 184. Hòa giải viên lao động"
   },
   {
-    "question": "Tôi muốn biết hoạt động đường bộ bao gồm những gì?",
-    "ground_truth": "Hoạt động đường bộ bao gồm: hoạt động về quy hoạch, đầu tư, xây dựng, quản lý, sử dụng, vận hành, khai thác, bảo trì, bảo vệ kết cấu hạ tầng đường bộ; vận tải đường bộ.",
-    "source": "Luật Đường bộ - Điều 2. Giải thích từ ngữ"
+    "question": "Thông tin nào phải được công ty công bố?",
+    "ground_truth": "d) Thông tin về Ban kiểm soát, Kiểm soát viên và hoạt động của họ;",
+    "source": "Luatdoanhnghiep"
   },
   {
-    "question": "Hành lang an toàn đường bộ là gì?",
-    "ground_truth": "Hành lang an toàn đường bộ là dải đất dọc hai bên đất của đường bộ, tính từ mép ngoài phần đất để bảo vệ, bảo trì đường bộ ra hai bên để bảo đảm an toàn giao thông đường bộ, bảo đảm tầm nhìn xe chạy và hạn chế ảnh hưởng đến môi trường xung quanh.",
-    "source": "Luật Đường bộ - Điều 2. Giải thích từ ngữ"
+    "question": "Tôi có thể đăng ký doanh nghiệp trực tiếp tại cơ quan đăng ký kinh doanh không?",
+    "ground_truth": "Người thành lập doanh nghiệp hoặc người được ủy quyền thực hiện đăng ký doanh nghiệp với Cơ quan đăng ký kinh doanh theo phương thức sau đây: a) Đăng ký doanh nghiệp trực tiếp tại Cơ quan đăng ký kinh doanh;",
+    "source": "Luật Doanh nghiệp - Điều 26. Trình tự, thủ tục đăng ký doanh nghiệp"
   },
   {
-    "question": "Tôi muốn cho thuê xe ô tô để người thuê tự lái, tôi cần đáp ứng những yêu cầu nào?",
-    "ground_truth": "Đơn vị kinh doanh cho thuê phương tiện để tự lái phải đáp ứng các yêu cầu sau đây: a) Chỉ được cho thuê phương tiện khi người thuê có giấy phép lái xe đang còn điểm, còn hiệu lực phù hợp với loại xe cho thuê; b) Không được bố trí lái xe cho người thuê phương tiện; c) Phải ký kết hợp đồng cho thuê phương tiện để tự lái với người thuê kèm theo bản phô tô giấy phép lái xe của người thuê.",
-    "source": "Luật Đường bộ - Điều 78. Dịch vụ cho thuê phương tiện giao thông cơ giới đường bộ"
+    "question": "Công ty TNHH một thành viên do bao nhiêu người thành lập?",
+    "ground_truth": "Công ty TNHH một thành viên do một tổ chức hoặc một cá nhân làm chủ sở hữu",
+    "source": "Luật Doanh nghiệp"
   },
   {
-    "question": "Tôi muốn thuê xe ô tô để tự lái, tôi có được sử dụng phương tiện đó để vận tải hành khách, hàng hóa có thu tiền không?",
-    "ground_truth": "Người thuê phương tiện để tự lái không được sử dụng phương tiện đi thuê để vận tải hành khách, hàng hóa có thu tiền.",
-    "source": "Luật Đường bộ - Điều 78. Dịch vụ cho thuê phương tiện giao thông cơ giới đường bộ"
+    "question": "Tài sản thuộc sở hữu chung hỗn hợp được hình thành từ nguồn nào?",
+    "ground_truth": "nguồn vốn góp của các chủ sở hữu, lợi nhuận hợp pháp thu được từ hoạt động sản xuất, kinh doanh hoặc từ nguồn khác phù hợp với quy định của pháp luật",
+    "source": "Luatdansu"
   },
   {
-    "question": "Thanh toán điện tử giao thông đường bộ là gì?",
-    "ground_truth": "Thanh toán điện tử giao thông đường bộ là việc thanh toán các loại phí, giá, tiền dịch vụ liên quan đến hoạt động giao thông của phương tiện giao thông đường bộ thông qua tài khoản giao thông.",
-    "source": "Luật Đường bộ - Điều 43. Thanh toán điện tử giao thông đường bộ"
+    "question": "Sở hữu riêng là gì?",
+    "ground_truth": "Sở hữu riêng là sở hữu của một cá nhân hoặc một pháp nhân.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Người quản lý, sử dụng công trình đường bộ và công trình hạ tầng kỹ thuật sử dụng chung có trách nhiệm gì?",
+    "ground_truth": "phối hợp trong quản lý, vận hành, khai thác",
+    "source": "Luatduongbo2024"
+  },
+  {
+    "question": "Bên cho vay có quyền đòi lại tài sản bất cứ lúc nào trong trường hợp hợp đồng vay không kỳ hạn và có lãi?",
+    "ground_truth": "bên cho vay có quyền đòi lại tài sản bất cứ lúc nào, nhưng phải báo trước cho bên vay một thời gian hợp lý",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Trường hợp đất đấu giá không thành lần 2 thì thời gian giao đất, cho thuê đất là bao lâu?",
+    "ground_truth": "Thời gian giao đất, cho thuê đất trong trường hợp này chỉ được thực hiện trong vòng 12 tháng kể từ ngày đấu giá không thành lần 2.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Báo cáo thực trạng quản trị công ty bao gồm những thông tin gì?",
+    "ground_truth": "Báo cáo thực trạng quản trị công ty bao gồm các thông tin sau đây: a) Thông tin về cơ quan đại diện chủ sở hữu, người đứng đầu và cấp phó của người đứng đầu cơ quan đại diện chủ sở hữu; b) Thông tin về người quản lý công ty, bao gồm trình độ chuyên môn, kinh nghiệm nghề nghiệp, các vị trí quản lý đã nắm giữ, cách thức được bổ nhiệm, công việc quản lý được giao; mức và cách thức chi trả tiền lương, thù lao, thưởng và lợi ích khác; người có liên quan và lợi ích có liên quan của người quản lý công ty; c) Quyết định có liên quan của cơ quan đại diện chủ sở hữu; các nghị quyết, quyết định của Hội đồng thành viên hoặc Chủ tịch công ty; d) Thông tin về Ban kiểm soát, Kiểm soát viên và hoạt động của họ;",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Hình phạt cho trường hợp phạm tội đưa chất thải vào lãnh thổ Việt Nam ở mức độ nghiêm trọng hơn là gì?",
+    "ground_truth": "phạt tiền từ 2.000.000.000 đồng đến 4.000.000.000 đồng",
+    "source": "Luathinhsu"
+  },
+  {
+    "question": "Thông tin nào phải được công bố theo quy định?",
+    "ground_truth": "d) Thông tin về Ban kiểm soát, Kiểm soát viên và hoạt động của họ;",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Tài sản vô chủ là gì?",
+    "ground_truth": "Tài sản vô chủ là tài sản mà chủ sở hữu đã từ bỏ quyền sở hữu đối với tài sản đó.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Khi nào cần sửa đổi, bổ sung nội dung Giấy chứng nhận đăng ký doanh nghiệp?",
+    "ground_truth": "c) Sửa đổi, bổ sung nội dung Giấy chứng nhận đăng ký doanh nghiệp, giấy phép thành lập, giấy phép thành lập và hoạt động, giấy phép hoạt động hoặc giấy phép khác liên quan đến hoạt động của công ty;",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Gia hạn sử dụng đất là gì?",
+    "ground_truth": "là việc cơ quan nhà nước có thẩm quyền cho phép tiếp tục sử dụng đất khi hết thời hạn theo mục đích đang sử dụng theo quy định của Luật này.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Vốn điều lệ của công ty là gì?",
+    "ground_truth": "Vốn điều lệ là tổng giá trị tài sản do các thành viên công ty, chủ sở hữu công ty đã góp hoặc cam kết góp khi thành lập công ty trách nhiệm hữu hạn, công ty hợp danh; là tổng mệnh giá cổ phần đã bán hoặc được đăng ký mua khi thành lập công ty cổ phần",
+    "source": "Luật Doanh nghiệp - Điều 4"
+  },
+  {
+    "question": "Hành vi đưa phương tiện không gắn biển số tham gia giao thông bị xử lý như thế nào?",
+    "ground_truth": "Đưa phương tiện không gắn biển số (đối với loại xe có quy định phải gắn biển số) tham gia giao thông; đưa phương tiện gắn biển số không đúng với Giấy đăng ký xe hoặc gắn biển số không do cơ quan có thẩm quyền cấp tham gia giao thông.",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Thông tin nào cần được cung cấp về người đại diện theo ủy quyền?",
+    "ground_truth": "a) Tên, mã số doanh nghiệp, địa chỉ trụ sở chính của chủ sở hữu, thành viên, cổ đông; b) Số lượng người đại diện theo ủy quyền và tỷ lệ sở hữu cổ phần, phần vốn góp tương ứng của mỗi người đại diện theo ủy quyền; c) Họ, tên, địa chỉ liên lạc, quốc tịch, số giấy tờ pháp lý của cá nhân từng người đại diện theo ủy quyền; d) Thời hạn ủy quyền tương ứng của từng người đại diện theo ủy quyền; trong đó ghi rõ ngày bắt đầu được đại diện; đ) Họ, tên, chữ ký của người đại diện theo pháp luật của chủ sở hữu, thành viên, cổ đông và của người đại diện theo ủy quyền.",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Tài sản bị trưng mua thì quyền sở hữu chấm dứt kể từ khi nào?",
+    "ground_truth": "kể từ thời điểm quyết định của cơ quan nhà nước có thẩm quyền có hiệu lực pháp luật.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Tôi không được thực hiện một công việc thì nghĩa vụ của tôi là gì?",
+    "ground_truth": "Nghĩa vụ không được thực hiện một công việc là nghĩa vụ mà theo đó bên có nghĩa vụ không được thực hiện công việc đó.",
+    "source": "Bộ luật Dân sự - Điều 281. Nghĩa vụ phải thực hiện hoặc không được thực hiện một công việc"
+  },
+  {
+    "question": "Người lao động có những quyền gì?",
+    "ground_truth": "d) Đóng cửa tạm thời nơi làm việc; đ) Các quyền khác theo quy định của pháp luật.",
+    "source": "Luatlaodong"
+  },
+  {
+    "question": "Nếu tôi phải thực hiện một công việc thì nghĩa vụ của tôi là gì?",
+    "ground_truth": "Nghĩa vụ phải thực hiện một công việc là nghĩa vụ mà theo đó bên có nghĩa vụ phải thực hiện đúng công việc đó.",
+    "source": "Bộ luật Dân sự - Điều 281. Nghĩa vụ phải thực hiện hoặc không được thực hiện một công việc"
+  },
+  {
+    "question": "Ai phải bồi thường thiệt hại khi người chưa đủ mười lăm tuổi gây thiệt hại trong thời gian trường học?",
+    "ground_truth": "Người chưa đủ mười lăm tuổi trong thời gian trường học trực tiếp quản lý mà gây thiệt hại thì trường học phải bồi thường thiệt hại xảy ra.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Nhà nước có những chính sách gì về đất đai cho đồng bào dân tộc thiểu số?",
+    "ground_truth": "c) Giao đất nông nghiệp trong hạn mức không thu tiền sử dụng đất; d) Cho thuê đất phi nông nghiệp không phải là đất ở để sản xuất, kinh doanh và được miễn, giảm tiền thuê đất;",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Hợp đồng vô hiệu do giả tạo là như thế nào?",
+    "ground_truth": "Khi các bên xác lập giao dịch dân sự một cách giả tạo nhằm che giấu một giao dịch dân sự khác thì giao dịch dân sự giả tạo vô hiệu",
+    "source": "Bộ luật Dân sự - Điều 124"
+  },
+  {
+    "question": "Tôi có quyền yêu cầu Tòa án làm gì khi thông tin trên mạng xã hội ảnh hưởng xấu đến danh dự của mình?",
+    "ground_truth": "Cá nhân có quyền yêu cầu Tòa án bác bỏ thông tin làm ảnh hưởng xấu đến danh dự, nhân phẩm, uy tín của mình.",
+    "source": "Bộ luật Dân sự - Điều 34. Quyền được bảo vệ danh dự, nhân phẩm, uy tín"
+  },
+  {
+    "question": "Đất nông nghiệp đã sử dụng trước ngày 01 tháng 7 năm 2004 mà người sử dụng đất không đủ điều kiện cấp Giấy chứng nhận thì việc bồi thường được thực hiện như thế nào?",
+    "ground_truth": "theo quy định của Chính phủ",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Chủ phương tiện trực tiếp điều khiển phương tiện chở vượt trên 50% đến 100% số người quy định được phép chở của phương tiện thì bị tước quyền sử dụng Giấy phép lái xe trong bao lâu?",
+    "ground_truth": "từ 01 tháng đến 03 tháng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Người sử dụng đất thuộc trường hợp nào được tiếp tục sử dụng đất?",
+    "ground_truth": "Người sử dụng đất thuộc trường hợp được tiếp tục sử dụng đất theo quy định tại khoản 5 Điều 60 của Luật Đất đai số 45/2013/QH13",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Cầu đường bộ xây dựng trên khu vực có hoạt động giao thông đường thủy nội địa, giao thông hàng hải cần đảm bảo gì?",
+    "ground_truth": "bảo đảm khổ thông thuyền cho tàu, thuyền lưu thông an toàn theo quy định của pháp luật về đường thủy nội địa và pháp luật về hàng hải",
+    "source": "Luatduongbo2024"
+  },
+  {
+    "question": "Tôi có thể xử lý tài sản cầm cố như thế nào?",
+    "ground_truth": "Xử lý tài sản cầm cố theo phương thức đã thỏa thuận hoặc theo quy định của pháp luật.",
+    "source": "Bộ luật Dân sự - Điều 314. Quyền của bên nhận cầm cố"
+  },
+  {
+    "question": "Tôi có thể bị khai trừ khỏi công ty khi nào?",
+    "ground_truth": "Trường hợp có thành viên góp vốn không góp đủ và đúng hạn số vốn đã cam kết thì số vốn chưa góp đủ được coi là khoản nợ của thành viên đó đối với công ty; trong trường hợp này, thành viên góp vốn có liên quan có thể bị khai trừ khỏi công ty theo quyết định của Hội đồng thành viên.",
+    "source": "Luật Doanh nghiệp - Điều 178. Thực hiện góp vốn và cấp giấy chứng nhận phần vốn góp"
+  },
+  {
+    "question": "Hình phạt cho trường hợp phạm tội đưa chất thải vào lãnh thổ Việt Nam đặc biệt nghiêm trọng?",
+    "ground_truth": "phạt tiền từ 2.000.000.000 đồng đến 4.000.000.000 đồng",
+    "source": "Luathinhsu"
+  },
+  {
+    "question": "Quấy rối tình dục tại nơi làm việc là gì?",
+    "ground_truth": "Quấy rối tình dục tại nơi làm việc là hành vi có tính chất tình dục của bất kỳ người nào đối với người khác tại nơi làm việc mà không được người đó mong muốn hoặc chấp nhận",
+    "source": "Bộ luật Lao động - Điều 3"
+  },
+  {
+    "question": "Phạm tội với các chất ma túy khác ở thể lỏng có mức phạt nào?",
+    "ground_truth": "n) Các chất ma túy khác ở thể lỏng có thể tích từ 100 mililít đến dưới 250 mililít;",
+    "source": "Luathinhsu"
+  },
+  {
+    "question": "Nhân viên điều độ chạy tàu ga bị phạt bao nhiêu nếu lập tàu có ghép nối toa xe không bảo đảm quy chuẩn?",
+    "ground_truth": "Phạt tiền từ 1.000.000 đồng đến 2.000.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Cấp kỹ thuật của đường bộ được quy định theo đâu?",
+    "ground_truth": "quy chuẩn kỹ thuật quốc gia do Bộ trưởng Bộ Xây dựng ban hành và tiêu chuẩn kỹ thuật do cấp có thẩm quyền công bố",
+    "source": "Luatduongbo2024"
+  },
+  {
+    "question": "Đi xe máy lạng lách đánh võng bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 6.000.000 đồng đến 8.000.000 đồng đối với người điều khiển xe mô tô có hành vi lạng lách, đánh võng trên đường",
+    "source": "Nghị định 168/2024"
+  },
+  {
+    "question": "Cách thức thông qua quyết định của Ủy ban kiểm toán?",
+    "ground_truth": "biểu quyết tại cuộc họp, lấy ý kiến bằng văn bản hoặc hình thức khác do Điều lệ công ty hoặc quy chế hoạt động Ủy ban kiểm toán quy định",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Giám đốc hoặc Tổng giám đốc có quyền quyết định gì về tiền lương và lợi ích khác?",
+    "ground_truth": "Quyết định tiền lương và lợi ích khác đối với người lao động trong công ty, kể cả người quản lý thuộc thẩm quyền bổ nhiệm của Giám đốc hoặc Tổng giám đốc;",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Mức phạt đối với người điều khiển xe đạp, xe đạp máy vi phạm quy tắc giao thông đường bộ là bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 80.000 đồng đến 100.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Nếu người lái xe thực hiện hành vi lắp thêm đèn vượt quá âm lượng, thì bị xử lý như thế nào?",
+    "ground_truth": "b) Thực hiện hành vi quy định tại điểm a khoản 3, điểm d khoản 4 Điều này bị tịch thu đèn lắp thêm, còi vượt quá âm lượng;",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Điều khiển xe không lắp đủ bánh lốp bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 2.000.000 đồng đến 3.000.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Giao dịch dân sự có thể được thể hiện bằng hình thức nào?",
+    "ground_truth": "Giao dịch dân sự được thể hiện bằng lời nói, bằng văn bản hoặc bằng hành vi cụ thể.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Chủ sở hữu bất động sản có hệ thống thoát nước đi qua phải làm gì?",
+    "ground_truth": "phải dành một lối thoát nước thích hợp, không được cản trở hoặc ngăn chặn hệ thống thoát nước",
+    "source": "Luatduongbo2024"
+  },
+  {
+    "question": "Vợ chồng có nghĩa vụ chung thủy không?",
+    "ground_truth": "Vợ chồng có nghĩa vụ thương yêu, chung thủy, tôn trọng, quan tâm, chăm sóc, giúp đỡ nhau",
+    "source": "Luật Hôn nhân và Gia đình - Điều 19"
+  },
+  {
+    "question": "Người sử dụng lao động có những quyền gì?",
+    "ground_truth": "Người sử dụng lao động có các quyền: tuyển dụng, bố trí, quản lý, điều hành, giám sát lao động; khen thưởng và xử lý vi phạm kỷ luật lao động; thành lập, gia nhập, hoạt động trong tổ chức đại diện người sử dụng lao động",
+    "source": "Bộ luật Lao động - Điều 6"
+  },
+  {
+    "question": "Bên cầm cố có quyền yêu cầu bên nhận cầm cố làm gì khi tài sản cầm cố có nguy cơ bị mất giá trị?",
+    "ground_truth": "yêu cầu bên nhận cầm cố chấm dứt việc sử dụng tài sản cầm cố trong trường hợp quy định tại khoản 3 Điều 314 của Bộ luật này nếu do sử dụng mà tài sản cầm cố có nguy cơ bị mất giá trị hoặc giảm sút giá trị.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Yêu cầu đối với công trình hạ tầng kỹ thuật sử dụng chung là gì?",
+    "ground_truth": "Không ảnh hưởng đến an toàn công trình đường bộ, an toàn giao thông đường bộ; không cản trở công tác bảo trì công trình đường bộ;",
+    "source": "Luatduongbo2024"
+  },
+  {
+    "question": "Tiền cước được tính như thế nào?",
+    "ground_truth": "a) Tiền cước được tính thông qua đồng hồ tính tiền;",
+    "source": "Luatduongbo2024"
+  },
+  {
+    "question": "Mức phạt tiền tối đa cho chủ phương tiện là tổ chức khi giao phương tiện vượt quá quy định được phép chở là bao nhiêu?",
+    "ground_truth": "tổng mức phạt tiền tối đa không vượt quá 80.000.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Khi chia công ty, nghị quyết, quyết định chia công ty cần gồm những nội dung gì?",
+    "ground_truth": "các nội dung chủ yếu sau: tên, địa chỉ trụ sở chính của công ty bị chia, tên các công ty sẽ thành lập; nguyên tắc, cách thức và thủ tục chia tài sản công ty; phương án sử dụng lao động; cách thức phân chia, thời hạn và thủ tục chuyển đổi phần vốn góp, cổ phần, trái phiếu của công ty bị chia sang các công ty mới thành lập; nguyên tắc giải quyết nghĩa vụ của công ty bị chia; thời hạn thực hiện chia công ty",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Điều khiển xe không có còi bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 100.000 đồng đến 200.000 đồng",
+    "source": "Nghidinh 100:2019"
   },
   {
     "question": "Nếu tôi vận chuyển hàng nguy hiểm mà dừng xe ở nơi đông người, khu dân cư, công trình quan trọng mà không có báo hiệu hàng nguy hiểm, tôi sẽ bị phạt bao nhiêu tiền?",
@@ -320,23 +870,663 @@
     "source": "Nghị định 100/2019 - Điều 26. Xử phạt người điều khiển xe ô tô thực hiện hành vi vi phạm quy định về vận chuyển chất gây ô nhiễm môi trường, hàng nguy hiểm"
   },
   {
-    "question": "Nếu tôi vận chuyển hàng nguy hiểm mà không có giấy phép, tôi sẽ bị phạt bao nhiêu tiền?",
-    "ground_truth": "2. Phạt tiền từ 2.000.000 đồng đến 3.000.000 đồng đối với hành vi vận chuyển hàng nguy hiểm không có giấy phép hoặc có nhưng không thực hiện đúng quy định trong giấy phép, trừ các hành vi vi phạm quy định tại điểm a khoản 6 Điều 23 Nghị định này.",
-    "source": "Nghị định 100/2019 - Điều 26. Xử phạt người điều khiển xe ô tô thực hiện hành vi vi phạm quy định về vận chuyển chất gây ô nhiễm môi trường, hàng nguy hiểm"
+    "question": "Nếu thông tin ảnh hưởng xấu đến danh dự của tôi được đăng tải trên phương tiện thông tin đại chúng, thì phải xử lý như thế nào?",
+    "ground_truth": "phải được gỡ bỏ, cải chính bằng chính phương tiện thông tin đại chúng đó",
+    "source": "Luatdansu"
   },
   {
-    "question": "Nếu nhân viên khám xe không thực hiện việc khám, sửa chữa đoàn tàu đi, đến hoặc thực hiện khám, sửa chữa đoàn tàu đi, đến không đúng, không đủ nội dung theo quy định, thì họ sẽ bị xử phạt bao nhiêu?",
-    "ground_truth": "Phạt tiền từ 300.000 đồng đến 500.000 đồng đối với nhân viên khám xe thực hiện một trong các hành vi vi phạm sau đây: a) Không thực hiện việc khám, sửa chữa đoàn tàu đi, đến hoặc thực hiện khám, sửa chữa đoàn tàu đi, đến không đúng, không đủ nội dung theo quy định;",
-    "source": "Nghị định 100/2019 - Điều 40. Xử phạt các hành vi vi phạm quy định về khám, sửa chữa toa xe, lập tàu, thử hãm"
+    "question": "Quả thuốc phiện tươi có khối lượng bao nhiêu được coi là phạm tội?",
+    "ground_truth": "đ) Quả thuốc phiện tươi có khối lượng từ 50 kilôgam đến dưới 150 kilôgam;",
+    "source": "Luathinhsu"
   },
   {
-    "question": "Nếu doanh nghiệp kinh doanh vận tải đường sắt không thực hiện các hành vi vi phạm nào, thì họ sẽ bị xử phạt bao nhiêu?",
-    "ground_truth": "5. Phạt tiền từ 3.000.000 đồng đến 4.000.000 đồng đối với doanh nghiệp kinh doanh vận tải đường sắt, doanh nghiệp kinh doanh kết cấu hạ tầng đường sắt, chủ sở hữu đường sắt chuyên dùng thực hiện một trong các hành vi vi phạm sau đây: a) Doanh nghiệp kinh doanh vận tải đường sắt không",
-    "source": "Nghị định 100/2019 - Điều 40. Xử phạt các hành vi vi phạm quy định về khám, sửa chữa toa xe, lập tàu, thử hãm"
+    "question": "Ai là những người có liên quan cần được Hội đồng thành viên chấp thuận khi ký hợp đồng, giao dịch với công ty?",
+    "ground_truth": "Người có liên quan của người quy định tại điểm a khoản này; Người có liên quan của người quy định tại điểm c khoản này.",
+    "source": "Luatdoanhnghiep"
   },
   {
-    "question": "Nếu xây dựng công trình gần đường sắt mà không đảm bảo an toàn, tôi sẽ bị xử phạt bao nhiêu?",
-    "ground_truth": "Phạt tiền từ 1.000.000 đồng đến 3.000.000 đồng đối với cá nhân, từ 2.000.000 đồng đến 6.000.000 đồng đối với tổ chức.",
-    "source": "Nghị định 100/2019 - Điều 52. Xử phạt các hành vi vi phạm quy định về xây dựng công trình, khai thác tài nguyên và các hoạt động khác ở vùng lân cận phạm vi bảo vệ công trình đường sắt"
+    "question": "Giao dịch dân sự của người chưa thành niên có thể bị vô hiệu trong trường hợp nào?",
+    "ground_truth": "2. Giao dịch dân sự của người quy định tại khoản 1 Điều này không bị vô hiệu trong trường hợp sau đây: a) Giao dịch dân sự của người chưa đủ sáu tuổi, người mất năng lực hành vi dân sự nhằm đáp ứng nhu cầu thiết yếu hàng ngày của người đó;",
+    "source": "Bộ luật Dân sự - Điều 125. Giao dịch dân sự vô hiệu do người chưa thành niên, người mất năng lực hành vi dân sự, người có khó khăn trong nhận thức, làm chủ hành vi, người bị hạn chế năng lực hành vi dân sự xác lập, thực hiện"
+  },
+  {
+    "question": "Ủy ban nhân dân cấp tỉnh sử dụng nguồn kinh phí như thế nào?",
+    "ground_truth": "Ủy ban nhân dân cấp tỉnh sử dụng nguồn kinh phí thu được từ nguồn thu khi cho phép chuyển mục đích đất trồng lúa sang sử dụng vào mục đích khác và nguồn kinh phí hợp pháp khác để phục vụ việc cải tạo, đưa đất chưa sử dụng",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Trong thời gian bao lâu kể từ ngày hết thời hạn quản lý sau cai nghiện ma túy thì không được phép?",
+    "ground_truth": "02 năm kể từ ngày hết thời hạn quản lý sau cai nghiện ma túy",
+    "source": "Luathinhsu"
+  },
+  {
+    "question": "Trước khi xử lý tài sản bảo đảm, bên nhận bảo đảm phải làm gì?",
+    "ground_truth": "phải thông báo bằng văn bản trong một thời hạn hợp lý về việc xử lý tài sản bảo đảm cho bên bảo đảm và các bên cùng nhận bảo đảm khác",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Hội đồng quản trị họp bao nhiêu lần mỗi quý?",
+    "ground_truth": "ít nhất một lần",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Chủ sở hữu công ty phải tách biệt tài sản gì?",
+    "ground_truth": "Chủ sở hữu công ty phải tách biệt chi tiêu của cá nhân và gia đình mình với chi tiêu của Chủ tịch công ty, Giám đốc hoặc Tổng giám đốc.",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Thừa kế theo di chúc là gì?",
+    "ground_truth": "Thừa kế theo di chúc là thừa kế theo sự định đoạt của người để lại di sản được thể hiện trong di chúc",
+    "source": "Bộ luật Dân sự - Điều 624"
+  },
+  {
+    "question": "Cây trồng chưa thu hoạch nhưng có thể di chuyển đến địa điểm khác sẽ được bồi thường như thế nào?",
+    "ground_truth": "được bồi thường chi phí di chuyển và thiệt hại thực tế do phải di chuyển, phải trồng lại",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Ai sẽ quản lý tài sản của người bị tuyên bố mất tích?",
+    "ground_truth": "Người đang quản lý tài sản của người vắng mặt tại nơi cư trú quy định tại Điều 65 của Bộ luật này tiếp tục quản lý tài sản của người đó khi người đó bị Tòa án tuyên bố mất tích",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Khi kết hôn trái pháp luật bị hủy thì hai bên phải làm gì?",
+    "ground_truth": "chấm dứt quan hệ như vợ chồng",
+    "source": "Luathonnhan"
+  },
+  {
+    "question": "Hàng hóa ký gửi được định nghĩa như thế nào?",
+    "ground_truth": "Hàng hóa ký gửi là hàng hóa gửi theo xe ô tô kinh doanh vận tải hành khách mà người gửi không đi cùng trên xe, được thực hiện theo thỏa thuận giữa người kinh doanh vận tải và người gửi hàng.",
+    "source": "Luatduongbo2024"
+  },
+  {
+    "question": "Người thành lập doanh nghiệp có thể đăng ký doanh nghiệp qua những phương thức nào?",
+    "ground_truth": "theo phương thức sau đây: a) Đăng ký doanh nghiệp trực tiếp tại Cơ quan đăng ký kinh doanh; b) Đăng ký doanh nghiệp qua dịch vụ bưu chính; c) Đăng ký doanh nghiệp qua mạng thông tin điện tử.",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Pháp luật áp dụng đối với hành vi pháp lý đơn phương được quy định như thế nào?",
+    "ground_truth": "Pháp luật áp dụng đối với hành vi pháp lý đơn phương là pháp luật của nước nơi cá nhân xác lập hành vi đó cư trú hoặc nơi pháp nhân xác lập hành vi đó được thành lập.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Người điều khiển xe đi ngược chiều của đường một chiều sẽ bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 3.000.000 đồng đến 5.000.000 đồng đối với người điều khiển xe thực hiện một trong các hành vi vi phạm sau đây: ... c) Đi ngược chiều của đường một chiều, đi ngược chiều trên đường có biển “Cấm đi ngược chiều”,",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Thông tin nào phải được công bố đầy đủ, chính xác và kịp thời?",
+    "ground_truth": "Thông tin được công bố phải đầy đủ, chính xác và kịp thời theo quy định của pháp luật.",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Người đang sử dụng đất quốc phòng, an ninh được tiếp tục sử dụng đất trong trường hợp nào?",
+    "ground_truth": "Đối với những khu vực nằm trong quy hoạch sử dụng đất quốc phòng, an ninh nhưng chưa có nhu cầu sử dụng vào mục đích quốc phòng, an ninh thì người đang sử dụng đất được tiếp tục sử dụng đến khi có quyết định thu hồi đất của cơ quan nhà nước có thẩm quyền nhưng không được làm biến dạng địa hình tự nhiên.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Khi sử dụng dịch vụ vận tải hàng hóa, người thuê vận tải cần thực hiện những nghĩa vụ gì?",
+    "ground_truth": "c) Thanh toán đủ tiền cước và chi phí phát sinh cho người kinh doanh vận tải hàng hóa;",
+    "source": "Luatduongbo2024"
+  },
+  {
+    "question": "Lái xe ô tô khi nồng độ cồn vượt quá mức cho phép bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 30.000.000 đồng đến 40.000.000 đồng đối với người điều khiển xe ô tô có nồng độ cồn vượt quá 80 miligam/100 mililít máu hoặc vượt quá 0,4 miligam/1 lít khí thở",
+    "source": "Nghị định 168/2024"
+  },
+  {
+    "question": "Người điều khiển phương tiện vi phạm sẽ bị phạt như thế nào?",
+    "ground_truth": "Không có tờ khai phương tiện vận tải đường bộ tạm nhập, tái xuất theo quy định;",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Tôi có thể cho thuê lại lao động được không?",
+    "ground_truth": "Cho thuê lại lao động là việc người lao động giao kết hợp đồng lao động với một người sử dụng lao động là doanh nghiệp cho thuê lại lao động, sau đó người lao động được chuyển sang làm việc và chịu sự điều hành của người sử dụng lao động khác mà vẫn duy trì quan hệ lao động với người sử dụng lao động đã giao kết hợp đồng lao động.",
+    "source": "Bộ luật Lao động - Điều 52. Cho thuê lại lao động"
+  },
+  {
+    "question": "Trước khi bắt đầu đình công, tổ chức đại diện người lao động phải gửi văn bản về việc quyết định đình công cho những bên nào?",
+    "ground_truth": "người sử dụng lao động, Ủy ban nhân dân cấp huyện và cơ quan chuyên môn về lao động thuộc Ủy ban nhân dân cấp tỉnh",
+    "source": "Luatlaodong"
+  },
+  {
+    "question": "Thông tin nào thuộc Hệ thống thông tin quốc gia về đất đai không được công bố?",
+    "ground_truth": "Những thông tin thuộc bí mật nhà nước theo quy định của pháp luật",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Mục đích của việc xây dựng tường chống ồn?",
+    "ground_truth": "để giảm tiếng ồn do phương tiện giao thông đường bộ gây ra",
+    "source": "Luatduongbo2024"
+  },
+  {
+    "question": "Thời gian vận động, thuyết phục người có đất thu hồi?",
+    "ground_truth": "15 ngày",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Trung tâm sát hạch lái xe không có hệ thống âm thanh thông báo công khai lỗi vi phạm của thí sinh sẽ bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 10.000.000 đồng đến 15.000.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Thoái hóa đất là gì?",
+    "ground_truth": "Thoái hóa đất là tình trạng đất bị thay đổi đặc tính, tính chất vốn có ban đầu theo chiều hướng xấu do tác động của điều kiện tự nhiên, con người",
+    "source": "Luật Đất đai - Điều 3"
+  },
+  {
+    "question": "Yêu cầu về lưu trữ hồ sơ của đơn vị kinh doanh vận tải?",
+    "ground_truth": "Không lưu trữ theo quy định các hồ sơ, tài liệu có liên quan trong quá trình quản lý, điều hành hoạt động vận tải của đơn vị;",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Người gốc Việt Nam định cư ở nước ngoài có thể chuyển quyền sử dụng đất ở khi nào?",
+    "ground_truth": "b) Chuyển quyền sử dụng đất ở khi bán, tặng cho, để thừa kế, đổi nhà ở cho tổ chức, cá nhân, người gốc Việt Nam định cư ở nước ngoài thuộc đối tượng được sở hữu nhà ở tại Việt Nam;",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Phạm tội với mức phạt tù từ 05 năm đến 10 năm được quy định như thế nào?",
+    "ground_truth": "Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 05 năm đến 10 năm:",
+    "source": "Luathinhsu"
+  },
+  {
+    "question": "Giao dịch dân sự của người mất năng lực hành vi phải do ai thực hiện?",
+    "ground_truth": "Giao dịch dân sự của người mất năng lực hành vi dân sự phải do người đại diện theo pháp luật xác lập, thực hiện",
+    "source": "Bộ luật Dân sự - Điều 22"
+  },
+  {
+    "question": "Quyền hưởng dụng có hiệu lực từ thời điểm nào?",
+    "ground_truth": "Quyền hưởng dụng được xác lập từ thời điểm nhận chuyển giao tài sản, trừ trường hợp có thỏa thuận khác hoặc luật liên quan có quy định khác.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Trường hợp nào phải nộp Phiếu lý lịch tư pháp cho Cơ quan đăng ký kinh doanh?",
+    "ground_truth": "Trường hợp Cơ quan đăng ký kinh doanh có yêu cầu, người đăng ký thành lập doanh nghiệp phải nộp Phiếu lý lịch tư pháp cho Cơ quan đăng ký kinh doanh;",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Ủy ban nhân dân cấp tỉnh có trách nhiệm quản lý đất chưa sử dụng ở đâu?",
+    "ground_truth": "tại các đảo chưa giao cho đơn vị hành chính cấp huyện, cấp xã quản lý.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Người phân chia di sản có thể được hưởng thù lao khi nào?",
+    "ground_truth": "Người phân chia di sản được hưởng thù lao, nếu người để lại di sản cho phép trong di chúc hoặc những người thừa kế có thỏa thuận.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Gây thiệt hại trong tình thế cấp thiết được bồi thường theo quy định tại Điều số nào?",
+    "ground_truth": "Điều 595",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Phạt tiền bao nhiêu cho người điều khiển xe ô tô chở hành khách chạy tuyến có cự ly lớn hơn 300 km chở quá số người quy định?",
+    "ground_truth": "tối đa không vượt quá 40.000.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Tuổi nghỉ hưu của nữ giới là bao nhiêu?",
+    "ground_truth": "Nữ giới nghỉ hưu ở tuổi 60",
+    "source": "Bộ luật Lao động - Điều 169"
+  },
+  {
+    "question": "Diện tích đất do cơ quan, tổ chức của Nhà nước quản lý có trong khu vực thực hiện góp quyền sử dụng đất được sử dụng như thế nào?",
+    "ground_truth": "Sử dụng để xây dựng, nâng cấp hệ thống hạ tầng, dịch vụ công cộng khu dân cư;",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Trước khi tuyển dụng người lao động nước ngoài, doanh nghiệp cần làm gì?",
+    "ground_truth": "phải giải trình nhu cầu sử dụng lao động và được sự chấp thuận bằng văn bản của cơ quan nhà nước có thẩm quyền",
+    "source": "Luatlaodong"
+  },
+  {
+    "question": "Trợ cấp thôi việc được tính như thế nào?",
+    "ground_truth": "Người sử dụng lao động có trách nhiệm trả trợ cấp thôi việc cho người lao động đã làm việc thường xuyên từ đủ 12 tháng trở lên, mỗi năm làm việc trợ cấp một nửa tháng tiền lương",
+    "source": "Bộ luật Lao động - Điều 46"
+  },
+  {
+    "question": "Năng lực pháp luật dân sự của cá nhân là gì?",
+    "ground_truth": "Năng lực pháp luật dân sự của cá nhân là khả năng của cá nhân có quyền dân sự và nghĩa vụ dân sự. Mọi cá nhân đều có năng lực pháp luật dân sự như nhau",
+    "source": "Bộ luật Dân sự - Điều 16"
+  },
+  {
+    "question": "Tôi là chủ sở hữu của một công ty trách nhiệm hữu hạn hai thành viên trở lên, có sở hữu ít nhất 35% vốn điều lệ. Tôi có thể ủy quyền bao nhiêu người đại diện theo ủy quyền?",
+    "ground_truth": "a) Tổ chức là thành viên công ty trách nhiệm hữu hạn hai thành viên trở lên có sở hữu ít nhất 35% vốn điều lệ có thể ủy quyền tối đa 03 người đại diện theo ủy quyền;",
+    "source": "Luật Doanh nghiệp - Điều 14. Người đại diện theo ủy quyền của chủ sở hữu, thành viên, cổ đông công ty là tổ chức"
+  },
+  {
+    "question": "Trường hợp nào thì hồ sơ đăng ký đất đai vẫn được giải quyết theo Luật Đất đai số 45/2013/QH13?",
+    "ground_truth": "Hồ sơ đăng ký đất đai, tài sản gắn liền với đất, cấp Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất đã được cơ quan có thẩm quyền tiếp nhận nhưng đến ngày Luật này có hiệu lực thi hành mà chưa được cơ quan có thẩm quyền cấp Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Điều kiện để Tòa án giải quyết cho ly hôn khi có yêu cầu ly hôn?",
+    "ground_truth": "nếu có căn cứ về việc chồng, vợ có hành vi bạo lực gia đình làm ảnh hưởng nghiêm trọng đến tính mạng, sức khỏe, tinh thần của người kia.",
+    "source": "Luathonnhan"
+  },
+  {
+    "question": "Thành viên Hội đồng quản trị có thể đồng thời là thành viên Hội đồng quản trị của công ty khác?",
+    "ground_truth": "có thể đồng thời là thành viên Hội đồng quản trị của công ty khác",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Tôi muốn biết việc kết nối giao thông đường bộ được thực hiện theo quy định của cơ quan nào?",
+    "ground_truth": "c) Việc kết nối giao thông đường bộ thực hiện theo quy định của Chính phủ.",
+    "source": "Luật Đường bộ - Điều 30. Kết nối giao thông đường bộ"
+  },
+  {
+    "question": "Đăng ký đất đai là gì?",
+    "ground_truth": "Đăng ký đất đai, tài sản gắn liền với đất là việc người sử dụng đất, người sở hữu tài sản gắn liền với đất, người được giao quản lý đất kê khai quyền sử dụng đất, quyền sở hữu tài sản gắn liền với đất với cơ quan nhà nước có thẩm quyền để được ghi nhận",
+    "source": "Luật Đất đai - Điều 3"
+  },
+  {
+    "question": "Mức phạt đối với người điều khiển xe mô tô không có bảo hiểm trách nhiệm dân sự?",
+    "ground_truth": "Phạt tiền từ 100.000 đồng đến 200.000 đồng đối với một trong các hành vi vi phạm sau đây: a) Người điều khiển xe mô tô, xe gắn máy, các loại xe tương tự xe mô tô và các loại xe tương tự xe gắn máy không có hoặc không mang theo Giấy chứng nhận bảo hiểm trách nhiệm dân sự của chủ xe cơ giới còn hiệu lực;",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Bên vi phạm phải bồi thường bằng tiền như thế nào?",
+    "ground_truth": "ngang với giá trị của tài sản bị mất, bị hư hỏng, trừ trường hợp có thỏa thuận khác hoặc theo quy định tại khoản 2, khoản 3 Điều 351 và Điều 363 của Bộ luật này.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Hành vi đưa phương tiện không gắn biển số tham gia giao thông bị phạt như thế nào?",
+    "ground_truth": "k) Đưa phương tiện không gắn biển số (đối với loại xe có quy định phải gắn biển số) tham gia giao thông; đưa phương tiện gắn biển số không đúng với Giấy đăng ký xe hoặc gắn biển số không do cơ quan có thẩm quyền cấp tham gia giao thông.",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Người lao động có thai được nghỉ thai sản bao nhiêu tháng?",
+    "ground_truth": "Lao động nữ được nghỉ thai sản 6 tháng",
+    "source": "Bộ luật Lao động"
+  },
+  {
+    "question": "Giấy chứng nhận quyền sử dụng đất tạm thời được cấp như thế nào?",
+    "ground_truth": "Giấy chứng nhận quyền sử dụng đất tạm thời được cơ quan nhà nước có thẩm quyền cấp hoặc có tên trong Sổ đăng ký ruộng đất, Sổ địa chính;",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Hình thức xử phạt bổ sung cho người tái phạm hoặc vi phạm nhiều lần là gì?",
+    "ground_truth": "Tái phạm hoặc vi phạm nhiều lần hành vi quy định tại khoản 1, khoản 2 Điều này bị tịch thu phương tiện.",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Quy hoạch mạng lưới đường bộ được tổ chức lập bởi cơ quan nào?",
+    "ground_truth": "Bộ Giao thông vận tải tổ chức lập quy hoạch mạng lưới đường bộ trình Thủ tướng Chính phủ phê duyệt.",
+    "source": "Luật Đường bộ - Điều 5. Quy hoạch mạng lưới đường bộ, quy hoạch kết cấu hạ tầng đường bộ"
+  },
+  {
+    "question": "Biện pháp khắc phục hậu quả khi thực hiện hành vi vi phạm quy định tại khoản 1 là gì?",
+    "ground_truth": "thực hiện hành vi vi phạm quy định tại khoản 1; điểm a, điểm b khoản 2 Điều này buộc phải đưa rác thải sinh hoạt; đất, đá, chất độc hại, chất phế thải và các vật liệu khác ra khỏi đường sắt",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Trường hợp nào thì áp dụng tập quán?",
+    "ground_truth": "Trường hợp các bên không có thỏa thuận và pháp luật không quy định thì có thể áp dụng tập quán",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Tường chống ồn được xây dựng tại vị trí nào?",
+    "ground_truth": "tại các vị trí cần thiết để giảm tiếng ồn do phương tiện giao thông đường bộ gây ra",
+    "source": "Luatduongbo2024"
+  },
+  {
+    "question": "Thành viên có thể rút khỏi hợp đồng hợp tác trong trường hợp nào?",
+    "ground_truth": "Thành viên có quyền rút khỏi hợp đồng hợp tác trong trường hợp sau đây: a) Theo điều kiện đã thỏa thuận trong hợp đồng hợp tác; b) Có lý do chính đáng và được sự đồng ý của hơn một nửa tổng số thành viên hợp tác.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Mức phạt đối với người điều khiển xe gây tai nạn giao thông không đúng quy định là bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 6.000.000 đồng đến 8.000.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Nếu tôi có nghĩa vụ phải thực hiện một công việc thì nghĩa vụ đó là gì?",
+    "ground_truth": "Nghĩa vụ phải thực hiện một công việc là nghĩa vụ mà theo đó bên có nghĩa vụ phải thực hiện đúng công việc đó.",
+    "source": "Bộ luật Dân sự - Điều 281. Nghĩa vụ phải thực hiện hoặc không được thực hiện một công việc"
+  },
+  {
+    "question": "Nếu tôi trộn lẫn tài sản của người khác vào tài sản của mình mà không được sự đồng ý của họ, thì họ có quyền gì?",
+    "ground_truth": "2. Khi một người đã trộn lẫn tài sản của người khác vào tài sản của mình, mặc dù đã biết hoặc phải biết tài sản đó không phải của mình và không được sự đồng ý của chủ sở hữu tài sản bị trộn lẫn thì chủ sở hữu tài sản bị trộn lẫn có một trong các quyền sau đây:",
+    "source": "Bộ luật Dân sự - Điều 226. Xác lập quyền sở hữu trong trường hợp trộn lẫn"
+  },
+  {
+    "question": "Hành vi đi ngược chiều của đường một chiều bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 3.000.000 đồng đến 5.000.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Hành vi để toa xe chưa dồn trên đường ga bị phạt thế nào?",
+    "ground_truth": "Để toa xe chưa dồn trên đường ga, đường nhánh trong khu gian, đường dùng riêng mà không nối liền với nhau, không siết chặt hãm tay ở hai đầu đoàn xe, không chèn chắc chắn.",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Người lao động làm việc theo ca được nghỉ ít nhất bao lâu trước khi chuyển sang ca làm việc khác?",
+    "ground_truth": "12 giờ",
+    "source": "Luatlaodong"
+  },
+  {
+    "question": "Hành vi dồn phóng vào đường có toa xe đang tác nghiệp kỹ thuật bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 500.000 đồng đến 1.000.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Bên có quyền có thể yêu cầu gì khi bên có nghĩa vụ không thực hiện một công việc?",
+    "ground_truth": "yêu cầu bên có nghĩa vụ tiếp tục thực hiện hoặc tự mình thực hiện hoặc giao người khác thực hiện công việc đó và yêu cầu bên có nghĩa vụ thanh toán chi phí hợp lý, bồi thường thiệt hại",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Người bị tuyên bố mất tích có thể ly hôn không?",
+    "ground_truth": "Trường hợp vợ hoặc chồng của người bị tuyên bố mất tích xin ly hôn thì Tòa án giải quyết cho ly hôn theo quy định của pháp luật về hôn nhân và gia đình.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Làm thêm giờ vào ngày thường được trả lương tối thiểu bằng bao nhiêu phần trăm?",
+    "ground_truth": "Người lao động làm thêm giờ vào ngày thường được trả lương ít nhất bằng 150% tiền lương tính theo đơn giá tiền lương hoặc tiền lương thực trả theo công việc đang làm",
+    "source": "Bộ luật Lao động - Điều 98"
+  },
+  {
+    "question": "Thành viên có thể chuyển nhượng quyền góp vốn của mình như thế nào?",
+    "ground_truth": "theo quy định tại Điều 52 của Luật này",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Hồ sơ đăng ký doanh nghiệp qua mạng thông tin điện tử bao gồm những gì?",
+    "ground_truth": "hồ sơ đăng ký doanh nghiệp qua mạng thông tin điện tử bao gồm các dữ liệu theo quy định của Luật này và được thể hiện dưới dạng văn bản điện tử.",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Đất sản xuất, kinh doanh phi nông nghiệp gồm những loại đất nào?",
+    "ground_truth": "đ) Đất sản xuất, kinh doanh phi nông nghiệp, gồm: đất khu công nghiệp, cụm công nghiệp; đất thương mại, dịch vụ; đất cơ sở sản xuất phi nông nghiệp; đất sử dụng cho hoạt động khoá",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Người phân chia di sản được hưởng thù lao trong trường hợp nào?",
+    "ground_truth": "nếu người để lại di sản cho phép trong di chúc hoặc những người thừa kế có thỏa thuận",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Nếu tôi chết, thì số cổ phần của tôi sẽ được giải quyết như thế nào?",
+    "ground_truth": "4. Trường hợp cổ đông là cá nhân chết mà không có người thừa kế, người thừa kế từ chối nhận thừa kế hoặc bị truất quyền thừa kế thì số cổ phần của cổ đông đó được giải quyết theo quy định của pháp luật về dân sự.",
+    "source": "Luật Doanh nghiệp - Điều 127. Chuyển nhượng cổ phần"
+  },
+  {
+    "question": "Thời gian người đã là thành viên hợp danh phải chịu trách nhiệm về các khoản nợ của công ty?",
+    "ground_truth": "02 năm kể từ ngày chấm dứt tư cách thành viên",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Tôi có thể thành lập tổ chức đại diện người lao động tại cơ sở được không?",
+    "ground_truth": "Tổ chức đại diện người lao động tại cơ sở là tổ chức được thành lập trên cơ sở tự nguyện của người lao động tại một đơn vị sử dụng lao động nhằm mục đích bảo vệ quyền và lợi ích hợp pháp, chính đáng của người lao động trong quan hệ lao động thông qua thương lượng tập thể hoặc các hình thức khác theo quy định của pháp luật về lao động.",
+    "source": "Bộ luật Lao động - Điều 3. Giải thích từ ngữ"
+  },
+  {
+    "question": "Tôi có quyền được xác định lại giới tính không?",
+    "ground_truth": "Cá nhân có quyền xác định lại giới tính.",
+    "source": "Bộ luật Dân sự - Điều 36. Quyền xác định lại giới tính"
+  },
+  {
+    "question": "Nếu quá thời hạn hẹn giải quyết vụ việc vi phạm, người vi phạm phải làm gì?",
+    "ground_truth": "phải chấp hành quyết định xử phạt vi phạm hành chính theo quy định đối với các hành vi vi phạm đã ghi trong biên bản vi phạm hành chính",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Phạt tiền từ 1.000.000.000 đồng đến 4.000.000.000 đồng hoặc phạt tù bao lâu?",
+    "ground_truth": "từ 01 năm đến 05 năm",
+    "source": "Luathinhsu"
+  },
+  {
+    "question": "Nếu cố ý thay đổi, xóa dấu vết hiện trường vụ tai nạn giao thông thì bị phạt tiền bao nhiêu?",
+    "ground_truth": "từ 2.000.000 đồng đến 4.000.000 đồng đối với cá nhân, từ 4.000.000 đồng đến 8.000.000 đồng đối với tổ chức",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Luật Đường bộ được ban hành vào ngày nào?",
+    "ground_truth": "ngày 27 tháng 6 năm 2024",
+    "source": "Luatduongbo2024"
+  },
+  {
+    "question": "Một cá nhân chỉ được bầu làm thành viên độc lập Hội đồng quản trị của một công ty không quá bao nhiêu nhiệm kỳ liên tục?",
+    "ground_truth": "02 nhiệm kỳ",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Phương án góp quyền sử dụng đất, điều chỉnh lại đất đai cần thể hiện những nội dung gì?",
+    "ground_truth": "Phương án góp quyền sử dụng đất, điều chỉnh lại đất đai phải thể hiện các nội dung sau đây: a) Hiện trạng sử dụng đất trong khu vực cần điều chỉnh lại và các bên góp quyền sử dụng đất; b) Phương án sắp xếp lại đất đai, trong đó phải thể hiện phương án thiết kế hạ tầng kỹ thuật, hạ tầng xã hội, hạ tầng môi trường, tỷ lệ diện tích đất mà người sử dụng đất đóng góp để xây dựng các công trình hạ tầng kỹ thuật, cung cấp dịch vụ công cộng; c) Vị trí, diện tích đất mà người sử dụng đất được nhận lại sau khi thực hiện phương án điều chỉnh đất đai.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Ai chịu trách nhiệm về tính đầy đủ, kịp thời, trung thực và chính xác của thông tin được công bố?",
+    "ground_truth": "Người đại diện theo pháp luật phải chịu trách nhiệm về tính đầy đủ, kịp thời, trung thực và chính xác của thông tin được công bố.",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Nếu tôi xếp hàng hóa lên xe ô tô vượt quá trọng tải cho phép, tôi sẽ bị phạt bao nhiêu?",
+    "ground_truth": "Phạt tiền từ 500.000 đồng đến 1.000.000 đồng đối với cá nhân, từ 1.000.000 đồng đến 2.000.000 đồng đối với tổ chức kinh doanh vận tải, dịch vụ hỗ trợ vận tải thực hiện một trong các hành vi vi phạm sau đây: a) Xếp hàng hóa lên mỗi xe ô tô (kể cả rơ moóc và sơ mi rơ moóc) vượt quá trọng tải (khối lượng hàng chuyên chở) cho phép tham gia giao thông được ghi trong Giấy chứng nhận kiểm định an toàn kỹ thuật và bảo vệ môi trường của xe trên 10% đến 50% (trừ xe xi téc chở chất lỏng), trên 20% đến 50% đối với xe xi téc chở chất lỏng;",
+    "source": "Nghị định 100/2019 - Điều 28. Xử phạt các hành vi vi phạm quy định về vận tải đường bộ, dịch vụ hỗ trợ vận tải đường bộ"
+  },
+  {
+    "question": "Bên giữ tài sản phải làm gì nếu làm mất, hư hỏng tài sản gửi giữ?",
+    "ground_truth": "Phải bồi thường thiệt hại, nếu làm mất, hư hỏng tài sản gửi giữ, trừ trường hợp bất khả kháng.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Tôi muốn biết lý do tại sao cần cấp giấy phép lao động?",
+    "ground_truth": "Mục 4. LAO ĐỘNG LÀ NGƯỜI KHUYẾT TẬT",
+    "source": "Bộ luật Lao động - Điều 157. Cấp, cấp lại, gia hạn, thu hồi giấy phép lao động, giấy xác nhận không thuộc diện cấp giấy phép lao động"
+  },
+  {
+    "question": "Người đang sử dụng đất trong khu vực quy hoạch sử dụng đất quốc phòng, an ninh nhưng chưa có nhu cầu sử dụng được phép làm gì?",
+    "ground_truth": "được tiếp tục sử dụng đến khi có quyết định thu hồi đất của cơ quan nhà nước có thẩm quyền nhưng không được làm biến dạng địa hình tự nhiên",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Thành viên hợp tác có quyền rút khỏi hợp đồng hợp tác trong trường hợp nào?",
+    "ground_truth": "Theo điều kiện đã thỏa thuận trong hợp đồng hợp tác hoặc có lý do chính đáng và được sự đồng ý của hơn một nửa tổng số thành viên hợp tác.",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Tổ chức tôn giáo, tổ chức tôn giáo trực thuộc được cấp Giấy chứng nhận quyền sử dụng đất khi có đủ điều kiện gì?",
+    "ground_truth": "Tổ chức tôn giáo, tổ chức tôn giáo trực thuộc được Nhà nước cho phép hoạt động; Đất không có tranh chấp hoặc tranh chấp đã được giải quyết bởi cơ quan nhà nước có thẩm quyền, bản án, quyết định của Tòa án, quyết định hoặc phán quyết của Trọng tài đã có hiệu lực pháp luật; Không phải là đất nhận chuyển nhượng, nhận tặng cho từ ngày 01 tháng 7 năm 2004 trở về sau.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Đất phi nông nghiệp bao gồm những loại đất nào?",
+    "ground_truth": "Nhóm đất phi nông nghiệp bao gồm: đất ở tại nông thôn, đất ở tại đô thị, đất xây dựng trụ sở cơ quan, đất sử dụng vào mục đích quốc phòng, an ninh, đất xây dựng công trình sự nghiệp",
+    "source": "Luật Đất đai - Điều 9"
+  },
+  {
+    "question": "Thửa đất là gì?",
+    "ground_truth": "Thửa đất là phần diện tích đất được giới hạn bởi ranh giới mô tả trên hồ sơ địa chính",
+    "source": "Luật Đất đai - Điều 3"
+  },
+  {
+    "question": "Thành viên hợp danh được chia lợi nhuận như thế nào?",
+    "ground_truth": "Được chia lợi nhuận tương ứng với tỷ lệ phần vốn góp hoặc theo thỏa thuận quy định tại Điều lệ công ty;",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Cơ sở thể dục, thể thao do Nhà nước thành lập hoặc cho phép hoạt động gồm những gì?",
+    "ground_truth": "khu liên hợp thể thao, trung tâm đào tạo, huấn luyện vận động viên thể thao; sân vận động, cơ sở thi đấu, tập luyện các môn thể thao",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Văn bản quy định không áp dụng những quy định nào đối với người phạm tội?",
+    "ground_truth": "c) Quy định không có lợi cho người phạm tội tại các điều 63, 192, 193, 194, 195, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 248, 249, 250, 251, 252, 255, 317, 353, 354, 355, 356, 357, 358 và 359 của Bộ luật Hình sự được sửa đổi, bổ sung tại các khoản 4, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27 và 28 Điều 1 của Luật này và các quy định khác không có lợi cho người phạm tội",
+    "source": "Luathinhsu"
+  },
+  {
+    "question": "Thẩm tra an toàn giao thông đường bộ là gì?",
+    "ground_truth": "Thẩm tra an toàn giao thông đường bộ là việc tổ chức kinh doanh dịch vụ thẩm tra an toàn giao thông nghiên cứu, phân tích thiết kế cơ sở, thiết kế triển khai sau thiết kế cơ sở, báo cáo kinh tế - kỹ thuật xây dựng công trình, hồ sơ hoàn thành công trình, hồ sơ quản lý tuyến đường, nguyên nhân các vụ tai nạn giao thông và tiến hành kiểm tra hiện trường để phát hiện các khả năng tiềm ẩn tai nạn giao thông hoặc đánh giá nguyên nhân gây tai nạn giao thông để đề xuất giải pháp khắc phục nhằm bảo đảm giao thông trên tuyến thông suốt, an toàn.",
+    "source": "Luatduongbo2024"
+  },
+  {
+    "question": "Ủy ban kiểm toán có bao nhiêu thành viên?",
+    "ground_truth": "Ủy ban kiểm toán có từ 02 thành viên trở lên",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Tôi cần có người làm chứng khi lập di chúc bằng văn bản?",
+    "ground_truth": "Việc lập di chúc bằng văn bản không có người làm chứng phải tuân theo quy định tại Điều 631 của Bộ luật này.",
+    "source": "Bộ luật Dân sự - Điều 633. Di chúc bằng văn bản không có người làm chứng"
+  },
+  {
+    "question": "Cơ quan đăng ký kinh doanh có quyền từ chối tên dự kiến đăng ký không?",
+    "ground_truth": "Cơ quan đăng ký kinh doanh có quyền từ chối chấp thuận tên dự kiến đăng ký của doanh nghiệp",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Tôi cần phải nộp những giấy tờ gì khi đăng ký công ty cổ phần?",
+    "ground_truth": "1. Giấy đề nghị đăng ký doanh nghiệp. 2. Điều lệ công ty. 3. Danh sách cổ đông sáng lập; danh sách cổ đông là nhà đầu tư nước ngoài.",
+    "source": "Luật Doanh nghiệp - Điều 22. Hồ sơ đăng ký công ty cổ phần"
+  },
+  {
+    "question": "Công ty có thể tăng vốn điều lệ trong trường hợp nào?",
+    "ground_truth": "Công ty có thể tăng vốn điều lệ trong trường hợp sau đây: a) Tăng vốn góp của thành viên; b) Tiếp nhận thêm vốn góp của thành viên mới.",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Nếu nhân viên đường sắt có nồng độ cồn trong máu hoặc hơi thở nhưng chưa vượt quá 50 miligam/100 mililít máu hoặc chưa vượt quá 0,25 miligam/1 lít khí thở, thì họ sẽ bị phạt bao nhiêu tiền?",
+    "ground_truth": "Phạt tiền từ 2.000.000 đồng đến 4.000.000 đồng",
+    "source": "Nghị định 100/2019 - Điều 63. Xử phạt nhân viên đường sắt trực tiếp phục vụ chạy tàu (trừ lái tàu và phụ lái tàu) vi phạm quy định về nồng độ cồn hoặc sử dụng các chất kích thích khác mà pháp luật cấm sử dụng"
+  },
+  {
+    "question": "Khi nào thì việc trông nom, chăm sóc, giáo dục con sẽ được giao cho người giám hộ?",
+    "ground_truth": "trong các trường hợp sau đây: cha và mẹ đều bị Tòa án hạn chế quyền đối với con chưa thành niên; một bên cha, mẹ không bị hạn chế quyền đối với con chưa thành niên nhưng không đủ điều kiện để thực hiện quyền, nghĩa vụ đối với con; một bên cha, mẹ bị hạn chế quyền đối với con chưa thành niên và chưa xác định",
+    "source": "Luathonnhan"
+  },
+  {
+    "question": "Sau khi tách công ty, công ty bị tách và công ty được tách có phải chịu trách nhiệm về các nghĩa vụ của công ty bị tách không?",
+    "ground_truth": "Sau khi đăng ký doanh nghiệp, công ty bị tách và công ty được tách phải cùng liên đới chịu trách nhiệm về các nghĩa vụ, các khoản nợ chưa thanh toán, hợp đồng lao động và nghĩa vụ tài sản khác của công ty bị tách, trừ trường hợp công ty bị tách, công ty được tách, chủ nợ, khách hàng và người lao động của công ty bị tách có thỏa thuận khác.",
+    "source": "Luật Doanh nghiệp - Điều 199. Tách công ty"
+  },
+  {
+    "question": "Khi nhiều người cùng bảo lãnh, họ phải thực hiện nghĩa vụ như thế nào?",
+    "ground_truth": "phải liên đới thực hiện việc bảo lãnh",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Người điều khiển xe có bị phạt nếu lái xe có nồng độ cồn dưới 50 miligam/100 mililít máu?",
+    "ground_truth": "c) Điều khiển xe trên đường mà trong máu hoặc hơi thở có nồng độ cồn nhưng chưa vượt quá 50 miligam/100 mililít máu hoặc chưa vượt quá 0,25 miligam/1 lít khí thở.",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Mức phạt đối với chủ phương tiện là cá nhân khi giao phương tiện cho người khác điều khiển vượt quá quy định được phép chở?",
+    "ground_truth": "Phạt tiền từ 1.000.000 đồng đến 2.000.000 đồng trên mỗi người vượt quá quy định được phép chở của phương tiện nhưng tổng mức phạt tiền tối đa không vượt quá 40.000.000 đồng đối với chủ phương tiện là cá nhân",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Người sử dụng lối cấp, thoát nước phải làm gì khi lắp đặt đường dẫn nước?",
+    "ground_truth": "hạn chế đến mức thấp nhất thiệt hại cho chủ sở hữu bất động sản có nước chảy qua",
+    "source": "Luatdansu"
+  },
+  {
+    "question": "Tài sản được hình thành từ tài sản riêng của vợ, chồng là gì?",
+    "ground_truth": "Tài sản được hình thành từ tài sản riêng của vợ, chồng cũng là tài sản riêng của vợ, chồng",
+    "source": "Luathonnhan"
+  },
+  {
+    "question": "Điều kiện về số chuyến trùng lặp điểm đầu và trùng lặp điểm cuối cho xe kinh doanh vận tải hành khách theo hợp đồng, xe kinh doanh vận tải khách du lịch là gì?",
+    "ground_truth": "Sử dụng xe kinh doanh vận tải hành khách theo hợp đồng, xe kinh doanh vận tải khách du lịch mà xe đó có số chuyến trùng lặp điểm đầu và trùng lặp điểm cuối vượt quá quy định",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Ủy ban nhân dân cấp tỉnh có vai trò gì trong quản lý đất quốc phòng, an ninh?",
+    "ground_truth": "Ủy ban nhân dân cấp tỉnh chủ trì, phối hợp với Bộ Quốc phòng, Bộ Công an thực hiện việc quản lý nhà nước đối với đất quốc phòng, an ninh thuộc phạm vi quản lý hành chính của địa phương.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Mức phạt nếu không mang theo Giấy chứng nhận bảo hiểm trách nhiệm dân sự của chủ xe cơ giới?",
+    "ground_truth": "Phạt tiền từ 100.000 đồng đến 200.000 đồng",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Xe ô tô phải kiểm định định kỳ bao nhiêu năm một lần?",
+    "ground_truth": "Xe ô tô không kinh doanh vận tải có niên hạn sử dụng dưới 7 năm kiểm định 2 năm một lần",
+    "source": "Luật Đường bộ"
+  },
+  {
+    "question": "Người sử dụng đất có thể đồng ý để cơ quan nhà nước thu hồi đất trước thời hạn không?",
+    "ground_truth": "Trường hợp người sử dụng đất, chủ sở hữu tài sản gắn liền với đất, người có quyền lợi và nghĩa vụ liên quan trong khu vực thu hồi đất đồng ý để cơ quan nhà nước có thẩm quyền thu hồi đất trước thời hạn quy định tại khoản 1 Điều này thì Ủy ban nhân dân cấp có thẩm quyền quyết định thu hồi đất mà không phải chờ đến hết thời hạn quy định tại khoản 1 Điều này.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Tổ chức đã nộp hồ sơ thực hiện thủ tục giao đất nhưng chưa có quyết định giao đất thì thực hiện theo quy định nào?",
+    "ground_truth": "theo quy định của pháp luật trước ngày Luật này có hiệu lực thi hành; trường hợp có nhu cầu thì được thực hiện theo quy định của Luật này",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Hàng hóa ký gửi là gì?",
+    "ground_truth": "Hàng hóa ký gửi là hàng hóa gửi theo xe ô tô kinh doanh vận tải hành khách mà người gửi không đi cùng trên xe, được thực hiện theo thỏa thuận giữa người kinh doanh vận tải và người gửi hàng.",
+    "source": "Luatduongbo2024"
+  },
+  {
+    "question": "Cơ quan nhà nước có được sử dụng tài sản nhà nước góp vốn vào doanh nghiệp không?",
+    "ground_truth": "Cơ quan nhà nước, đơn vị lực lượng vũ trang nhân dân sử dụng tài sản nhà nước góp vốn vào doanh nghiệp để thu lợi riêng cho cơ quan, đơn vị mình;",
+    "source": "Luatdoanhnghiep"
+  },
+  {
+    "question": "Tổ chức lại doanh nghiệp bao gồm những hình thức nào?",
+    "ground_truth": "Tổ chức lại doanh nghiệp là việc chia, tách, hợp nhất, sáp nhập hoặc chuyển đổi loại hình doanh nghiệp",
+    "source": "Luật Doanh nghiệp - Điều 4"
+  },
+  {
+    "question": "Khi sử dụng xe thô sơ, xe gắn máy, xe mô tô hai bánh, xe mô tô ba bánh để kinh doanh vận tải hành khách, hàng hóa thì phải thực hiện quy định của pháp luật về trật tự, an toàn giao thông đường bộ?",
+    "ground_truth": "Tổ chức, cá nhân sử dụng xe thô sơ, xe gắn máy, xe mô tô hai bánh, xe mô tô ba bánh để kinh doanh vận tải hành khách, hàng hóa phải thực hiện quy định của pháp luật về trật tự, an toàn giao thông đường bộ.",
+    "source": "Luatduongbo2024"
+  },
+  {
+    "question": "Khi nào cơ quan có thẩm quyền không thu hồi giấy chứng nhận đã cấp?",
+    "ground_truth": "Cơ quan có thẩm quyền cấp Giấy chứng nhận quyền sử dụng đất, quyền sở hữu tài sản gắn liền với đất quy định tại Điều 136 của Luật này không thu hồi giấy chứng nhận đã cấp trong các trường hợp quy định tại điểm d khoản 2 Điều này nếu người được cấp giấy chứng nhận đã thực hiện chuyển quyền sử dụng đất, quyền sở hữu tài sản gắn liền với đất theo quy định của pháp luật về đất đai.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Ai chịu trách nhiệm thi hành Nghị định này?",
+    "ground_truth": "Các Bộ trưởng, Thủ trưởng cơ quan ngang bộ, Thủ trưởng cơ quan thuộc Chính phủ, Chủ tịch Ủy ban nhân dân tỉnh, thành phố trực thuộc trung ương chịu trách nhiệm thi hành Nghị định này.",
+    "source": "Nghidinh 100:2019"
+  },
+  {
+    "question": "Cơ quan nào quyết định thu hồi đất khi người sử dụng đất đồng ý?",
+    "ground_truth": "Ủy ban nhân dân cấp có thẩm quyền quyết định thu hồi đất mà không phải chờ đến hết thời hạn quy định tại khoản 1 Điều này.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Giấy chứng nhận quyền sử dụng đất do ai cấp?",
+    "ground_truth": "Giấy chứng nhận quyền sử dụng đất, quyền sở hữu tài sản gắn liền với đất do cơ quan nhà nước có thẩm quyền cấp cho người có quyền sử dụng đất, quyền sở hữu tài sản gắn liền với đất",
+    "source": "Luật Đất đai - Điều 3"
+  },
+  {
+    "question": "Phạm tội với mức phạt tù từ 05 năm đến 10 năm khi nào?",
+    "ground_truth": "Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 05 năm đến 10 năm:",
+    "source": "Luathinhsu"
+  },
+  {
+    "question": "Nhà nước thực hiện gì khi thu hồi đất vì mục đích quốc phòng, an ninh?",
+    "ground_truth": "Thực hiện bồi thường, hỗ trợ, tái định cư theo quy định của pháp luật cho người có đất thu hồi khi Nhà nước thu hồi đất vì mục đích quốc phòng, an ninh; phát triển kinh tế - xã hội vì lợi ích quốc gia, công cộng.",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Phạm tội thuộc trường hợp nào thì bị phạt tù từ 15 năm đến 20 năm?",
+    "ground_truth": "a) Nhựa thuốc phiện, nhựa cần sa hoặc cao côca có khối lượng từ 01 kilôgam đến dưới 05 kilôgam;",
+    "source": "Luathinhsu"
+  },
+  {
+    "question": "Nếu tôi vi phạm hành chính trong lĩnh vực giao thông đường bộ, đường sắt, tôi có thể bị buộc phải làm gì?",
+    "ground_truth": "Buộc khôi phục lại tình trạng ban đầu đã bị thay đổi do vi phạm hành chính gây ra; Buộc tháo dỡ công trình, phần công trình xây dựng không có giấy phép hoặc xây dựng không đúng với giấy phép; Buộc thực hiện biện pháp để khắc phục tình trạng ô nhiễm môi trường do vi phạm hành chính gây ra; Buộc tái xuất phương tiện khỏi Việt Nam; Buộc nộp lại số lợi bất hợp pháp có được do thực hiện vi phạm hành chính; Các biện pháp khắc phục hậu quả khác được quy định tại khoản 2 và khoản 3 Điều này.",
+    "source": "Nghị định 100/2019 - Điều 4. Các biện pháp khắc phục hậu quả và nguyên tắc áp dụng"
+  },
+  {
+    "question": "Ai quy định chức năng, nhiệm vụ, quyền hạn, tổ chức bộ máy của đơn vị trực thuộc Bộ, Công an tỉnh, thành phố?",
+    "ground_truth": "Bộ trưởng Bộ Công an",
+    "source": "Luathinhsu"
+  },
+  {
+    "question": "Quy hoạch sử dụng đất các cấp phải đảm bảo tính đặc thù, liên kết vùng và điều gì khác?",
+    "ground_truth": "sự cân bằng giữa nhu cầu sử dụng đất của các ngành, lĩnh vực, địa phương và phù hợp với tiềm năng đất đai của quốc gia nhằm sử dụng đất tiết kiệm, hiệu quả",
+    "source": "Luatdatdai"
+  },
+  {
+    "question": "Tổ chức nước ngoài có chức năng ngoại giao có quyền gì khi không còn nhu cầu sử dụng đất?",
+    "ground_truth": "c) Sở hữu công trình do mình xây dựng trên đất thuê trong thời hạn thuê đất;",
+    "source": "Luatdatdai"
   }
 ]
