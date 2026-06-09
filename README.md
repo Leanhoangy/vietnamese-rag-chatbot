@@ -150,7 +150,7 @@ vietnamese-rag-chatbot/
 │   └── evaluate_finetuned.py       # Đánh giá fine-tuned e5
 ├── train_custom.py                 # Pipeline train custom transformer
 ├── train_finetuned.py              # Pipeline fine-tune e5
-├── test_set.json                   # 68 câu hỏi test
+├── test_set.json                   # 306 câu hỏi test (20% split)
 └── requirements.txt
 ```
 
@@ -163,10 +163,10 @@ So sánh 2 embedding model với Hybrid Retrieval (BM25 + FAISS + Cross-Encoder,
 ### Retrieval Metrics
 | Metric           | Custom Transformer | Fine-tuned e5 |
 |:-----------------|:------------------:|:-------------:|
-| NDCG@7           | 0.9937             | **0.9950**    |
-| MRR@10           | 1.0000             | **1.0000**    |
+| NDCG@7           | 0.9937             | **0.9899**    |
+| MRR@10           | 1.0000             | **0.9914**    |
 | Recall@7         | 1.0000             | **1.0000**    |
-| Precision@7      | 0.9821             | **0.9857**    |
+| Precision@7      | 0.9821             | **0.9511**    |
 
 ### RAGAS Metrics
 | Metric            | Custom Transformer | Fine-tuned e5 |

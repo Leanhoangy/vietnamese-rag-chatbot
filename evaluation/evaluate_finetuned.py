@@ -10,8 +10,8 @@ from langchain_huggingface import HuggingFaceEmbeddings
 
 os.environ["USE_HYBRID_RETRIEVAL"] = "true"
 os.environ["USE_FINETUNED"] = "true"  # skip custom transformer, dùng fine-tuned e5
+os.environ["EVAL_LLM_MODEL"] = "llama-3.1-8b-instant"  # dùng 8b cho QA pipeline khi evaluation
 
-# Load fine-tuned e5 trực tiếp, bỏ qua custom transformer
 FINETUNED_PATH = Path("models/finetuned-embedder")
 if not FINETUNED_PATH.exists():
     raise FileNotFoundError("Chưa có fine-tuned model. Chạy train.py trước.")
@@ -31,4 +31,4 @@ evaluator = RAGEvaluator(
     embeddings=embeddings,
     test_set_path="test_set.json",
 )
-evaluator.run_full_evaluation(limit=10)
+evaluator.run_full_evaluation(limit=150)
