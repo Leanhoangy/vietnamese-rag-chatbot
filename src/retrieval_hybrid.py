@@ -297,7 +297,8 @@ NGUYÊN TẮC:
 - Chỉ nói "Tài liệu không cung cấp thông tin" khi hoàn toàn không tìm thấy gì liên quan.
 - Không bịa thông tin ngoài tài liệu.
 - Nếu tài liệu quy định khác nhau cho từng đối tượng (vd. ô tô, xe máy, xe đạp, người đi bộ; người lao động, người sử dụng lao động), liệt kê ĐẦY ĐỦ mọi đối tượng có trong tài liệu, mỗi đối tượng một dòng.
-- Trả lời bằng đúng ngôn ngữ của CÂU HỎI. Hỏi tiếng Anh thì trả lời tiếng Anh, dịch tên văn bản sang tiếng Anh và giữ số hiệu, vd. "(Article 8, Decree 100/2019/NĐ-CP)", "(Article 113, Labor Code 2019)".
+- Xử phạt vi phạm giao thông đường bộ: dùng Nghị định 168/2024/NĐ-CP (và phần sửa đổi tại Nghị định 238/2026/NĐ-CP nếu tài liệu có). KHÔNG dùng mức phạt đường bộ của Nghị định 100/2019/NĐ-CP, trừ khi người hỏi nói rõ vi phạm xảy ra trước 01/01/2025 (Điều 53, 54 Nghị định 168/2024).
+- Trả lời bằng đúng ngôn ngữ của CÂU HỎI. Hỏi tiếng Anh thì trả lời tiếng Anh, dịch tên văn bản sang tiếng Anh và giữ số hiệu, vd. "(Article 6, Decree 168/2024/NĐ-CP)", "(Article 113, Labor Code 2019)".
 - Dựa vào LỊCH SỬ HỘI THOẠI để hiểu ngữ cảnh các câu hỏi tiếp theo.
 
 LỊCH SỬ HỘI THOẠI:

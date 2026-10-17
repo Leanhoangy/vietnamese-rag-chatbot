@@ -19,15 +19,22 @@ DOC_LABELS = {
     "Luathonnhan.docx": "Luật Hôn nhân và Gia đình 2014 (số 52/2014/QH13)",
     "Luatlaodong.docx": "Bộ luật Lao động 2019 (số 45/2019/QH14)",
     "Nghidinh 100:2019.docx": "Nghị định 100/2019/NĐ-CP (xử phạt giao thông đường bộ, đường sắt)",
+    "Nghidinh_168_2024.docx": "Nghị định 168/2024/NĐ-CP (xử phạt giao thông đường bộ, trừ điểm giấy phép lái xe)",
+    "Nghidinh_238_2026.docx": "Nghị định 238/2026/NĐ-CP (sửa đổi, bổ sung Nghị định 168/2024)",
 }
 
 # Lưu ý hiển thị kèm câu trả lời khi nguồn đã bị thay thế một phần hoặc không phải toàn văn
 DOC_NOTES = {
+    # Theo Điều 53, 54 Nghị định 168/2024: hiệu lực từ 01/01/2025; vi phạm trước đó áp dụng nghị định cũ
     DOC_LABELS["Nghidinh 100:2019.docx"]: (
-        "Mức phạt giao thông đường bộ trong Nghị định 100/2019 đã được thay bằng Nghị định 168/2024/NĐ-CP "
-        "từ 01/01/2025; văn bản mới chưa có trong hệ thống. "
-        "(Road-traffic fines in Decree 100/2019 were replaced by Decree 168/2024 from 1 Jan 2025; "
-        "the new decree is not in the system yet.)"
+        "Từ 01/01/2025, xử phạt vi phạm giao thông đường bộ áp dụng Nghị định 168/2024/NĐ-CP; mức phạt "
+        "đường bộ của Nghị định 100/2019 chỉ áp dụng cho vi phạm xảy ra trước ngày đó. "
+        "(From 1 Jan 2025 road-traffic violations are fined under Decree 168/2024; Decree 100/2019 road-traffic "
+        "fines apply only to violations before that date.)"
+    ),
+    DOC_LABELS["Nghidinh_168_2024.docx"]: (
+        "Một số điều của Nghị định 168/2024 đã được sửa đổi, bổ sung bởi Nghị định 238/2026/NĐ-CP "
+        "(hiệu lực từ 15/08/2026). (Some provisions were amended by Decree 238/2026, effective 15 Aug 2026.)"
     ),
     DOC_LABELS["Luathinhsu.docx"]: (
         "Đây là luật sửa đổi, bổ sung một số điều của Bộ luật Hình sự, không phải toàn văn Bộ luật Hình sự. "
@@ -105,8 +112,16 @@ def _split_long_article(part: str) -> list[str]:
 def _split_by_dieu(doc: Document) -> list[Document]:
     """Tách document theo ranh giới Điều X., fallback RecursiveCharacter nếu điều quá dài."""
     label = _doc_label(doc)
-    parts = _DIEU_PATTERN.split(doc.page_content)
-    parts = [p.strip() for p in parts if p.strip()]
+    parts = []
+    for part in (p.strip() for p in _DIEU_PATTERN.split(doc.page_content)):
+        if not part:
+            continue
+        # Văn bản sửa đổi: "Điều 13. Sửa đổi, bổ sung Điều 42" rồi trích nguyên văn “Điều 42. …” →
+        # giữ chung để chunk không rỗng và vẫn biết đây là Điều 13 của văn bản sửa đổi
+        if parts and "\n" not in parts[-1] and len(parts[-1]) < MIN_CHUNK_CHARS and part.startswith(("“", '"')):
+            parts[-1] = f"{parts[-1]}\n{part}"
+        else:
+            parts.append(part)
 
     chunks = []
     for part in parts:

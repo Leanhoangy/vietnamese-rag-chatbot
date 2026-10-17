@@ -1,6 +1,6 @@
 # Vietnamese Legal RAG Chatbot
 
-**A chatbot that answers questions about 8 core Vietnamese laws and decrees, asked in Vietnamese or English, grounded in the official Vietnamese legal text and citing the law and article. It is built for citizens, HR staff, small businesses and foreign investors who need a quick legal lookup without reading the whole code.**
+**A chatbot that answers questions about 10 core Vietnamese laws and decrees, asked in Vietnamese or English, grounded in the official Vietnamese legal text and citing the law and article. It is built for citizens, HR staff, small businesses and foreign investors who need a quick legal lookup without reading the whole code.**
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://vietnamese-rag-chatbot-jemrcpipbmxd5bdugx5z2l.streamlit.app)
 [![tests](https://github.com/Leanhoangy/vietnamese-rag-chatbot/actions/workflows/tests.yml/badge.svg)](https://github.com/Leanhoangy/vietnamese-rag-chatbot/actions/workflows/tests.yml)
@@ -25,14 +25,14 @@
 - **Answers tied to sources.** Every chunk is stamped with its law name and article number, and the LLM (temperature 0) is prompted to answer only from the retrieved passages and cite them that way. Answers can expand to show the source passages. The last 5 chat turns go into the prompt, so follow-up questions work. When no passage is relevant enough (cooking, gold prices, laws outside the corpus), the bot declines without calling the LLM instead of guessing, and greetings get an instant reply.
 - **Evaluation pipeline.** It measures retrieval (NDCG, MRR, Recall, Precision), runs RAGAS (faithfulness, answer relevancy, context precision and recall) and scores semantic similarity against reference answers.
 - **Cloud or fully local.** The repo includes a Streamlit chat UI, a FastAPI endpoint and a prebuilt FAISS index, and the fine-tuned model downloads from Hugging Face Hub on first start. One setting switches the LLM between Gemini (hosted demo) and any Ollama model running on your own machine, so documents and questions never leave it. The public demo protects its API quota with per-session and daily question limits and caches answers to repeated opening questions.
-- **8 legal documents covered.** Civil Code 2015, Labor Code 2019, Land Law 2024, Law on Enterprises 2020, Law on Marriage and Family 2014, Road Law 2024, the 2025 law amending the Penal Code, and Decree 100/2019 on traffic fines. The road-traffic fines in Decree 100/2019 were replaced by Decree 168/2024 from 1 January 2025 (since amended by Decree 238/2026), which is not in the corpus yet, so the app shows a warning whenever an answer cites Decree 100/2019. <!-- TODO: the official texts of Decrees 168/2024 and 238/2026 on vanban.chinhphu.vn are scanned PDFs; add a verified text version to data/raw/ and rebuild the index. -->
+- **10 legal documents covered, kept current.** Civil Code 2015, Labor Code 2019, Land Law 2024, Law on Enterprises 2020, Law on Marriage and Family 2014, Road Law 2024, the 2025 law amending the Penal Code, and the traffic-fine decrees 168/2024 (in force since 1 January 2025), 238/2026 (its amendments) and 100/2019 (for earlier violations). The official texts of the two newest decrees are only published as scanned PDFs, so their Word texts were cross-checked against the scans with OCR: every monetary amount matches (473 in Decree 168, 23 in Decree 238).
 
 ## Architecture
 
 ```mermaid
 flowchart TD
     subgraph OFFLINE["Offline: build the index"]
-        A["8 legal documents (.docx)"] --> B["Structure-aware chunking<br/>split by article ('Điều N.'), long articles by clause ('khoản'), ~1,000 chars<br/>each chunk prefixed with law name + article"]
+        A["10 legal documents (.docx)"] --> B["Structure-aware chunking<br/>split by article ('Điều N.'), long articles by clause ('khoản'), ~1,000 chars<br/>each chunk prefixed with law name + article"]
         B --> C["Embed chunks<br/>fine-tuned multilingual-e5-base (768-d)<br/>or custom Transformer (128-d)"]
         C --> D[("FAISS index")]
         B --> E[("BM25 index<br/>built at startup")]
@@ -220,7 +220,7 @@ vietnamese-rag-chatbot/
 │   ├── custom_transformer/     # tokenizer, encoder architecture, triplet-loss trainer
 │   └── finetuned_e5/           # multilingual-e5-base fine-tuning
 ├── evaluation/                 # evaluate_finetuned.py, evaluate_custom.py, make_clean_test_set.py
-├── data/raw/                   # the 8 legal documents (.docx)
+├── data/raw/                   # the 10 legal documents (.docx)
 ├── faiss_index_local/          # prebuilt FAISS index (768-d, fine-tuned E5) used by the demo
 ├── train_finetuned.py          # fine-tuning pipeline
 ├── train_custom.py             # custom Transformer pipeline
@@ -251,9 +251,9 @@ Built as a Deep Learning course project at HUIT (2025) by [@Leanhoangy](https://
 
 ### Giới thiệu
 
-Hệ thống chatbot cho phép người dùng hỏi đáp về pháp luật Việt Nam dựa trên các văn bản luật chính thức (Luật Đường bộ 2024, Bộ luật Lao động, Luật Doanh nghiệp, Bộ luật Dân sự, Luật sửa đổi, bổ sung Bộ luật Hình sự 2025, Luật Đất đai, Luật Hôn nhân và Gia đình, Nghị định 100/2019).
+Hệ thống chatbot cho phép người dùng hỏi đáp về pháp luật Việt Nam dựa trên các văn bản luật chính thức (Luật Đường bộ 2024, Bộ luật Lao động, Luật Doanh nghiệp, Bộ luật Dân sự, Luật sửa đổi, bổ sung Bộ luật Hình sự 2025, Luật Đất đai, Luật Hôn nhân và Gia đình, Nghị định 168/2024 và Nghị định 238/2026 sửa đổi, Nghị định 100/2019).
 
-Lưu ý: phần xử phạt giao thông đường bộ của Nghị định 100/2019 đã được thay bằng Nghị định 168/2024 từ 01/01/2025 (đã được sửa đổi bởi Nghị định 238/2026); các văn bản này chưa có trong dữ liệu, app tự hiện cảnh báo khi câu trả lời dựa trên Nghị định 100/2019.
+Lưu ý: từ 01/01/2025, xử phạt giao thông đường bộ áp dụng Nghị định 168/2024 (đã được sửa đổi bởi Nghị định 238/2026 từ 15/08/2026); Nghị định 100/2019 chỉ áp dụng cho vi phạm xảy ra trước ngày đó. Bản chính thức của hai nghị định mới chỉ có PDF scan, nên bản Word được đối chiếu với bản scan bằng OCR: mọi con số tiền phạt đều khớp.
 
 ### Kiến trúc RAG Pipeline
 

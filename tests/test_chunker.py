@@ -57,6 +57,24 @@ def test_quoted_heading_in_amending_law_is_recognised():
     assert chunks[0].metadata["article"] == "Điều 49"
 
 
+def test_amending_article_stays_with_the_quoted_article_it_introduces():
+    text = (
+        "Điều 13. Sửa đổi, bổ sung Điều 42\n"
+        "“Điều 42. Thẩm quyền xử phạt của Chủ tịch Ủy ban nhân dân các cấp\n"
+        "1. Chủ tịch Ủy ban nhân dân cấp xã có quyền phạt cảnh cáo.”\n"
+        "Điều 14. Hiệu lực thi hành\n"
+        "Nghị định này có hiệu lực từ ngày 15 tháng 8 năm 2026."
+    )
+    chunks = _split_by_dieu(make_doc(text, filename="Nghidinh_238_2026.docx"))
+    assert [c.metadata["article"] for c in chunks] == ["Điều 13", "Điều 14"]
+    assert "Thẩm quyền xử phạt" in chunks[0].page_content
+
+
+def test_repealed_article_is_not_merged_into_the_next_one():
+    chunks = _split_by_dieu(make_doc("Điều 10. (được bãi bỏ)\nĐiều 11. Phạm vi\nNội dung."))
+    assert [c.metadata["article"] for c in chunks] == ["Điều 10", "Điều 11"]
+
+
 def test_long_article_is_split_between_clauses_never_inside_one():
     red_light = "đ) Không chấp hành hiệu lệnh của đèn tín hiệu giao thông."
     text = "\n".join([

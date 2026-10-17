@@ -8,7 +8,7 @@ Tài liệu này mô tả kiến trúc **hiện tại** của hệ thống (cậ
 
 ### Offline — chuẩn bị dữ liệu
 ```
-data/raw/*.docx (8 văn bản luật)
+data/raw/*.docx (10 văn bản luật)
         ↓ loader.py      đọc file (.docx; .doc/.pdf nếu có)
         ↓ chunker.py     tách theo Điều → gom theo khoản, gắn nhãn "[Tên văn bản] Điều N."
         ↓ embedder.py    fine-tuned multilingual-e5-base (768 chiều) hoặc Custom Transformer (128 chiều)
@@ -49,7 +49,11 @@ Văn bản luật có cấu trúc **Điều → khoản (1., 2.) → điểm (a)
 
 Tên văn bản lấy từ `DOC_LABELS` (theo số hiệu ghi ở đầu từng file); file mới chưa có trong bảng thì dùng "Văn bản số …" đọc từ dòng `Số:`. `DOC_NOTES` chứa lưu ý cho văn bản đã bị thay thế một phần (Nghị định 100/2019) hoặc không phải toàn văn (luật sửa đổi Bộ luật Hình sự).
 
-Kết quả hiện tại: 3.394 chunk, không có chunk nào chỉ chứa tiêu đề hoặc mở đầu bằng một điểm a), b)… tách khỏi khoản.
+Văn bản sửa đổi kiểu "Điều 13. Sửa đổi, bổ sung Điều 42" + nội dung “Điều 42. …” trích nguyên văn được giữ chung một chunk (nhãn Điều 13 của văn bản sửa đổi); điều chỉ có tiêu đề như "Điều 10. (được bãi bỏ)" không bị gộp vào điều sau.
+
+Kết quả hiện tại: 3.825 chunk, không có chunk nào chỉ chứa tiêu đề hoặc mở đầu bằng một điểm a), b)… tách khỏi khoản.
+
+**Nghị định 168/2024 và 238/2026:** bản chính thức trên vanban.chinhphu.vn chỉ là PDF scan (không có lớp chữ). Bản Word lấy từ thuvienphapluat.vn được đối chiếu với bản scan bằng OCR (Apple Vision, `vi-VT`): khớp 473/473 con số ở Nghị định 168, 23/23 ở Nghị định 238; độ giống văn bản sau khi bỏ dấu 98,8% và 97%. Các chỗ khác nhau đều do OCR đọc sót (vệt đen trên bản scan, con dấu chữ ký số) và đã được kiểm tra trên ảnh trang gốc.
 
 ### 2.3 Embedder (`src/embedder.py`)
 Thứ tự chọn model: Custom Transformer (nếu có `models/custom-transformer/`) → fine-tuned E5 → base E5.
@@ -166,10 +170,12 @@ input_ids (≤128 token) → Token Embedding (vocab 2.672) + Positional Encoding
 | 78 chunk chỉ có tiêu đề điều | Tiêu đề ngắn bị đẩy ra khi khoản kế tiếp dài | Gộp đoạn < 300 ký tự với phần kế tiếp |
 | App lỗi khó hiểu khi chạy local | Index 768 chiều nhưng embedder chọn Custom Transformer 128 chiều | Kiểm tra số chiều khi load, gợi ý `USE_FINETUNED=true` |
 | Build index bị crash trên macOS | Import `faiss` trước `torch` (xung đột OpenMP) | Import embedder trước FAISS |
+| Trả lời mức phạt giao thông đã hết hiệu lực | Nghị định 168/2024 chỉ có bản scan chính thức | Bản Word + đối chiếu từng con số với bản scan bằng OCR; prompt ưu tiên Nghị định 168 theo Điều 53, 54 của chính nghị định này |
 
 ---
 
 ## 7. Hạn chế hiện tại
-- Mức phạt giao thông theo Nghị định 100/2019, đã được thay bằng Nghị định 168/2024 (sửa đổi bởi Nghị định 238/2026). Bản chính thức của hai nghị định mới trên vanban.chinhphu.vn chỉ có PDF scan, chưa có bản văn bản để đưa vào hệ thống; app hiện lưu ý này khi trả lời.
+- Nghị định 168/2024 và 238/2026 là hai văn bản riêng (chưa có văn bản hợp nhất): câu trả lời đúng khi tìm được cả điều gốc lẫn điều sửa đổi. Mức trừ điểm giấy phép lái xe nằm ở khoản riêng nên đôi khi không được nêu.
+- Các câu hỏi giao thông trong `test_set.json` có đáp án theo Nghị định 100/2019; với dữ liệu mới, câu trả lời đúng theo Nghị định 168/2024 sẽ bị chấm lệch đáp án — cần cập nhật đáp án các câu này trước khi đánh giá lại.
 - `qwen3:8b` chạy local yếu với câu hỏi nhiều đối tượng; Gemini trả lời đầy đủ hơn.
 - E5 vẫn được fine-tune trên tập triplet có lẫn câu test; đánh giá tránh vấn đề này bằng `test_set_clean.json`, nhưng muốn dùng lại cả 306 câu thì cần tạo lại triplet chỉ từ `train_set.json` và train lại.

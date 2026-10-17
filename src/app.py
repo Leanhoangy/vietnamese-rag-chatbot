@@ -22,7 +22,7 @@ EXAMPLE_QUESTIONS = [
     ("Người lao động được nghỉ hằng năm bao nhiêu ngày?", "How many days of annual leave does an employee get?"),
     ("Điều kiện kết hôn theo pháp luật là gì?", "What are the legal requirements for marriage?"),
     ("Hồ sơ đăng ký thành lập công ty trách nhiệm hữu hạn gồm những gì?", "What documents are needed to register a limited liability company?"),
-    ("Thời hiệu khởi kiện tranh chấp hợp đồng là bao lâu?", "What is the limitation period for contract disputes?"),
+    ("Vượt đèn đỏ bị phạt bao nhiêu tiền?", "What is the fine for running a red light?"),
 ]
 # Cho khách nước ngoài thử ngay: câu hỏi tiếng Anh được LLM viết lại thành truy vấn tiếng Việt
 ENGLISH_EXAMPLES = [

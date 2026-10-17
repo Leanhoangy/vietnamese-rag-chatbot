@@ -39,11 +39,13 @@ def out_of_scope_reply(question: str) -> str:
         return (
             "Mình chưa tìm thấy quy định liên quan trong các văn bản của hệ thống. Hiện hệ thống hỗ trợ: "
             "Bộ luật Dân sự, Bộ luật Lao động, Luật Doanh nghiệp, Luật Đất đai, Luật Hôn nhân và Gia đình, "
-            "Luật Đường bộ, Nghị định 100/2019 về xử phạt giao thông và luật sửa đổi Bộ luật Hình sự 2025. "
+            "Luật Đường bộ, các Nghị định 168/2024, 238/2026 và 100/2019 về xử phạt giao thông "
+            "và luật sửa đổi Bộ luật Hình sự 2025. "
             "Bạn thử hỏi cụ thể hơn hoặc dùng thuật ngữ pháp lý nhé."
         )
     return (
         "I couldn't find relevant provisions in the documents this system covers: the Civil Code, Labor Code, "
-        "Law on Enterprises, Land Law, Law on Marriage and Family, Road Law, Decree 100/2019 on traffic fines "
+        "Law on Enterprises, Land Law, Law on Marriage and Family, Road Law, Decrees 168/2024, 238/2026 "
+        "and 100/2019 on traffic fines "
         "and the 2025 amendments to the Penal Code. Try asking more specifically."
     )
