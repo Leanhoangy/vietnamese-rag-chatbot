@@ -34,6 +34,19 @@ def small_talk_reply(text: str) -> str:
     return "Xin chào! Bạn cần tư vấn về vấn đề pháp luật nào? · Hello! What legal question can I help you with?"
 
 
+# Câu trả lời của LLM kiểu "tài liệu không có thông tin" có thể chỉ là một lần viết lại câu hỏi / sinh câu trả lời
+# không may. App không đưa những câu này vào cache dùng chung, để một lần trả lời hỏng không lặp lại cho mọi người.
+_NON_ANSWER = re.compile(
+    r"không (?:cung cấp|có|đề cập)(?: đến| tới)?(?: bất kỳ| đủ)? thông tin"
+    r"|(?:does not|doesn't|do not|don't) (?:provide|contain|mention|include)",
+    re.IGNORECASE,
+)
+
+
+def looks_like_non_answer(text: str) -> bool:
+    return bool(_NON_ANSWER.search(text))
+
+
 def not_in_uploaded_docs_reply(question: str) -> str:
     if has_vietnamese_diacritics(question):
         return "Tài liệu bạn tải lên không có thông tin liên quan tới câu hỏi này."

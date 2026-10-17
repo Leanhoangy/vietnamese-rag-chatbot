@@ -76,7 +76,7 @@ def load_chain():
 qa_chain = load_chain()
 
 from src import observability  # noqa: E402 — sys.path đã được thêm trong load_chain()
-from src.canned_replies import is_small_talk  # noqa: E402
+from src.canned_replies import is_small_talk, looks_like_non_answer  # noqa: E402
 from src.chunker import DOC_NOTES  # noqa: E402
 from src.document_upload import MAX_FILE_MB, MAX_FILES, SUPPORTED_SUFFIXES, UploadError  # noqa: E402
 from src.llm_chain import LLM_PROVIDER, is_transient_error  # noqa: E402
@@ -212,7 +212,8 @@ def answer_question(backend, question: str, chat_history: str, *, use_cache: boo
             "search_query": prepared.get("search_query", ""),
             "sources": _sources(prepared.get("source_documents", [])),
         }
-        if use_cache and not errors:
+        # Chỉ cache câu trả lời thật của LLM; câu từ chối / "không có thông tin" có thể chỉ là một lần không may
+        if use_cache and not errors and prepared["result"] is None and not looks_like_non_answer(content):
             _cache_put(question, reply)
         return reply
 

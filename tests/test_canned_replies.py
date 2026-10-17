@@ -1,6 +1,6 @@
 import pytest
 
-from src.canned_replies import is_small_talk, out_of_scope_reply, small_talk_reply
+from src.canned_replies import is_small_talk, looks_like_non_answer, out_of_scope_reply, small_talk_reply
 
 
 @pytest.mark.parametrize("text", [
@@ -27,3 +27,24 @@ def test_replies_follow_the_question_language():
     assert "You're welcome" in small_talk_reply("thanks")
     assert out_of_scope_reply("Cách nấu phở bò ngon?").startswith("Mình chưa tìm thấy quy định liên quan")
     assert out_of_scope_reply("How do I cook pho?").startswith("I couldn't find relevant provisions")
+
+
+@pytest.mark.parametrize("answer", [
+    # Câu trả lời sai thật từng bị cache trên demo
+    "Tài liệu không cung cấp thông tin cụ thể về tổng số ngày nghỉ hằng năm của người lao động mà chỉ quy định ...",
+    "Các tài liệu được cung cấp không đề cập đến thông tin về thủ đô của Pháp.",
+    "Tài liệu không có thông tin về vấn đề này.",
+    "The documents do not provide information about this.",
+    "The handbook doesn't mention a notice period for interns.",
+])
+def test_non_answers_are_detected(answer):
+    assert looks_like_non_answer(answer)
+
+
+@pytest.mark.parametrize("answer", [
+    "- 12 ngày làm việc đối với người làm công việc trong điều kiện bình thường (khoản 1 Điều 113 Bộ luật Lao động 2019).",
+    "Người điều khiển xe mô tô không chấp hành hiệu lệnh của đèn tín hiệu giao thông bị phạt tiền từ 4.000.000 đến 6.000.000 đồng.",
+    "Full-time employees receive 18 days of paid annual leave per calendar year (handbook.md, section 3).",
+])
+def test_real_answers_are_not_flagged(answer):
+    assert not looks_like_non_answer(answer)
