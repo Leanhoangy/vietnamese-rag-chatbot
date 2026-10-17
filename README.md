@@ -22,7 +22,7 @@
 
 - **Query rewriting + hybrid retrieval with re-ranking.** A small glossary first maps everyday terms to the wording used in the law (for example "đèn đỏ" → "đèn tín hiệu giao thông"), then the LLM rewrites the question into a Vietnamese legal search query. This also covers follow-ups that depend on the chat history, questions asked in English and Vietnamese typed without diacritics; answers come back in the user's language. BM25 keyword search and FAISS dense search then run in parallel, their scores are fused 50/50, and a multilingual cross-encoder picks the top 7 passages, extended to up to 10 when more provisions score almost as high (questions such as "running a red light" span one article per vehicle type). Exact references (article numbers, fine amounts) and everyday wording can both match.
 - **Two domain-trained embedding models.** `multilingual-e5-base` (278M parameters) is fine-tuned with triplet loss on 3,642 legal triplets with FAISS-mined hard negatives and [published on Hugging Face](https://huggingface.co/Hoangy2005/vietnamese-legal-embedder). Alongside it is a 738,560-parameter Transformer encoder built from scratch in PyTorch, with its own tokenizer, architecture and training loop.
-- **Answers tied to sources.** Every chunk is stamped with its law name and article number, and the LLM (temperature 0) is prompted to answer only from the retrieved passages and cite them that way. Answers can expand to show the source passages. The last 5 chat turns go into the prompt, so follow-up questions work.
+- **Answers tied to sources.** Every chunk is stamped with its law name and article number, and the LLM (temperature 0) is prompted to answer only from the retrieved passages and cite them that way. Answers can expand to show the source passages. The last 5 chat turns go into the prompt, so follow-up questions work. When no passage is relevant enough (cooking, gold prices, laws outside the corpus), the bot declines without calling the LLM instead of guessing, and greetings get an instant reply.
 - **Evaluation pipeline.** It measures retrieval (NDCG, MRR, Recall, Precision), runs RAGAS (faithfulness, answer relevancy, context precision and recall) and scores semantic similarity against reference answers.
 - **Cloud or fully local.** The repo includes a Streamlit chat UI, a FastAPI endpoint and a prebuilt FAISS index, and the fine-tuned model downloads from Hugging Face Hub on first start. One setting switches the LLM between Gemini (hosted demo) and any Ollama model running on your own machine, so documents and questions never leave it. The public demo protects its API quota with per-session and daily question limits and caches answers to repeated opening questions.
 - **8 legal documents covered.** Civil Code 2015, Labor Code 2019, Land Law 2024, Law on Enterprises 2020, Law on Marriage and Family 2014, Road Law 2024, the 2025 law amending the Penal Code, and Decree 100/2019 on traffic fines. The road-traffic fines in Decree 100/2019 were replaced by Decree 168/2024 from 1 January 2025 (since amended by Decree 238/2026), which is not in the corpus yet, so the app shows a warning whenever an answer cites Decree 100/2019. <!-- TODO: the official texts of Decrees 168/2024 and 238/2026 on vanban.chinhphu.vn are scanned PDFs; add a verified text version to data/raw/ and rebuild the index. -->
@@ -137,6 +137,9 @@ GOOGLE_API_KEY=your_google_ai_studio_key_here
 # Optional: demo protection (0 = unlimited)
 # DEMO_SESSION_LIMIT=20     # questions per browser session
 # DEMO_DAILY_LIMIT=200      # LLM-backed questions per day for the whole app
+
+# Optional: decline a question when the best passage's cross-encoder score is below this
+# MIN_RELEVANCE_SCORE=-4.0
 ```
 
 **3. Start the app**
@@ -205,6 +208,7 @@ vietnamese-rag-chatbot/
 │   ├── api.py                  # FastAPI: POST /chat (history in, sources out), GET /health
 │   ├── retrieval_hybrid.py     # query rewrite, BM25 + FAISS fusion, cross-encoder re-rank, QA chain + prompt
 │   ├── legal_glossary.py       # everyday words → legal terms, applied to every search query
+│   ├── canned_replies.py       # greetings and out-of-scope replies that need no LLM call
 │   ├── llm_chain.py            # LLM factory: Gemini (cloud) or Ollama (local)
 │   ├── embedder.py             # picks custom Transformer → fine-tuned E5 → base E5
 │   ├── vector_store.py         # build / load the FAISS index

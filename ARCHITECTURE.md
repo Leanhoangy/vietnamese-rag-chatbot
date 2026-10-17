@@ -75,6 +75,9 @@ LLM viết lại câu hỏi thành một truy vấn pháp lý **bằng tiếng V
 - **Fusion**: chuẩn hóa min-max từng nguồn (khoảng cách FAISS được đảo chiều), `0.5 × dense + 0.5 × BM25`.
 - **Cross-encoder** `cross-encoder/mmarco-mMiniLMv2-L12-H384-v1` đọc đồng thời câu hỏi và đoạn văn để xếp hạng lại.
 - **k thích ứng**: lấy top 7, cộng thêm tối đa 3 chunk có điểm cross-encoder cách chunk đứng đầu không quá 2.0. Câu hỏi nhiều đối tượng (vượt đèn đỏ: mỗi loại xe một Điều) cần nhiều hơn 7 chunk; câu hỏi thường gần như không bị ảnh hưởng.
+- **Lọc câu ngoài phạm vi** (`src/canned_replies.py`): lời chào / cảm ơn (cả câu) được trả lời sẵn, không chạy retrieval. Nếu điểm cross-encoder của đoạn đứng đầu < `MIN_RELEVANCE_SCORE` (mặc định −4.0), chain trả lời "chưa tìm thấy quy định liên quan" kèm danh sách văn bản, **không gọi LLM**.
+
+  Ngưỡng được chọn từ dữ liệu: điểm đoạn đứng đầu của 306 câu test (p1 = −3.49, p5 = 0.32, trung vị 6.61) và 20 câu ngoài phạm vi (từ 0.23 với thuế TNCN đến −6.67 với nấu phở). Ở −4.0: từ chối 3/306 câu hợp lệ — cả 3 là ca retrieval vốn đã sai (vd. "tốc độ tối đa trong khu dân cư" không có đoạn đúng trong top 7) — và chặn 9/20 câu ngoài phạm vi rõ ràng. Câu ngoài phạm vi còn lọt qua (thường là luật khác: thuế, cư trú) vẫn bị prompt yêu cầu không trả lời ngoài tài liệu.
 
 ### 2.8 LLM (`src/llm_chain.py`)
 `LLM_PROVIDER` = `gemini` (mặc định khi có `GOOGLE_API_KEY`, model `gemini-3.5-flash-lite`) hoặc `ollama` (model local, mặc định `qwen3:8b`, `num_ctx=12288`, tắt thinking). Đổi model bằng `LLM_MODEL`. `temperature=0`, tối đa 2.048 token đầu ra. `is_transient_error()` nhận diện lỗi quá tải / giới hạn request (429, 503) cho app, API và evaluation.

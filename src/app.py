@@ -51,7 +51,8 @@ def load_chain():
 
 qa_chain = load_chain()
 
-from src.chunker import DOC_NOTES  # noqa: E402 — sys.path đã được thêm trong load_chain()
+from src.canned_replies import is_small_talk  # noqa: E402 — sys.path đã được thêm trong load_chain()
+from src.chunker import DOC_NOTES  # noqa: E402
 from src.llm_chain import is_transient_error  # noqa: E402
 
 
@@ -74,8 +75,8 @@ def _take_daily_quota() -> bool:
 
 
 def run_chain(question: str, chat_history: str) -> dict:
-    """Gọi QA chain (tính vào quota ngày), trả về dữ liệu thuần để cache được."""
-    if not _take_daily_quota():
+    """Gọi QA chain (tính vào quota ngày, trừ lời chào không cần LLM), trả về dữ liệu thuần để cache được."""
+    if not is_small_talk(question) and not _take_daily_quota():
         raise DemoQuotaExceeded()
     result = qa_chain.invoke({"query": question, "chat_history": chat_history})
     return {

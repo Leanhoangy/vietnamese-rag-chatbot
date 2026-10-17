@@ -22,11 +22,13 @@ class DocumentLike(Protocol):
     metadata: Dict[str, Any]
 
 try:
+    from .canned_replies import is_small_talk, out_of_scope_reply, small_talk_reply
     from .legal_glossary import apply_glossary, has_vietnamese_diacritics
     from .llm_chain import LLM_PROVIDER, model
     from .vector_store import vectorstore
     from .chunker import splits
 except ImportError:
+    from canned_replies import is_small_talk, out_of_scope_reply, small_talk_reply
     from legal_glossary import apply_glossary, has_vietnamese_diacritics
     from llm_chain import LLM_PROVIDER, model
     from vector_store import vectorstore
@@ -250,9 +252,10 @@ class LangChainHybridRetriever(BaseRetriever):
             top_score = results[0][1]
             extra = [r for r in results[self.k:] if r[1] >= top_score - self.score_margin]
             results = results[:self.k] + extra
-        else:
-            results = results[:self.k]
-        return [doc for doc, _ in results]
+            # Bản sao kèm điểm cross-encoder (không sửa Document dùng chung) để chain lọc câu ngoài phạm vi
+            return [Document(page_content=doc.page_content, metadata={**doc.metadata, "rerank_score": score})
+                    for doc, score in results]
+        return [doc for doc, _ in results[:self.k]]
 
 
 class HybridQAChain:
@@ -347,6 +350,10 @@ TRUY VẤN:"""
         # auto: Gemini viết lại mọi câu. Model local nhỏ (Ollama) viết lại câu hỏi độc lập còn kém hơn
         # từ điển (vd. qwen3:8b bỏ mất chữ "đèn"), nên chỉ dùng LLM cho câu nối tiếp cần lịch sử hội thoại.
         self.query_rewrite_mode = os.getenv("QUERY_REWRITE", "auto").strip().lower()
+        # Điểm cross-encoder của đoạn đứng đầu thấp hơn ngưỡng → coi là ngoài phạm vi.
+        # -4.0 đo trên 306 câu test + 20 câu ngoài phạm vi: từ chối 1% câu hợp lệ (đều là ca retrieval sai)
+        # và 9/20 câu ngoài phạm vi rõ ràng (nấu ăn, code, giá vàng...).
+        self.min_relevance_score = float(os.getenv("MIN_RELEVANCE_SCORE", "-4.0"))
         self.model = model
         self.retriever = retriever
 
@@ -380,8 +387,17 @@ TRUY VẤN:"""
         query = query_dict.get("query", "")
         chat_history = query_dict.get("chat_history", "")
 
+        if is_small_talk(query):
+            return {"result": small_talk_reply(query), "source_documents": [], "search_query": query}
+
         search_query = self.rewrite_query(query, chat_history)
         docs = self.retriever.invoke(search_query)
+
+        # Không đoạn luật nào đủ liên quan → từ chối thay vì để LLM tự trả lời (dễ bịa), không tốn lượt gọi LLM
+        top_score = docs[0].metadata.get("rerank_score") if docs else None
+        if not docs or (top_score is not None and top_score < self.min_relevance_score):
+            return {"result": out_of_scope_reply(query), "source_documents": [], "search_query": search_query}
+
         context = self.format_docs(docs)
 
         answer = (
