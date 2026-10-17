@@ -21,6 +21,17 @@ DOC_LABELS = {
     "Nghidinh 100:2019.docx": "Nghị định 100/2019/NĐ-CP (xử phạt giao thông đường bộ, đường sắt)",
 }
 
+# Lưu ý hiển thị kèm câu trả lời khi nguồn đã bị thay thế một phần hoặc không phải toàn văn
+DOC_NOTES = {
+    DOC_LABELS["Nghidinh 100:2019.docx"]: (
+        "Mức phạt giao thông đường bộ trong Nghị định 100/2019 đã được thay bằng Nghị định 168/2024/NĐ-CP "
+        "từ 01/01/2025; văn bản mới chưa có trong hệ thống."
+    ),
+    DOC_LABELS["Luathinhsu.docx"]: (
+        "Đây là luật sửa đổi, bổ sung một số điều của Bộ luật Hình sự, không phải toàn văn Bộ luật Hình sự."
+    ),
+}
+
 # Ranh giới điều luật: "Điều N." ở ĐẦU DÒNG (luật sửa đổi có thể mở bằng ngoặc kép).
 # Neo đầu dòng để không cắt nhầm ở câu dẫn chiếu như "... khoản 3 Điều 71; t) Điều 72, Điều 73."
 _DIEU_PATTERN = re.compile(r'(?=^[ \t]*[“"]?(?:Điều|ĐIỀU)\s+\d+[a-zđ]?[\.:])', re.MULTILINE)
@@ -30,6 +41,8 @@ _SO_HIEU_PATTERN = re.compile(r'(?:Bộ luật số|Luật số|Số)\s*:\s*(\S+
 _KHOAN_PATTERN = re.compile(r'(?=^\d+\.\s)', re.MULTILINE)
 
 MAX_CHUNK_CHARS = 1000
+# Đoạn ngắn hơn mức này (thường chỉ là tiêu đề điều) không đứng thành chunk riêng
+MIN_CHUNK_CHARS = 300
 
 _fallback_splitter = RecursiveCharacterTextSplitter(
     chunk_size=MAX_CHUNK_CHARS,
@@ -66,14 +79,17 @@ def _split_long_article(part: str) -> list[str]:
     texts, current = [], ""
     for seg in segments:
         if len(seg) > MAX_CHUNK_CHARS:
-            if current:
-                texts.append(current)
-                current = ""
             is_khoan = re.match(r'\d+\.\s', seg) is not None
             lead = seg.split("\n", 1)[0][:300]
+            if current and len(current) < MIN_CHUNK_CHARS:
+                # Đoạn trước quá ngắn (thường chỉ là tiêu đề điều) → gộp vào khoản dài, tránh chunk rỗng nội dung
+                seg = f"{current}\n{seg}"
+            elif current:
+                texts.append(current)
+            current = ""
             for i, piece in enumerate(_fallback_splitter.split_text(seg)):
                 texts.append(f"{lead} (tiếp theo)\n{piece}" if i > 0 and is_khoan else piece)
-        elif current and len(current) + 1 + len(seg) > MAX_CHUNK_CHARS:
+        elif current and len(current) >= MIN_CHUNK_CHARS and len(current) + 1 + len(seg) > MAX_CHUNK_CHARS:
             texts.append(current)
             current = seg
         else:

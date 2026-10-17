@@ -1,13 +1,20 @@
-from fastapi import FastAPI
+import traceback
+from typing import List, Literal
+
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 try:
+    from .chunker import DOC_NOTES
+    from .llm_chain import is_transient_error
     from .retrieval_hybrid import qa_chain
 except ImportError:
+    from chunker import DOC_NOTES
+    from llm_chain import is_transient_error
     from retrieval_hybrid import qa_chain
 
-app = FastAPI()
+app = FastAPI(title="Vietnamese Legal RAG API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -16,14 +23,66 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+class ChatTurn(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str
+
+
 class ChatRequest(BaseModel):
     message: str
+    history: List[ChatTurn] = []  # các lượt trước, cũ → mới (dùng cho câu hỏi nối tiếp)
 
-@app.post("/chat")
-async def chat(request: ChatRequest):
-    response = qa_chain.invoke({"query": request.message})
-    return {"reply": response['result']}
+
+class Source(BaseModel):
+    law: str
+    article: str
+    excerpt: str
+
+
+class ChatResponse(BaseModel):
+    reply: str
+    search_query: str
+    sources: List[Source]
+    notes: List[str]
+
+
+def format_history(history: List[ChatTurn], max_turns: int = 5) -> str:
+    """Cùng định dạng lịch sử hội thoại với Streamlit app."""
+    lines = []
+    for turn in history[-(max_turns * 2):]:
+        role = "Người dùng" if turn.role == "user" else "Trợ lý"
+        lines.append(f"{role}: {turn.content[:200]}")
+    return "\n".join(lines)
+
+
+# def (không async): qa_chain chạy đồng bộ, FastAPI sẽ đưa vào threadpool thay vì chặn event loop
+@app.post("/chat", response_model=ChatResponse)
+def chat(request: ChatRequest):
+    try:
+        result = qa_chain.invoke({"query": request.message, "chat_history": format_history(request.history)})
+    except Exception as e:
+        traceback.print_exc()
+        if is_transient_error(e):
+            raise HTTPException(status_code=503, detail="LLM provider is busy, please retry shortly.")
+        raise HTTPException(status_code=500, detail="Failed to answer the question.")
+
+    docs = result.get("source_documents", [])
+    return ChatResponse(
+        reply=result["result"],
+        search_query=result.get("search_query", request.message),
+        sources=[
+            Source(
+                law=doc.metadata.get("law") or doc.metadata.get("source", ""),
+                article=doc.metadata.get("article", ""),
+                excerpt=doc.page_content[:300],
+            )
+            for doc in docs
+        ],
+        notes=sorted({DOC_NOTES[doc.metadata.get("law")] for doc in docs if doc.metadata.get("law") in DOC_NOTES}),
+    )
+
 
 @app.get("/health")
-async def health():    
+def health():
     return {"status": "ok"}

@@ -59,5 +59,13 @@ def make_llm(temperature: float = 0, max_tokens: int = 2048):
     )
 
 
+def is_transient_error(error: Exception) -> bool:
+    """Lỗi tạm thời của provider (quá tải / giới hạn request) — nên thử lại sau."""
+    message = f"{type(error).__name__}: {error}".lower()
+    return any(key in message for key in (
+        "429", "503", "rate_limit", "rate limit", "resource_exhausted", "unavailable", "overloaded", "high demand",
+    ))
+
+
 print(f"LLM: {LLM_PROVIDER} / {LLM_MODEL}")
 model = make_llm()

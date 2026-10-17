@@ -33,6 +33,9 @@ def load_chain():
 
 qa_chain = load_chain()
 
+from src.chunker import DOC_NOTES  # noqa: E402 — sys.path đã được thêm trong load_chain()
+from src.llm_chain import is_transient_error  # noqa: E402
+
 hybrid_retriever = getattr(qa_chain, "hybrid_retriever", None)
 if hybrid_retriever is not None:
     with st.sidebar:
@@ -60,7 +63,7 @@ def format_chat_history(messages: list, max_turns: int = 5) -> str:
 def friendly_error(error: Exception) -> str:
     """Thông báo dễ hiểu cho người dùng; lỗi chi tiết được in ra log."""
     message = f"{type(error).__name__}: {error}".lower()
-    if any(key in message for key in ("429", "503", "rate_limit", "rate limit", "resource_exhausted", "unavailable", "overloaded", "high demand")):
+    if is_transient_error(error):
         return ("⚠️ Hệ thống AI đang quá tải, vui lòng thử lại sau ít phút. "
                 "*(The AI service is busy — please try again in a minute.)*")
     if "connect" in message:
@@ -103,6 +106,9 @@ if prompt:
         st.write(answer)
 
         if source_docs and len(answer) > 100:
+            notes = sorted({DOC_NOTES[doc.metadata.get("law")] for doc in source_docs if doc.metadata.get("law") in DOC_NOTES})
+            for note in notes:
+                st.warning(note, icon="⚠️")
             with st.expander("Nguồn tài liệu"):
                 if search_query and search_query != prompt:
                     st.caption(f"Truy vấn tìm kiếm: {search_query}")

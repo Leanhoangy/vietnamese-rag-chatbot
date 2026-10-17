@@ -3,6 +3,7 @@
 **A chatbot that answers plain-Vietnamese questions about 8 core Vietnamese laws and decrees, grounded in the official legal text and showing the source passages. It is built for citizens, HR staff and small businesses who need a quick legal lookup without reading the whole code.**
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://vietnamese-rag-chatbot-jemrcpipbmxd5bdugx5z2l.streamlit.app)
+[![tests](https://github.com/Leanhoangy/vietnamese-rag-chatbot/actions/workflows/tests.yml/badge.svg)](https://github.com/Leanhoangy/vietnamese-rag-chatbot/actions/workflows/tests.yml)
 [![Hugging Face model](https://img.shields.io/badge/Hugging_Face-fine--tuned_embedder-FFD21E?logo=huggingface&logoColor=black)](https://huggingface.co/Hoangy2005/vietnamese-legal-embedder)
 [![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)](https://www.python.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.x-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org)
@@ -24,7 +25,7 @@
 - **Answers tied to sources.** Every chunk is stamped with its law name and article number, and the LLM (temperature 0) is prompted to answer only from the retrieved passages and cite them that way. Answers can expand to show the source passages. The last 5 chat turns go into the prompt, so follow-up questions work.
 - **Evaluation pipeline.** It measures retrieval (NDCG, MRR, Recall, Precision), runs RAGAS (faithfulness, answer relevancy, context precision and recall) and scores semantic similarity against reference answers.
 - **Cloud or fully local.** The repo includes a Streamlit chat UI, a FastAPI endpoint and a prebuilt FAISS index, and the fine-tuned model downloads from Hugging Face Hub on first start. One setting switches the LLM between Gemini (hosted demo) and any Ollama model running on your own machine, so documents and questions never leave it.
-- **8 legal documents covered.** Civil Code 2015, Labor Code 2019, Land Law 2024, Law on Enterprises 2020, Law on Marriage and Family 2014, Road Law 2024, the 2025 law amending the Penal Code, and Decree 100/2019 on traffic fines. The road-traffic fines in Decree 100/2019 were replaced by Decree 168/2024 from 1 January 2025, which is not in the corpus yet. <!-- TODO: add Decree 168/2024 to data/raw/ and rebuild the index. -->
+- **8 legal documents covered.** Civil Code 2015, Labor Code 2019, Land Law 2024, Law on Enterprises 2020, Law on Marriage and Family 2014, Road Law 2024, the 2025 law amending the Penal Code, and Decree 100/2019 on traffic fines. The road-traffic fines in Decree 100/2019 were replaced by Decree 168/2024 from 1 January 2025 (since amended by Decree 238/2026), which is not in the corpus yet, so the app shows a warning whenever an answer cites Decree 100/2019. <!-- TODO: the official texts of Decrees 168/2024 and 238/2026 on vanban.chinhphu.vn are scanned PDFs; add a verified text version to data/raw/ and rebuild the index. -->
 
 ## Architecture
 
@@ -149,8 +150,21 @@ uvicorn src.api:app --reload     # interactive docs at http://localhost:8000/doc
 
 curl -X POST http://localhost:8000/chat \
   -H "Content-Type: application/json" \
-  -d '{"message": "Vượt đèn đỏ bị phạt bao nhiêu tiền?"}'
+  -d '{"message": "Còn người đi bộ thì sao?",
+       "history": [{"role": "user", "content": "Vượt đèn đỏ bị phạt bao nhiêu tiền?"},
+                   {"role": "assistant", "content": "..."}]}'
 ```
+
+The response contains `reply`, the rewritten `search_query`, `sources` (law, article, excerpt) and `notes` (for example, a warning when a cited decree has been superseded). The API returns 503 when the LLM provider is overloaded and 422 for malformed requests.
+
+**5. Optional: unit tests**
+
+```bash
+pip install -r requirements-dev.txt   # light: no torch or model downloads needed
+pytest -q
+```
+
+The same tests run on every push via GitHub Actions. They cover the glossary and the clause-aware chunker.
 
 <details>
 <summary><b>Retrain, rebuild the index, evaluate</b></summary>
@@ -182,7 +196,7 @@ python evaluation/evaluate_custom.py
 vietnamese-rag-chatbot/
 ├── src/
 │   ├── app.py                  # Streamlit chat UI
-│   ├── api.py                  # FastAPI: POST /chat, GET /health
+│   ├── api.py                  # FastAPI: POST /chat (history in, sources out), GET /health
 │   ├── retrieval_hybrid.py     # query rewrite, BM25 + FAISS fusion, cross-encoder re-rank, QA chain + prompt
 │   ├── legal_glossary.py       # everyday words → legal terms, applied to every search query
 │   ├── llm_chain.py            # LLM factory: Gemini (cloud) or Ollama (local)
@@ -202,9 +216,11 @@ vietnamese-rag-chatbot/
 ├── train_custom.py             # custom Transformer pipeline
 ├── train_colab.ipynb           # Colab GPU notebook for fine-tuning
 ├── test_set.json               # 306 evaluation questions with reference answers
-├── ARCHITECTURE.md             # design notes (Vietnamese)
+├── tests/                      # unit tests (glossary, chunker), run by .github/workflows/tests.yml
+├── ARCHITECTURE.md             # design notes and bugs fixed along the way (Vietnamese)
 ├── .env.example                # environment variable template
-└── requirements.txt            # pinned dependency versions
+├── requirements.txt            # pinned dependency versions
+└── requirements-dev.txt        # test dependencies
 ```
 
 ## About
@@ -226,7 +242,7 @@ Built as a Deep Learning course project at HUIT (2025) by [@Leanhoangy](https://
 
 Hệ thống chatbot cho phép người dùng hỏi đáp về pháp luật Việt Nam dựa trên các văn bản luật chính thức (Luật Đường bộ 2024, Bộ luật Lao động, Luật Doanh nghiệp, Bộ luật Dân sự, Luật sửa đổi, bổ sung Bộ luật Hình sự 2025, Luật Đất đai, Luật Hôn nhân và Gia đình, Nghị định 100/2019).
 
-Lưu ý: phần xử phạt giao thông đường bộ của Nghị định 100/2019 đã được thay bằng Nghị định 168/2024 từ 01/01/2025; văn bản này chưa có trong dữ liệu.
+Lưu ý: phần xử phạt giao thông đường bộ của Nghị định 100/2019 đã được thay bằng Nghị định 168/2024 từ 01/01/2025 (đã được sửa đổi bởi Nghị định 238/2026); các văn bản này chưa có trong dữ liệu, app tự hiện cảnh báo khi câu trả lời dựa trên Nghị định 100/2019.
 
 ### Kiến trúc RAG Pipeline
 
@@ -354,6 +370,7 @@ vietnamese-rag-chatbot/
 │   ├── evaluation_enhanced.py      # RAGAS + Retrieval metrics
 │   ├── app.py                      # Streamlit UI
 │   └── api.py                      # FastAPI endpoint
+├── tests/                          # Unit test (từ điển, chunker) — chạy tự động bằng GitHub Actions
 ├── evaluation/
 │   ├── evaluate_custom.py          # Đánh giá custom transformer
 │   └── evaluate_finetuned.py       # Đánh giá fine-tuned e5

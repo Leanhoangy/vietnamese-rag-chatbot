@@ -1,0 +1,5 @@
+# Unit-test dependencies (also used by CI). The tests stub out data loading and models,
+# so they don't need the full requirements.txt (torch, sentence-transformers, ...).
+langchain-core==1.3.2
+langchain-text-splitters==1.1.2
+pytest==9.1.1
