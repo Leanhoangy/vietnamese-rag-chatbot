@@ -15,10 +15,6 @@ from .tokenizer import LegalTokenizer, build_tokenizer
 from .architecture import LegalTransformerEncoder
 
 
-# ------------------------------------------------------------------
-# Config
-# ------------------------------------------------------------------
-
 CONFIG = {
     "hidden_dim": 128,
     "num_heads": 4,
@@ -26,17 +22,17 @@ CONFIG = {
     "ff_dim": 512,
     "max_len": 128,
     "dropout": 0.1,
-    "batch_size": 16,
-    "epochs": 5,
+    "batch_size": 32,
+    "epochs": 15,
     "lr": 3e-4,
     "triplet_margin": 0.3,
     "dataset_path": "legal_triplets_dataset",
+    "test_dataset_path": "test_triplets_dataset",
     "tokenizer_path": "models/custom-tokenizer/vocab.json",
     "model_output": "models/custom-transformer/model.pt",
 }
 
 
-# ------------------------------------------------------------------
 # Dataset
 # ------------------------------------------------------------------
 
@@ -65,10 +61,6 @@ class TripletDataset(Dataset):
         )
 
 
-# ------------------------------------------------------------------
-# Train
-# ------------------------------------------------------------------
-
 def train(config: dict = CONFIG):
     device = torch.device("cpu")
     print(f"Device: {device}")
@@ -90,6 +82,15 @@ def train(config: dict = CONFIG):
 
     dataset = TripletDataset(hf_ds, tokenizer, config["max_len"])
     loader = DataLoader(dataset, batch_size=config["batch_size"], shuffle=True)
+
+    # Test dataset (nếu có)
+    test_loader = None
+    test_path = config.get("test_dataset_path", "")
+    if test_path and Path(test_path).exists():
+        hf_test = load_from_disk(test_path)
+        test_dataset = TripletDataset(hf_test, tokenizer, config["max_len"])
+        test_loader = DataLoader(test_dataset, batch_size=config["batch_size"], shuffle=False)
+        print(f"  {len(hf_test)} test triplets loaded")
 
     # Model
     model = LegalTransformerEncoder(
@@ -117,6 +118,8 @@ def train(config: dict = CONFIG):
     print("Training Custom Transformer Embedding")
     print("=" * 50)
 
+    train_log, test_log = [], []
+
     for epoch in range(1, config["epochs"] + 1):
         model.train()
         total_loss = 0.0
@@ -139,7 +142,32 @@ def train(config: dict = CONFIG):
 
         scheduler.step()
         avg_loss = total_loss / len(loader)
-        print(f"Epoch {epoch:02d}/{config['epochs']} | Loss: {avg_loss:.4f} | LR: {scheduler.get_last_lr()[0]:.6f}")
+        train_log.append({"epoch": epoch, "loss": avg_loss})
+
+        # Test loss
+        test_loss_str = ""
+        if test_loader:
+            model.eval()
+            with torch.no_grad():
+                t_total = sum(
+                    criterion(model(a.to(device), am.to(device)),
+                              model(p.to(device), pm.to(device)),
+                              model(n.to(device), nm.to(device))).item()
+                    for a, am, p, pm, n, nm in test_loader
+                )
+            avg_test = t_total / len(test_loader)
+            test_log.append({"epoch": epoch, "loss": avg_test})
+            test_loss_str = f" | Test Loss: {avg_test:.4f}"
+
+        print(f"Epoch {epoch:02d}/{config['epochs']} | Loss: {avg_loss:.4f}{test_loss_str} | LR: {scheduler.get_last_lr()[0]:.6f}")
+
+    # Lưu loss log
+    with open("loss_log_custom.json", "w") as f:
+        json.dump(train_log, f, indent=2)
+    if test_log:
+        with open("loss_log_test_custom.json", "w") as f:
+            json.dump(test_log, f, indent=2)
+        print("Test loss log → loss_log_test_custom.json")
 
     # Save
     out_path = Path(config["model_output"])

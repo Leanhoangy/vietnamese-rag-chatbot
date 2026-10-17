@@ -1,35 +1,63 @@
 import os
 
 from dotenv import load_dotenv
-from langchain_groq import ChatGroq
 
 load_dotenv()
 
-_model_name = os.getenv("EVAL_LLM_MODEL", "llama-3.3-70b-versatile")
+# Provider sinh câu trả lời:
+#   - "gemini": Google AI Studio (dùng cho Streamlit Cloud), cần GOOGLE_API_KEY
+#   - "ollama": model chạy local qua Ollama, không cần key
+# Không set LLM_PROVIDER → dùng gemini nếu có key, ngược lại dùng ollama.
+DEFAULT_MODELS = {
+    "gemini": "gemini-3.5-flash-lite",
+    "ollama": "qwen3:8b",
+}
 
-# Load nhiều API keys để rotate khi bị rate limit
-def _load_groq_keys() -> list[str]:
-    keys = []
-    for i in range(1, 6):
-        k = os.getenv(f"GROQ_API_KEY_{i}", "").strip()
-        if k and k not in keys:
-            keys.append(k)
-    primary = os.getenv("GROQ_API_KEY", "").strip()
-    if primary and primary not in keys:
-        keys.insert(0, primary)
-    return keys
 
-GROQ_KEYS: list[str] = _load_groq_keys()
+def _google_api_key() -> str:
+    return (os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY") or "").strip()
 
-def make_groq_model(key_index: int = 0, model_name: str | None = None) -> ChatGroq:
-    """Tạo ChatGroq với key theo index, dùng khi rotate."""
-    key = GROQ_KEYS[key_index % len(GROQ_KEYS)]
-    return ChatGroq(
-        model=model_name or _model_name,
-        api_key=key,
-        temperature=0,
-        max_tokens=2048,
-        max_retries=1,
+
+def _resolve_provider() -> str:
+    provider = os.getenv("LLM_PROVIDER", "").strip().lower()
+    if not provider:
+        provider = "gemini" if _google_api_key() else "ollama"
+    if provider not in DEFAULT_MODELS:
+        raise ValueError(f"LLM_PROVIDER không hợp lệ: {provider!r} (chọn 'gemini' hoặc 'ollama')")
+    return provider
+
+
+LLM_PROVIDER = _resolve_provider()
+LLM_MODEL = os.getenv("LLM_MODEL", "").strip() or DEFAULT_MODELS[LLM_PROVIDER]
+
+
+def make_llm(temperature: float = 0, max_tokens: int = 2048):
+    """Tạo chat model theo LLM_PROVIDER / LLM_MODEL."""
+    if LLM_PROVIDER == "gemini":
+        from langchain_google_genai import ChatGoogleGenerativeAI
+
+        api_key = _google_api_key()
+        if not api_key:
+            raise EnvironmentError("Thiếu GOOGLE_API_KEY — tạo key tại https://aistudio.google.com/apikey")
+        return ChatGoogleGenerativeAI(
+            model=LLM_MODEL,
+            google_api_key=api_key,
+            temperature=temperature,
+            max_output_tokens=max_tokens,
+            max_retries=2,
+        )
+
+    from langchain_ollama import ChatOllama
+
+    return ChatOllama(
+        model=LLM_MODEL,
+        base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
+        temperature=temperature,
+        num_predict=max_tokens,
+        num_ctx=8192,     # context mặc định của Ollama ngắn hơn prompt 7 chunks → bị cắt
+        reasoning=False,  # tắt chế độ thinking (qwen3)
     )
 
-model = make_groq_model(0)
+
+print(f"LLM: {LLM_PROVIDER} / {LLM_MODEL}")
+model = make_llm()

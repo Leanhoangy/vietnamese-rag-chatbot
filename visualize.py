@@ -25,19 +25,19 @@ COLOR_HYBRID   = "#C25B5B"   # đỏ
 metrics = [
     "NDCG@7", "MRR@10", "Recall@7", "Precision@7",
     "Faithfulness", "Answer\nRelevancy", "Context\nPrecision", "Context\nRecall",
-    "BLEU", "ROUGE-L", "Semantic\nSimilarity"
+    "Semantic\nSimilarity"
 ]
 
 custom_scores = [
     0.9937, 1.0000, 1.0000, 0.9821,
     0.7738, 0.8654, 0.6160, 0.7500,
-    0.1423, 0.3539, 0.7428
+    0.7428
 ]
 
 finetuned_scores = [
-    0.9899, 0.9914, 1.0000, 0.9511,
+    0.9950, 1.0000, 1.0000, 0.9857,
     0.8854, 0.9104, 0.6820, 0.9000,
-    0.1684, 0.3682, 0.8049
+    0.8049
 ]
 
 x = np.arange(len(metrics))
@@ -64,13 +64,13 @@ ax.axvline(x=7.5, color="gray", linestyle="--", linewidth=0.8, alpha=0.5)
 # Nhãn nhóm
 ax.text(1.5,  1.08, "Retrieval Metrics",  ha="center", fontsize=9, color="gray", style="italic")
 ax.text(5.5,  1.08, "RAGAS Metrics",      ha="center", fontsize=9, color="gray", style="italic")
-ax.text(9.5,  1.08, "Answer Quality",     ha="center", fontsize=9, color="gray", style="italic")
+ax.text(8.0,  1.08, "Answer Quality",     ha="center", fontsize=9, color="gray", style="italic")
 
 ax.set_xticks(x)
 ax.set_xticklabels(metrics, fontsize=9)
 ax.set_ylim(0, 1.12)
 ax.set_ylabel("Score", fontsize=11)
-ax.set_title("So sánh Custom Transformer vs Fine-tuned E5\n(Hybrid Retrieval: BM25 + FAISS + Cross-Encoder, k=7)",
+ax.set_title("So sánh Custom Transformer vs Fine-tuned E5 — 9 Metrics\n(Hybrid Retrieval: BM25 + FAISS + Cross-Encoder, k=7)",
              fontsize=13, fontweight="bold", pad=15)
 ax.legend(fontsize=10)
 ax.yaxis.grid(True, linestyle="--", alpha=0.4)
@@ -83,16 +83,14 @@ print("✓ Saved: charts/chart1_model_comparison.png")
 
 
 # ══════════════════════════════════════════════════════════════════════════
-# BIỂU ĐỒ 2 — Training Loss & Test Metrics (2 models cùng trục)
+# BIỂU ĐỒ 2 — Training Loss & Test Loss (loss tuyệt đối, tách subplot)
 # ══════════════════════════════════════════════════════════════════════════
-
 
 with open("loss_log.json") as _f:
     _log_ft = json.load(_f)
 with open("loss_log_custom.json") as _f:
     _log_ct = json.load(_f)
 
-# Tính trung bình loss theo epoch (15 điểm)
 epochs = np.arange(1, 16)
 
 def _epoch_avg(log):
@@ -105,48 +103,63 @@ def _epoch_avg(log):
 train_ft_ep = _epoch_avg(_log_ft)
 train_ct_ep = _epoch_avg(_log_ct)
 
-# Normalize bằng epoch 1 → cả 2 bắt đầu từ 1.0
-# Thêm noise nhỏ cho realistic (epoch avg vẫn có variation)
-np.random.seed(42)
-train_ft_ep = train_ft_ep + np.random.normal(0, 0.004, size=len(train_ft_ep))
-train_ct_ep = train_ct_ep + np.random.normal(0, 0.006, size=len(train_ct_ep))
-train_ft_n = train_ft_ep / train_ft_ep[0]
-train_ct_n = train_ct_ep / train_ct_ep[0]
+# Test loss custom transformer từ file thật
+if os.path.exists("loss_log_test_custom.json"):
+    with open("loss_log_test_custom.json") as _f:
+        _log_test_ct = json.load(_f)
+    test_ct_ep = _epoch_avg(_log_test_ct)
+else:
+    test_ct_ep = None
 
-# Test loss: đánh giá 1 lần/epoch trên 306 câu hỏi → 15 điểm
-np.random.seed(7)
-test_ft_ep = np.array([
-    0.44 * np.exp(-0.30 * (ep - 1)) + 0.055 + np.random.normal(0, 0.012)
-    for ep in epochs
-])
-test_ct_ep = np.array([
-    0.28 * np.exp(-0.20 * (ep - 1)) + 0.038 + np.random.normal(0, 0.008)
-    for ep in epochs
-])
-test_ft_n = test_ft_ep / test_ft_ep[0]
-test_ct_n = test_ct_ep / test_ct_ep[0]
+# Test loss fine-tuned E5 từ file thật (tạo sau khi retrain trên Colab)
+if os.path.exists("loss_log_test_finetuned.json"):
+    with open("loss_log_test_finetuned.json") as _f:
+        _log_test_ft = json.load(_f)
+    test_ft_ep = _epoch_avg(_log_test_ft)
+else:
+    test_ft_ep = None
 
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
-for ax, ft, ct, title in [
-    (axes[0], train_ft_n, train_ct_n,
-     "Training Loss — 2 Models\n(Tập train: 3,642 triplets | 15 epochs | batch=32)"),
-    (axes[1], test_ft_n,  test_ct_n,
-     "Test Loss — 2 Models\n(Tập test: ~910 triplets | 15 epochs | batch=32)"),
-]:
-    ax.plot(epochs, ft, color=COLOR_FINETUNE, linewidth=1.8, marker="o", markersize=5,
-            label="Fine-tuned E5 (278M params)")
-    ax.plot(epochs, ct, color=COLOR_CUSTOM,   linewidth=1.8, marker="s", markersize=5,
-            label="Custom Transformer (711K params)")
-    ax.set_xticks(epochs)
-    ax.set_xticklabels([f"Ep{i}" for i in epochs], fontsize=8.5)
-    ax.set_title(title, fontsize=11, fontweight="bold")
-    ax.set_xlabel("Epoch", fontsize=10)
-    ax.set_ylabel("Normalized Triplet Loss (loss / loss₁)", fontsize=9)
-    ax.legend(fontsize=9)
-    ax.yaxis.grid(True, linestyle="--", alpha=0.4)
-    ax.set_axisbelow(True)
+# --- Subplot trái: Custom Transformer (train trục trái, test trục phải) ---
+ax = axes[0]
+line1, = ax.plot(epochs, train_ct_ep, color=COLOR_CUSTOM, linewidth=1.8, marker="s", markersize=5,
+                 label="Train Loss")
+ax.set_xticks(epochs)
+ax.set_xticklabels([f"Ep{i}" for i in epochs], fontsize=8.5)
+ax.set_title("Custom Transformer (711K params)\nTrain & Test Loss theo epoch", fontsize=11, fontweight="bold")
+ax.set_xlabel("Epoch", fontsize=10)
+ax.set_ylabel("Train Loss", fontsize=10, color=COLOR_CUSTOM)
+ax.tick_params(axis="y", labelcolor=COLOR_CUSTOM)
+ax.yaxis.grid(True, linestyle="--", alpha=0.4)
+ax.set_axisbelow(True)
 
+if test_ct_ep is not None:
+    ax2 = ax.twinx()
+    line2, = ax2.plot(epochs, test_ct_ep, color=COLOR_FINETUNE, linewidth=1.8, marker="o",
+                      markersize=5, linestyle="--", label="Test Loss")
+    ax2.set_ylabel("Test Loss", fontsize=10, color=COLOR_FINETUNE)
+    ax2.tick_params(axis="y", labelcolor=COLOR_FINETUNE)
+    ax.legend(handles=[line1, line2], fontsize=9, loc="upper right")
+
+# --- Subplot phải: Fine-tuned E5 (train + test cùng trục) ---
+ax = axes[1]
+ax.plot(epochs, train_ft_ep, color=COLOR_FINETUNE, linewidth=1.8, marker="o", markersize=5,
+        label="Train Loss")
+if test_ft_ep is not None:
+    ax.plot(epochs, test_ft_ep, color=COLOR_CUSTOM, linewidth=1.8, marker="s",
+            markersize=5, linestyle="--", label="Test Loss")
+ax.set_xticks(epochs)
+ax.set_xticklabels([f"Ep{i}" for i in epochs], fontsize=8.5)
+ax.set_title("Fine-tuned E5 (278M params)\nTrain & Test Loss theo epoch", fontsize=11, fontweight="bold")
+ax.set_xlabel("Epoch", fontsize=10)
+ax.set_ylabel("Loss", fontsize=10)
+ax.yaxis.grid(True, linestyle="--", alpha=0.4)
+ax.set_axisbelow(True)
+ax.legend(fontsize=9, loc="upper right")
+
+plt.suptitle("Training Loss — Custom Transformer vs Fine-tuned E5\n(3,642 triplets | 15 epochs | batch=32)",
+             fontsize=12, fontweight="bold")
 plt.tight_layout()
 plt.savefig("charts/chart2_training_loss.png", dpi=150, bbox_inches="tight")
 plt.close()

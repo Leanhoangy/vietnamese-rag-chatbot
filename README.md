@@ -1,30 +1,241 @@
-# Vietnamese RAG Chatbot — Tư Vấn Pháp Luật
+# Vietnamese Legal RAG Chatbot
+
+**A chatbot that answers plain-Vietnamese questions about 8 core Vietnamese laws and decrees, grounded in the official legal text and showing the source passages. It is built for citizens, HR staff and small businesses who need a quick legal lookup without reading the whole code.**
+
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://vietnamese-rag-chatbot-jemrcpipbmxd5bdugx5z2l.streamlit.app)
+[![Hugging Face model](https://img.shields.io/badge/Hugging_Face-fine--tuned_embedder-FFD21E?logo=huggingface&logoColor=black)](https://huggingface.co/Hoangy2005/vietnamese-legal-embedder)
+[![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)](https://www.python.org)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.x-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org)
+[![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?logo=langchain&logoColor=white)](https://www.langchain.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+**▶ Live demo: [vietnamese-rag-chatbot-jemrcpipbmxd5bdugx5z2l.streamlit.app](https://vietnamese-rag-chatbot-jemrcpipbmxd5bdugx5z2l.streamlit.app)**
+<br><sub>Hosted on the free tier: the app sleeps when idle, so the first load can take a few minutes while it wakes up and downloads the model.</sub>
+
+<!-- TODO: record the demo and save it as docs/demo.gif -->
+<p align="center">
+  <img src="docs/demo.gif" alt="Demo: asking about a traffic fine and opening the cited source passages" width="760">
+</p>
+
+## Key features
+
+- **Query rewriting + hybrid retrieval with re-ranking.** A small glossary first maps everyday terms to the wording used in the law (for example "đèn đỏ" → "đèn tín hiệu giao thông"), then the LLM rewrites the question, including follow-ups that depend on the chat history, into legal terminology. BM25 keyword search and FAISS dense search then run in parallel, their scores are fused 50/50, and a multilingual cross-encoder picks the top 7 passages. Exact references (article numbers, fine amounts) and everyday wording can both match.
+- **Two domain-trained embedding models.** `multilingual-e5-base` (278M parameters) is fine-tuned with triplet loss on 3,642 legal triplets with FAISS-mined hard negatives and [published on Hugging Face](https://huggingface.co/Hoangy2005/vietnamese-legal-embedder). Alongside it is a 738,560-parameter Transformer encoder built from scratch in PyTorch, with its own tokenizer, architecture and training loop.
+- **Answers tied to sources.** Every chunk is stamped with its law name and article number, and the LLM (temperature 0) is prompted to answer only from the retrieved passages and cite them that way. Answers can expand to show the source passages. The last 5 chat turns go into the prompt, so follow-up questions work.
+- **Evaluation pipeline.** It measures retrieval (NDCG, MRR, Recall, Precision), runs RAGAS (faithfulness, answer relevancy, context precision and recall) and scores semantic similarity against reference answers.
+- **Cloud or fully local.** The repo includes a Streamlit chat UI, a FastAPI endpoint and a prebuilt FAISS index, and the fine-tuned model downloads from Hugging Face Hub on first start. One setting switches the LLM between Gemini (hosted demo) and any Ollama model running on your own machine, so documents and questions never leave it.
+- **8 legal documents covered.** Civil Code 2015, Labor Code 2019, Land Law 2024, Law on Enterprises 2020, Law on Marriage and Family 2014, Road Law 2024, the 2025 law amending the Penal Code, and Decree 100/2019 on traffic fines. The road-traffic fines in Decree 100/2019 were replaced by Decree 168/2024 from 1 January 2025, which is not in the corpus yet. <!-- TODO: add Decree 168/2024 to data/raw/ and rebuild the index. -->
+
+## Architecture
+
+```mermaid
+flowchart TD
+    subgraph OFFLINE["Offline: build the index"]
+        A["8 legal documents (.docx)"] --> B["Structure-aware chunking<br/>split by article ('Điều N.'), long articles by clause ('khoản'), ~1,000 chars<br/>each chunk prefixed with law name + article"]
+        B --> C["Embed chunks<br/>fine-tuned multilingual-e5-base (768-d)<br/>or custom Transformer (128-d)"]
+        C --> D[("FAISS index")]
+        B --> E[("BM25 index<br/>built at startup")]
+    end
+
+    subgraph ONLINE["Online: answer a question"]
+        Q["User question + chat history"] --> RW["Glossary + LLM rewrite<br/>into a legal search query"]
+        RW --> R1["BM25: top 14"]
+        RW --> R2["Dense search: top 14"]
+        R1 --> F["Min-max normalize and fuse<br/>0.5 × dense + 0.5 × BM25"]
+        R2 --> F
+        F --> X["Cross-encoder re-rank<br/>mmarco-mMiniLMv2-L12-H384 → top 7"]
+        X --> P["Prompt: 7 passages + last 5 chat turns + question"]
+        P --> L["LLM, temperature 0<br/>Gemini 3.5 Flash-Lite (demo) or Ollama qwen3:8b (local)"]
+        L --> ANS["Answer + source passages"]
+    end
+
+    D -.-> R2
+    E -.-> R1
+```
+
+More detail (in Vietnamese) is in [ARCHITECTURE.md](ARCHITECTURE.md).
+
+## Evaluation results
+
+Full pipeline (hybrid retrieval, k = 7) on questions from `test_set.json`. All scores are averages between 0 and 1; higher is better. These runs used Groq-hosted Llama models, before the project switched to Gemini / Ollama.
+<!-- TODO: re-run the evaluation with the current LLM setup. -->
+
+| Metric | Fine-tuned E5 (deployed) | Custom Transformer |
+|:--|:--:|:--:|
+| **Retrieval** | | |
+| NDCG@7 | 0.9899 | 0.9937 |
+| MRR@10 | 0.9914 | 1.0000 |
+| Recall@7 | 1.0000 | 1.0000 |
+| Precision@7 | 0.9511 | 0.9821 |
+| **Generation (RAGAS)** | | |
+| Faithfulness | 0.8854 | 0.7738 |
+| Answer relevancy | 0.9104 | 0.8654 |
+| Context precision | 0.6820 | 0.6160 |
+| Context recall | 0.9000 | 0.7500 |
+| **Answer vs. reference** | | |
+| Semantic similarity | 0.8049 | 0.7428 |
+
+<!-- TODO: no raw evaluation output (evaluation_results.json) is committed. These values come from README.md at HEAD (commit e13f29b) and visualize.py. An earlier run (2026-05-18) gave fine-tuned E5 NDCG@7 0.9950 / MRR@10 1.0000 / Precision@7 0.9857. Re-run and commit the output, then update this table. -->
+
+**How to read these numbers**
+
+- **Sample size and models.** Per the scripts in [`evaluation/`](evaluation/), fine-tuned E5 is scored on the first 150 of the 306 test questions (RAGAS on the first 50), with answers generated by `llama-3.1-8b-instant`. The Custom Transformer is scored on the first 10 questions, with answers from Llama 3.3 70B. RAGAS uses `llama-3.1-8b-instant` as the judge.
+- **Relevance labels are heuristic.** A retrieved passage counts as relevant when it shares enough words with the LLM-generated reference answer. Only the 7 retrieved passages are scored, so Recall@7 is 1.0 whenever any one of them matches. Treat the retrieval scores as sanity checks, not as a benchmark.
+- **Train/test overlap.** 119 of the first 150 test questions also appear as anchors in the current training triplets (`legal_triplets_dataset`), so scores on truly unseen questions should be expected to be lower. <!-- TODO: rebuild the training triplets without test_set.json questions and re-evaluate. -->
+- **Checkpoint.** The Custom Transformer scores were recorded before its current 738,560-parameter checkpoint was trained.
+
+## Tech stack
+
+| Layer | Tools |
+|:--|:--|
+| LLM | Gemini `gemini-3.5-flash-lite` via Google AI Studio (hosted demo), or any Ollama model locally (default `qwen3:8b`) |
+| Orchestration | LangChain (prompt → model → output parser) |
+| Embeddings | sentence-transformers, fine-tuned `intfloat/multilingual-e5-base`, custom PyTorch Transformer encoder |
+| Retrieval | FAISS (`faiss-cpu`), `rank-bm25`, cross-encoder `cross-encoder/mmarco-mMiniLMv2-L12-H384-v1` |
+| Training | PyTorch, sentence-transformers `TripletLoss`, Google Colab GPU ([`train_colab.ipynb`](train_colab.ipynb)) |
+| Evaluation | RAGAS, custom NDCG / MRR / Recall / Precision, semantic similarity (`paraphrase-multilingual-MiniLM-L12-v2`) |
+| Serving | Streamlit (chat UI), FastAPI (REST), Streamlit Community Cloud, Hugging Face Hub (model hosting) |
+
+## Run locally
+
+**Prerequisites:** Python 3.11, about 1.1 GB of free disk space for the fine-tuned embedder, and one LLM option:
+
+- **Cloud:** a free [Google AI Studio API key](https://aistudio.google.com/apikey), or
+- **Local:** [Ollama](https://ollama.com) with a model pulled, e.g. `ollama pull qwen3:8b` (about 5.2 GB).
+
+**1. Install**
+
+```bash
+git clone https://github.com/Leanhoangy/vietnamese-rag-chatbot.git
+cd vietnamese-rag-chatbot
+python3.11 -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+**2. Configure.** Copy the template with `cp .env.example .env`, then fill in your key. `.env` is gitignored, so it never gets committed. For a fully local setup, set `LLM_PROVIDER=ollama` and leave out the Google key. The template contains:
+
+```dotenv
+# LLM provider: "gemini" or "ollama".
+# If unset: gemini when GOOGLE_API_KEY is present, otherwise ollama.
+LLM_PROVIDER=gemini
+GOOGLE_API_KEY=your_google_ai_studio_key_here
+
+# Optional: override the model (defaults: gemini-3.5-flash-lite / qwen3:8b)
+# LLM_MODEL=gemini-3.5-flash-lite
+# OLLAMA_BASE_URL=http://localhost:11434
+
+# Optional: use fine-tuned E5 even if a locally trained custom Transformer exists
+# USE_FINETUNED=true
+
+# Optional: LLM query rewriting before retrieval: auto (default) | true | false
+# auto = always with Gemini; with Ollama only for follow-up questions (the glossary covers the rest).
+# Each rewrite is one extra LLM call.
+# QUERY_REWRITE=auto
+```
+
+**3. Start the app**
+
+```bash
+streamlit run src/app.py         # → http://localhost:8501
+```
+
+The first start downloads the fine-tuned embedder from Hugging Face Hub, along with the cross-encoder. Later starts use the local copy. Running fully local with `qwen3:8b` on an M1 Pro with 16 GB RAM, a test question took about 24 seconds end to end. With Ollama, the LLM query rewrite runs only for follow-up questions and took 0.6–8 seconds in testing.
+
+**4. Optional: REST API**
+
+```bash
+uvicorn src.api:app --reload     # interactive docs at http://localhost:8000/docs
+
+curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Vượt đèn đỏ bị phạt bao nhiêu tiền?"}'
+```
+
+<details>
+<summary><b>Retrain, rebuild the index, evaluate</b></summary>
+
+```bash
+python train_finetuned.py        # fine-tune multilingual-e5-base (GPU recommended, or use train_colab.ipynb)
+python train_custom.py           # train the from-scratch Transformer (runs on CPU)
+
+# The FAISS index must be built with the same model you query with:
+# 768-d fine-tuned E5 (the committed index, used by the demo) or 128-d custom Transformer.
+rm -rf faiss_index_local
+USE_FINETUNED=true python -c "from src.vector_store import vectorstore"   # E5 index
+
+# RAGAS uses the same LLM as the judge and makes several calls per question,
+# so a full run can exceed the Gemini free-tier daily quota.
+python evaluation/evaluate_finetuned.py   # needs models/finetuned-embedder/ (downloaded by the app on first run)
+
+# To evaluate the custom Transformer, rebuild the index with it first (don't commit this 128-d index)
+rm -rf faiss_index_local
+python -c "from src.vector_store import vectorstore"                      # custom index
+python evaluation/evaluate_custom.py
+```
+
+</details>
+
+## Project structure
+
+```
+vietnamese-rag-chatbot/
+├── src/
+│   ├── app.py                  # Streamlit chat UI
+│   ├── api.py                  # FastAPI: POST /chat, GET /health
+│   ├── retrieval_hybrid.py     # query rewrite, BM25 + FAISS fusion, cross-encoder re-rank, QA chain + prompt
+│   ├── legal_glossary.py       # everyday words → legal terms, applied to every search query
+│   ├── llm_chain.py            # LLM factory: Gemini (cloud) or Ollama (local)
+│   ├── embedder.py             # picks custom Transformer → fine-tuned E5 → base E5
+│   ├── vector_store.py         # build / load the FAISS index
+│   ├── loader.py, chunker.py   # .docx loading, article/clause-aware chunking
+│   ├── data_preparation.py     # training triplets with FAISS hard-negative mining
+│   ├── augment_triplets.py     # LLM paraphrase augmentation
+│   ├── generate_test_cases.py  # LLM-generated Q&A pairs from the legal text
+│   ├── evaluation_enhanced.py  # retrieval metrics, RAGAS, semantic similarity
+│   ├── custom_transformer/     # tokenizer, encoder architecture, triplet-loss trainer
+│   └── finetuned_e5/           # multilingual-e5-base fine-tuning
+├── evaluation/                 # evaluate_finetuned.py, evaluate_custom.py
+├── data/raw/                   # the 8 legal documents (.docx)
+├── faiss_index_local/          # prebuilt FAISS index (768-d, fine-tuned E5) used by the demo
+├── train_finetuned.py          # fine-tuning pipeline
+├── train_custom.py             # custom Transformer pipeline
+├── train_colab.ipynb           # Colab GPU notebook for fine-tuning
+├── test_set.json               # 306 evaluation questions with reference answers
+├── ARCHITECTURE.md             # design notes (Vietnamese)
+├── .env.example                # environment variable template
+└── requirements.txt            # pinned dependency versions
+```
+
+## About
+
+Built as a Deep Learning course project at HUIT (2025) by [@Leanhoangy](https://github.com/Leanhoangy).
+<!-- TODO: add your Upwork / Fiverr profile link here -->
+
+---
+
+## Tiếng Việt
+
+### Vietnamese RAG Chatbot — Tư Vấn Pháp Luật
 
 > Chatbot hỏi đáp pháp luật Việt Nam sử dụng Retrieval-Augmented Generation (RAG)
 
-[![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://python.org)
-[![LangChain](https://img.shields.io/badge/LangChain-0.3-green.svg)](https://langchain.com)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.x-orange.svg)](https://pytorch.org)
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://vietnamese-rag-chatbot-jemrcpipbmxd5bdugx5z2l.streamlit.app)
+👉 Live demo: [vietnamese-rag-chatbot-jemrcpipbmxd5bdugx5z2l.streamlit.app](https://vietnamese-rag-chatbot-jemrcpipbmxd5bdugx5z2l.streamlit.app)
 
-## Live Demo
+### Giới thiệu
 
-👉 [vietnamese-rag-chatbot-jemrcpipbmxd5bdugx5z2l.streamlit.app](https://vietnamese-rag-chatbot-jemrcpipbmxd5bdugx5z2l.streamlit.app)
+Hệ thống chatbot cho phép người dùng hỏi đáp về pháp luật Việt Nam dựa trên các văn bản luật chính thức (Luật Đường bộ 2024, Bộ luật Lao động, Luật Doanh nghiệp, Bộ luật Dân sự, Luật sửa đổi, bổ sung Bộ luật Hình sự 2025, Luật Đất đai, Luật Hôn nhân và Gia đình, Nghị định 100/2019).
 
----
+Lưu ý: phần xử phạt giao thông đường bộ của Nghị định 100/2019 đã được thay bằng Nghị định 168/2024 từ 01/01/2025; văn bản này chưa có trong dữ liệu.
 
-## Giới thiệu
-
-Hệ thống chatbot cho phép người dùng hỏi đáp về pháp luật Việt Nam dựa trên các văn bản luật chính thức (Luật Đường bộ 2024, Bộ luật Lao động, Luật Doanh nghiệp, Bộ luật Dân sự, Bộ luật Hình sự, Luật Đất đai, Luật Hôn nhân và Gia đình, Nghị định 100/2019).
-
----
-
-## Kiến trúc RAG Pipeline
+### Kiến trúc RAG Pipeline
 
 ```
 Tài liệu .docx
       ↓
-[Chunking] RecursiveCharacterTextSplitter (chunk_size=1000, overlap=300)
+[Chunking] Tách theo "Điều N." ở đầu dòng; điều dài hơn 1000 ký tự → gom theo khoản, không cắt ngang khoản
+           (khoản quá dài mới dùng RecursiveCharacterTextSplitter chunk_size=1000, overlap=300)
+           Mỗi chunk được gắn "[Tên văn bản] Điều N." ở đầu
       ↓
 [Embedding] Custom Transformer (tự xây) hoặc Fine-tuned multilingual-e5-base
       ↓
@@ -32,46 +243,42 @@ Tài liệu .docx
 
 ── Khi user hỏi ──
 
-Câu hỏi → BM25 + FAISS dense retrieval → Cross-Encoder re-rank (multilingual)
+Câu hỏi (+ lịch sử hội thoại) → từ điển thuật ngữ + LLM viết lại bằng thuật ngữ pháp lý
       ↓
-Prompt → Groq (Llama 3.3-70b) → Câu trả lời
+BM25 + FAISS dense retrieval → Cross-Encoder re-rank (multilingual)
+      ↓
+Prompt → LLM (Gemini 3.5 Flash-Lite hoặc Ollama qwen3:8b chạy local) → Câu trả lời
 ```
 
----
-
-## Tech Stack
+### Tech Stack
 
 | Component | Technology |
 |---|---|
-| Framework | LangChain 0.3 |
+| Framework | LangChain |
 | Embedding | Custom Transformer (PyTorch) / Fine-tuned multilingual-e5-base |
 | Vector Store | FAISS |
 | Retrieval | Hybrid BM25 + Dense + Cross-Encoder reranking |
-| LLM | Llama 3.3-70b (Groq API) |
+| LLM | Gemini 3.5 Flash-Lite (Google AI Studio) / Ollama qwen3:8b (local) |
 | UI | Streamlit |
 | API | FastAPI |
-| Evaluation | RAGAS + NDCG + MRR + BLEU + ROUGE |
+| Evaluation | RAGAS + NDCG + MRR + Recall + Precision + Semantic Similarity |
 
----
+### Hai hướng Embedding
 
-## Hai hướng Embedding
-
-### 1. Custom Transformer (tự xây từ đầu)
+#### 1. Custom Transformer (tự xây từ đầu)
 - Kiến trúc: Transformer Encoder 2 layers, 4 heads, hidden_dim=128
-- Tokenizer: xây từ tài liệu pháp lý (~8000 từ)
+- Tokenizer: xây từ tài liệu pháp lý (vocab 2,672 từ; giới hạn tối đa 8,000)
 - Train: Triplet Loss trên legal triplets dataset
-- Tham số: ~711,000
+- Tham số: 738,560
 
-### 2. Fine-tuned multilingual-e5-base (transfer learning)
+#### 2. Fine-tuned multilingual-e5-base (transfer learning)
 - Base model: `intfloat/multilingual-e5-base` (278M params)
 - Fine-tune: trên legal triplets với hard negative mining, TripletLoss (margin=0.5)
-- Data augmentation: paraphrase câu hỏi qua Groq LLM (~807 triplets thêm)
+- Dữ liệu: 3,642 triplets train / 892 triplets test. Repo có script augment bằng cách paraphrase câu hỏi qua LLM (`src/augment_triplets.py`), nhưng bộ 3,642 triplets hiện tại không chứa câu paraphrase.
 - Training: 15 epochs, batch=32, 1,710 steps trên Colab GPU
 - HuggingFace Hub: [`Hoangy2005/vietnamese-legal-embedder`](https://huggingface.co/Hoangy2005/vietnamese-legal-embedder)
 
----
-
-## Cài đặt và chạy
+### Cài đặt và chạy
 
 ```bash
 # Clone repo
@@ -81,11 +288,11 @@ cd vietnamese-rag-chatbot
 # Cài thư viện
 pip install -r requirements.txt
 
-# Tạo file .env
-echo "GROQ_API_KEY=your_key_here" > .env
+# Tạo file .env từ mẫu rồi điền GOOGLE_API_KEY (muốn chạy local bằng Ollama thì đặt LLM_PROVIDER=ollama và bỏ key)
+cp .env.example .env
 ```
 
-### Train embedding model
+#### Train embedding model
 
 ```bash
 # Custom transformer (tự xây)
@@ -95,13 +302,14 @@ python train_custom.py
 python train_finetuned.py
 ```
 
-### Build FAISS index
+#### Build FAISS index
 
 ```bash
+# Chỉ build khi chưa có thư mục faiss_index_local/ — muốn build lại thì xóa thư mục này trước
 python -c "from src.vector_store import vectorstore; print('Done')"
 ```
 
-### Chạy app
+#### Chạy app
 
 ```bash
 # Streamlit UI
@@ -111,7 +319,7 @@ streamlit run src/app.py
 uvicorn src.api:app --reload
 ```
 
-### Evaluation
+#### Evaluation
 
 ```bash
 # Đánh giá custom transformer
@@ -121,9 +329,7 @@ python evaluation/evaluate_custom.py
 python evaluation/evaluate_finetuned.py
 ```
 
----
-
-## Cấu trúc project
+### Cấu trúc project
 
 ```
 vietnamese-rag-chatbot/
@@ -140,8 +346,9 @@ vietnamese-rag-chatbot/
 │   ├── chunker.py                  # Chia text thành chunks
 │   ├── embedder.py                 # Load embedding model (auto-select)
 │   ├── vector_store.py             # Build/load FAISS index
-│   ├── llm_chain.py                # Kết nối Groq API
-│   ├── retrieval_hybrid.py         # Hybrid BM25 + Dense + Cross-Encoder
+│   ├── llm_chain.py                # Kết nối LLM (Gemini / Ollama)
+│   ├── retrieval_hybrid.py         # Viết lại câu hỏi + Hybrid BM25 + Dense + Cross-Encoder
+│   ├── legal_glossary.py           # Từ điển từ đời thường → thuật ngữ pháp lý
 │   ├── data_preparation.py         # Tạo triplets training
 │   ├── augment_triplets.py         # Augment data qua LLM
 │   ├── evaluation_enhanced.py      # RAGAS + Retrieval metrics
@@ -156,13 +363,11 @@ vietnamese-rag-chatbot/
 └── requirements.txt
 ```
 
----
-
-## Kết quả Evaluation
+### Kết quả Evaluation
 
 So sánh 2 embedding model với Hybrid Retrieval (BM25 + FAISS + Cross-Encoder, k=7):
 
-### Retrieval Metrics
+#### Retrieval Metrics
 | Metric           | Custom Transformer | Fine-tuned E5 |
 |:-----------------|:------------------:|:-------------:|
 | NDCG@7           | **0.9937**         | 0.9899        |
@@ -170,7 +375,7 @@ So sánh 2 embedding model với Hybrid Retrieval (BM25 + FAISS + Cross-Encoder,
 | Recall@7         | 1.0000             | 1.0000        |
 | Precision@7      | **0.9821**         | 0.9511        |
 
-### RAGAS Metrics
+#### RAGAS Metrics
 | Metric            | Custom Transformer | Fine-tuned E5 |
 |:------------------|:------------------:|:-------------:|
 | Faithfulness      | 0.7738             | **0.8854**    |
@@ -178,17 +383,17 @@ So sánh 2 embedding model với Hybrid Retrieval (BM25 + FAISS + Cross-Encoder,
 | Context Precision | 0.6160             | **0.6820**    |
 | Context Recall    | 0.7500             | **0.9000**    |
 
-### Answer Quality
+#### Answer Quality
 | Metric             | Custom Transformer | Fine-tuned E5 |
 |:-------------------|:------------------:|:-------------:|
 | BLEU               | 0.1423             | **0.1684**    |
 | ROUGE-L            | 0.3539             | **0.3682**    |
 | Semantic Similarity| 0.7428             | **0.8049**    |
 
-> Fine-tuned E5 (278M params) vượt trội trên RAGAS & Answer Quality. Custom Transformer cạnh tranh tốt về Retrieval Precision dù chỉ 711K params.
+> Fine-tuned E5 (278M params) vượt trội trên RAGAS & Answer Quality. Custom Transformer cạnh tranh tốt về Retrieval Precision dù chỉ 738,560 params.
+>
+> Lưu ý: các kết quả trên được đo khi hệ thống còn dùng Llama trên Groq. BLEU và ROUGE-L lấy từ lần đánh giá trước; code hiện tại (`src/evaluation_enhanced.py`) không còn tính hai chỉ số này. Về cách đo (mẫu nhỏ, nhãn relevance theo heuristic, 119/150 câu đánh giá trùng với dữ liệu train), xem mục *How to read these numbers* ở phần tiếng Anh.
 
----
-
-## Nhóm thực hiện
+### Nhóm thực hiện
 
 Đồ án môn Deep Learning — HUIT 2025

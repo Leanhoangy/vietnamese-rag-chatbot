@@ -1,5 +1,5 @@
 """
-Augment legal triplets dataset by paraphrasing anchor questions via Groq LLM.
+Augment legal triplets dataset by paraphrasing anchor questions via the configured LLM (src/llm_chain.py).
 
 Strategy:
   - 31 unique (anchor, positive) pairs × 3 paraphrases = ~93 new anchors
@@ -16,7 +16,12 @@ from pathlib import Path
 
 from datasets import Dataset, load_from_disk
 from dotenv import load_dotenv
-from langchain_groq import ChatGroq
+from langchain_core.language_models import BaseChatModel
+
+try:
+    from .llm_chain import LLM_MODEL, LLM_PROVIDER, make_llm
+except ImportError:
+    from llm_chain import LLM_MODEL, LLM_PROVIDER, make_llm
 
 load_dotenv()
 
@@ -31,11 +36,8 @@ Yêu cầu:
 - Không thay đổi nghĩa pháp lý của câu hỏi"""
 
 
-def build_llm(model: str = "llama-3.1-8b-instant") -> ChatGroq:
-    api_key = os.getenv("GROQ_API_KEY")
-    if not api_key:
-        raise EnvironmentError("GROQ_API_KEY not found in environment")
-    return ChatGroq(model=model, api_key=api_key, temperature=0.7, max_retries=2)
+def build_llm() -> BaseChatModel:
+    return make_llm(temperature=0.7)
 
 
 def parse_paraphrases(raw: str, n: int) -> list[str]:
@@ -46,12 +48,12 @@ def parse_paraphrases(raw: str, n: int) -> list[str]:
     return cleaned[:n]
 
 
-def generate_paraphrases(llm: ChatGroq, question: str, n: int = 3, retries: int = 2) -> list[str]:
+def generate_paraphrases(llm: BaseChatModel, question: str, n: int = 3, retries: int = 2) -> list[str]:
     prompt = PARAPHRASE_PROMPT.format(question=question, n=n)
     for attempt in range(retries + 1):
         try:
             response = llm.invoke(prompt)
-            paraphrases = parse_paraphrases(response.content, n)
+            paraphrases = parse_paraphrases(response.text, n)
             if paraphrases:
                 return paraphrases
         except Exception as e:
@@ -65,7 +67,6 @@ def augment_dataset(
     dataset_path: str = "legal_triplets_dataset",
     output_path: str = "legal_triplets_dataset",
     paraphrases_per_anchor: int = 3,
-    model: str = "llama-3.1-8b-instant",
     delay: float = 0.5,
 ) -> Dataset:
     print("Loading existing dataset...")
@@ -81,9 +82,9 @@ def augment_dataset(
 
     unique_pairs = list(pair_negatives.keys())
     print(f"Unique (anchor, positive) pairs: {len(unique_pairs)}")
-    print(f"Generating {paraphrases_per_anchor} paraphrases per anchor via Groq ({model})...\n")
+    print(f"Generating {paraphrases_per_anchor} paraphrases per anchor via {LLM_PROVIDER} ({LLM_MODEL})...\n")
 
-    llm = build_llm(model)
+    llm = build_llm()
 
     new_anchors: list[str] = []
     new_positives: list[str] = []

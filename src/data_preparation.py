@@ -22,11 +22,11 @@ load_dotenv()
 class LegalDataPreparator:
     """Prepare training data for embedding fine-tuning"""
     
-    def __init__(self, test_set_path: str = "test_set.json",k_hard_negatives: int=5):
-        self.test_set_path= test_set_path
-        self.k_hard_negatives= k_hard_negatives
-        self.triplets=[]
-        self.positive_pairs=[]  # (query, positive, negative)
+    def __init__(self, test_set_path: str = "test_set.json", k_hard_negatives: int = 5):
+        self.test_set_path = test_set_path
+        self.k_hard_negatives = k_hard_negatives
+        self.triplets = []
+        self.positive_pairs = []
     
 
     def load_test_cases(self) -> List[Dict]:
@@ -40,7 +40,7 @@ class LegalDataPreparator:
             return []
             
 
-    def mine_hard_negatives(self, query: str, positive_doc_content: str, k: int = 5) -> List[str]:
+    def mine_hard_negatives(self, query: str, positive_doc_content: str, k: int) -> List[str]:
         """
         Mine hard negatives: retrieve documents similar to query but NOT the ground truth
         Using FAISS retriever to get top-k similar chunks
@@ -126,7 +126,7 @@ class LegalDataPreparator:
         
         return self.triplets
     
-    def _get_random_negatives(self, query: str, positive: str, test_cases: List[Dict], k: int = 5) -> List[str]:
+    def _get_random_negatives(self, query: str, positive: str, test_cases: List[Dict], k: int) -> List[str]:
         """Get random negatives from other test cases"""
         negatives = []
         other_ground_truths = []

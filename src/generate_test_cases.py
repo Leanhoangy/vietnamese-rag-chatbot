@@ -1,5 +1,5 @@
 """
-Generate additional test cases from raw legal documents using Groq LLM.
+Generate additional test cases from raw legal documents using the configured LLM (src/llm_chain.py).
 
 Strategy:
   - Parse each .docx into article-level chunks (Điều X...)
@@ -19,7 +19,12 @@ from typing import Optional
 
 from docx import Document
 from dotenv import load_dotenv
-from langchain_groq import ChatGroq
+from langchain_core.language_models import BaseChatModel
+
+try:
+    from .llm_chain import make_llm
+except ImportError:
+    from llm_chain import make_llm
 
 load_dotenv()
 
@@ -40,10 +45,10 @@ DOC_META = {
 
 # How many extra questions to target per domain
 DOMAIN_TARGETS = {
-    "Dân sự":      12,
-    "Doanh nghiệp": 9,
-    "Lao động":     6,
-    "Giao thông":   5,
+    "Dân sự":      45,
+    "Doanh nghiệp": 40,
+    "Lao động":     35,
+    "Giao thông":   30,
 }
 
 QA_PROMPT = """Bạn là chuyên gia pháp lý Việt Nam. Đọc đoạn văn bản pháp luật sau và tạo ra {n} cặp hỏi-đáp mà người dân thông thường có thể hỏi.
@@ -110,11 +115,8 @@ def extract_articles(docx_path: Path) -> list[dict]:
 # LLM helpers
 # ---------------------------------------------------------------------------
 
-def build_llm(model: str = "llama-3.1-8b-instant") -> ChatGroq:
-    api_key = os.getenv("GROQ_API_KEY")
-    if not api_key:
-        raise EnvironmentError("GROQ_API_KEY not found in environment")
-    return ChatGroq(model=model, api_key=api_key, temperature=0.3, max_retries=2)
+def build_llm() -> BaseChatModel:
+    return make_llm(temperature=0.3)
 
 
 def parse_qa_json(raw: str) -> list[dict]:
@@ -156,7 +158,7 @@ def ground_truth_in_text(ground_truth: str, article_text: str) -> bool:
 
 
 def generate_qa_pairs(
-    llm: ChatGroq,
+    llm: BaseChatModel,
     article: dict,
     n: int = 2,
     retries: int = 2,
@@ -170,7 +172,7 @@ def generate_qa_pairs(
     for attempt in range(retries + 1):
         try:
             response = llm.invoke(prompt)
-            pairs = parse_qa_json(response.content)
+            pairs = parse_qa_json(response.text)
             # Validate ground_truth is actually in the article
             valid = [
                 p for p in pairs
@@ -204,7 +206,6 @@ def existing_questions(test_set: list[dict]) -> set[str]:
 def generate_test_cases(
     delay: float = 0.8,
     articles_per_domain_batch: int = 6,
-    model: str = "llama-3.1-8b-instant",
 ) -> list[dict]:
     existing = load_existing_test_set(TEST_SET_PATH)
     seen_questions = existing_questions(existing)
@@ -225,7 +226,7 @@ def generate_test_cases(
         current = domain_counts.get(domain, 0)
         print(f"  {domain}: {current} (target +{target} more)")
 
-    llm = build_llm(model)
+    llm = build_llm()
     new_cases: list[dict] = []
 
     for filename, meta in DOC_META.items():

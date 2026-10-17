@@ -22,11 +22,13 @@ class DocumentLike(Protocol):
     metadata: Dict[str, Any]
 
 try:
-    from .llm_chain import model
+    from .legal_glossary import apply_glossary
+    from .llm_chain import LLM_PROVIDER, model
     from .vector_store import vectorstore
     from .chunker import splits
 except ImportError:
-    from llm_chain import model
+    from legal_glossary import apply_glossary
+    from llm_chain import LLM_PROVIDER, model
     from vector_store import vectorstore
     from chunker import splits
 
@@ -275,6 +277,8 @@ class HybridQAChain:
 NGUYÊN TẮC:
 - Nếu câu hỏi là lời chào (ví dụ: "hello", "xin chào", "hi"...), chào lại ngắn gọn và hỏi người dùng cần tư vấn gì.
 - Nếu câu hỏi liên quan pháp luật: trả lời THẲNG VÀO NỘI DUNG, không chào hỏi thêm. Trích dẫn chính xác điều khoản, mức phạt từ tài liệu.
+- Mỗi tài liệu mở đầu bằng [Tên văn bản] và số Điều. Trích dẫn ngắn gọn ngay sau ý liên quan, dạng "(Điều 6 Nghị định 100/2019/NĐ-CP)" hoặc "(khoản 2 Điều 8 Bộ luật Lao động 2019)": dùng tên văn bản bỏ phần trong ngoặc, không chép nguyên dòng [...] ở đầu tài liệu, không tự suy ra số Điều.
+- Chỉ ghi khoản, điểm khi thấy rõ số khoản, điểm đó trong nội dung tài liệu; không chắc thì chỉ ghi số Điều.
 - Nếu tài liệu có thông tin liên quan: trả lời những gì có, không nói "không đủ thông tin".
 - Chỉ nói "Tài liệu không cung cấp thông tin" khi hoàn toàn không tìm thấy gì liên quan.
 - Không bịa thông tin ngoài tài liệu.
@@ -295,6 +299,24 @@ TRẢ LỜI:"""
             input_variables=["chat_history", "context", "question"]
         )
 
+        # Câu hỏi đời thường ("bằng lái", "đuổi việc"...) thường không khớp thuật ngữ trong luật
+        # → LLM viết lại thành truy vấn pháp lý trước khi retrieve
+        rewrite_template = """Viết lại câu hỏi của người dùng thành MỘT câu truy vấn để tìm kiếm trong văn bản pháp luật Việt Nam.
+
+YÊU CẦU:
+- THAY từ ngữ đời thường bằng thuật ngữ pháp lý tương ứng như trong luật, nghị định; không giữ lại từ đời thường đã được thay. Ví dụ: "bằng lái" → "giấy phép lái xe"; "xe máy" → "xe mô tô, xe gắn máy"; "bị đuổi việc" → "người sử dụng lao động đơn phương chấm dứt hợp đồng lao động".
+- Nếu câu hỏi phụ thuộc LỊCH SỬ HỘI THOẠI (ví dụ "còn ô tô thì sao?"), bổ sung chủ đề đang nói tới để truy vấn tự đủ nghĩa.
+- Giữ nguyên ý hỏi. Không trả lời câu hỏi, không thêm thông tin mới.
+- Nếu là lời chào hoặc không liên quan pháp luật, trả về nguyên văn câu hỏi.
+- Chỉ trả về một dòng truy vấn, không giải thích.
+
+LỊCH SỬ HỘI THOẠI:
+{chat_history}
+
+CÂU HỎI: {question}
+
+TRUY VẤN:"""
+
         def format_docs(docs):
             return "\n\n".join([
                 f"[Tài liệu {i+1}]:\n{doc.page_content}"
@@ -303,15 +325,48 @@ TRẢ LỜI:"""
 
         self.format_docs = format_docs
         self.prompt = prompt
+        self.rewrite_prompt = PromptTemplate(
+            template=rewrite_template,
+            input_variables=["chat_history", "question"],
+        )
+        # QUERY_REWRITE: "auto" (mặc định) | "true" | "false".
+        # auto: Gemini viết lại mọi câu. Model local nhỏ (Ollama) viết lại câu hỏi độc lập còn kém hơn
+        # từ điển (vd. qwen3:8b bỏ mất chữ "đèn"), nên chỉ dùng LLM cho câu nối tiếp cần lịch sử hội thoại.
+        self.query_rewrite_mode = os.getenv("QUERY_REWRITE", "auto").strip().lower()
         self.model = model
         self.retriever = retriever
+
+    def _should_rewrite(self, chat_history: str) -> bool:
+        if self.query_rewrite_mode in ("true", "false"):
+            return self.query_rewrite_mode == "true"
+        return LLM_PROVIDER != "ollama" or bool(chat_history.strip())
+
+    def rewrite_query(self, query: str, chat_history: str = "") -> str:
+        """Quy đổi từ đời thường theo từ điển, rồi LLM viết lại thành truy vấn pháp lý; lỗi thì dùng câu đã quy đổi."""
+        query = apply_glossary(query)
+        if not self._should_rewrite(chat_history):
+            return query
+        try:
+            raw = (self.rewrite_prompt | self.model | StrOutputParser()).invoke({
+                "chat_history": chat_history or "(không có)",
+                "question": query,
+            })
+        except Exception as e:
+            print(f"Query rewrite failed, using original query: {e}")
+            return query
+
+        lines = [line.strip().strip('"“”') for line in raw.splitlines() if line.strip()]
+        rewritten = lines[0] if lines else ""
+        # Áp dụng lại từ điển: LLM đôi khi thêm ngược từ đời thường vào truy vấn
+        return apply_glossary(rewritten) if 0 < len(rewritten) <= 300 else query
 
     def invoke(self, query_dict: Dict) -> Dict:
         """Invoke the QA chain (compatible with LangChain interface)"""
         query = query_dict.get("query", "")
         chat_history = query_dict.get("chat_history", "")
 
-        docs = self.retriever.invoke(query)
+        search_query = self.rewrite_query(query, chat_history)
+        docs = self.retriever.invoke(search_query)
         context = self.format_docs(docs)
 
         answer = (
@@ -326,7 +381,8 @@ TRẢ LỜI:"""
 
         return {
             "result": answer,
-            "source_documents": docs
+            "source_documents": docs,
+            "search_query": search_query,
         }
     
     def __call__(self, query: str) -> str:

@@ -1,6 +1,6 @@
 """
 Enhanced evaluation metrics for RAG system.
-Includes retrieval metrics (NDCG, MRR, Recall), answer quality metrics (BLEU, ROUGE),
+Includes retrieval metrics (NDCG, MRR, Recall), answer quality metrics (Semantic Similarity),
 and RAGAS evaluation.
 """
 
@@ -18,18 +18,7 @@ from ragas.llms import LangchainLLMWrapper
 from ragas.embeddings import LangchainEmbeddingsWrapper
 from ragas.run_config import RunConfig
 
-from langchain_groq import ChatGroq
-from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
-from rouge_score import rouge_scorer
-import nltk
-
-# Import based on availability
-try:
-    from nltk.translate.bleu_score import sentence_bleu
-    BLEU_AVAILABLE = True
-except:
-    BLEU_AVAILABLE = False
 
 try:
     from sentence_transformers import SentenceTransformer
@@ -39,6 +28,15 @@ except:
     SENTENCE_TRANSFORMERS_AVAILABLE = False
 
 load_dotenv()
+
+# Free tier giới hạn request/phút → gặp 429 thì chờ rồi thử lại
+RATE_LIMIT_RETRIES = 3
+RATE_LIMIT_WAIT_SECONDS = 30
+
+
+def _is_rate_limit(error: Exception) -> bool:
+    message = str(error).lower()
+    return "429" in message or "rate_limit" in message or "resource_exhausted" in message
 
 
 class RetrievalMetrics:
@@ -105,52 +103,14 @@ class RetrievalMetrics:
 
 class AnswerQualityMetrics:
     """Calculate answer generation quality metrics"""
-    
-    def __init__(self):
-        self.rouge_scorer = rouge_scorer.RougeScorer(['rouge1', 'rougeL'], use_stemmer=True)
-        self.semantic_model = None
 
+    def __init__(self):
+        self.semantic_model = None
         if SENTENCE_TRANSFORMERS_AVAILABLE:
             self.semantic_model = SentenceTransformer(
                 "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
             )
 
-    @staticmethod
-    def _simple_tokenize(text: str) -> List[str]:
-        """Tokenizer independent of NLTK punkt resources."""
-        return re.findall(r"\w+", text.lower(), flags=re.UNICODE)
-    
-    def bleu_score(self, reference: str, hypothesis: str) -> float:
-        """
-        Calculate BLEU score
-        
-        Args:
-            reference: Ground truth answer
-            hypothesis: Generated answer
-            
-        Returns:
-            BLEU score [0, 1]
-        """
-        if not BLEU_AVAILABLE:
-            return 0.0
-
-        ref_tokens = self._simple_tokenize(reference)
-        hyp_tokens = self._simple_tokenize(hypothesis)
-
-        try:
-            score = sentence_bleu([ref_tokens], hyp_tokens, weights=(0.25, 0.25, 0.25, 0.25))
-            return score
-        except:
-            return 0.0
-    
-    def rouge_l_score(self, reference: str, hypothesis: str) -> float:
-        """Calculate ROUGE-L (longest common subsequence based)"""
-        try:
-            scores = self.rouge_scorer.score(reference, hypothesis)
-            return scores['rougeL'].fmeasure
-        except:
-            return 0.0
-    
     def semantic_similarity(self, reference: str, hypothesis: str) -> float:
         """
         Calculate semantic similarity using sentence-transformers
@@ -189,11 +149,9 @@ class RAGEvaluator:
         self.retrieval_metrics = RetrievalMetrics()
         self.answer_metrics = AnswerQualityMetrics()
 
-        # RAGAS setup — hỗ trợ key rotation
-        from src.llm_chain import GROQ_KEYS, make_groq_model
-        self._groq_keys = GROQ_KEYS
-        self._key_idx = 0
-        self.ragas_model = make_groq_model(0, model_name="llama-3.1-8b-instant")
+        # RAGAS judge dùng cùng provider với chatbot (LLM_PROVIDER / LLM_MODEL)
+        from src.llm_chain import make_llm
+        self.ragas_model = make_llm()
         self.ragas_llm = LangchainLLMWrapper(self.ragas_model)
 
         # RAGAS requires a HuggingFace embedding with a string model name.
@@ -292,7 +250,7 @@ class RAGEvaluator:
         for i, case in enumerate(test_cases):
             print(f"[{i+1}/{len(test_cases)}] {case['question'][:60]}...")
 
-            for _ in range(len(self._groq_keys)):
+            for attempt in range(RATE_LIMIT_RETRIES + 1):
                 try:
                     result = self.qa_chain.invoke({"query": case["question"]})
                     source_docs = result.get("source_documents", [])
@@ -307,13 +265,9 @@ class RAGEvaluator:
                     time.sleep(0.5)
                     break
                 except Exception as e:
-                    if "429" in str(e) or "rate_limit" in str(e).lower():
-                        self._key_idx = (self._key_idx + 1) % len(self._groq_keys)
-                        from src.llm_chain import make_groq_model
-                        new_model = make_groq_model(self._key_idx)
-                        self.qa_chain.model = new_model
-                        print(f"  [Rate limit] Rotated to key {self._key_idx + 1}/{len(self._groq_keys)}, retrying...")
-                        time.sleep(2)
+                    if _is_rate_limit(e) and attempt < RATE_LIMIT_RETRIES:
+                        print(f"  [Rate limit] Waiting {RATE_LIMIT_WAIT_SECONDS}s, retrying...")
+                        time.sleep(RATE_LIMIT_WAIT_SECONDS)
                     else:
                         print(f"  Error: {e}")
                         break
@@ -389,19 +343,7 @@ class RAGEvaluator:
         ground_truths = ground_truths[:ragas_limit]
         print(f"Evaluating {len(questions)} samples with RAGAS...")
 
-        # Chạy từng sample — 429 thì rotate key + retry sample đó, không restart từ đầu
-        from src.llm_chain import make_groq_model
-
-        def _rotate_ragas_key(self):
-            self._key_idx = (self._key_idx + 1) % len(self._groq_keys)
-            self.ragas_model = make_groq_model(self._key_idx, model_name="llama-3.1-8b-instant")
-            self.ragas_llm = LangchainLLMWrapper(self.ragas_model)
-            self.faithfulness_metric.llm = self.ragas_llm
-            self.answer_relevancy_metric.llm = self.ragas_llm
-            self.context_precision_metric.llm = self.ragas_llm
-            self.context_recall_metric.llm = self.ragas_llm
-            print(f"[RAGAS] Rotated to key {self._key_idx + 1}/{len(self._groq_keys)}")
-
+        # Chạy từng sample — 429 thì chờ rồi retry sample đó, không restart từ đầu
         all_scores = {"faithfulness": [], "answer_relevancy": [], "context_precision": [], "context_recall": []}
         ground_truth_list = [truths[0] if truths else "" for truths in ground_truths]
 
@@ -409,7 +351,7 @@ class RAGEvaluator:
             print(f"  [RAGAS {i+1}/{len(questions)}]", end=" ", flush=True)
             single = Dataset.from_dict({"question": [q], "answer": [a], "contexts": [c], "ground_truth": [gt]})
             success = False
-            for _ in range(len(self._groq_keys)):
+            for attempt in range(RATE_LIMIT_RETRIES + 1):
                 try:
                     res = evaluate(
                         single,
@@ -417,7 +359,7 @@ class RAGEvaluator:
                                  self.context_precision_metric, self.context_recall_metric],
                         llm=self.ragas_llm,
                         embeddings=self.ragas_embeddings,
-                        run_config=RunConfig(max_workers=1, timeout=120)
+                        run_config=RunConfig(max_workers=1, timeout=200)
                     )
                     df = res.to_pandas()
                     for metric in all_scores:
@@ -427,10 +369,9 @@ class RAGEvaluator:
                     success = True
                     break
                 except Exception as e:
-                    if "429" in str(e) or "rate_limit" in str(e).lower():
-                        print(f"429→rotate", end=" ", flush=True)
-                        _rotate_ragas_key(self)
-                        time.sleep(2)
+                    if _is_rate_limit(e) and attempt < RATE_LIMIT_RETRIES:
+                        print(f"429→wait {RATE_LIMIT_WAIT_SECONDS}s", end=" ", flush=True)
+                        time.sleep(RATE_LIMIT_WAIT_SECONDS)
                     else:
                         print(f"skip({e})")
                         for metric in all_scores:
@@ -454,31 +395,24 @@ class RAGEvaluator:
         answers: List[str],
         references: List[str],
     ) -> Dict:
-        """Evaluate answer generation quality"""
+        """Evaluate answer semantic similarity vs ground truth"""
         print("\n" + "="*60)
         print("Evaluating Answer Quality")
         print("="*60)
-        
-        bleu_scores = []
-        rouge_scores = []
+
         semantic_scores = []
-        
         for hyp, ref in zip(answers, references):
             if ref and hyp:
-                bleu_scores.append(self.answer_metrics.bleu_score(ref, hyp))
-                rouge_scores.append(self.answer_metrics.rouge_l_score(ref, hyp))
                 semantic_scores.append(self.answer_metrics.semantic_similarity(ref, hyp))
-        
+
         scores = {
-            "bleu": float(np.mean(bleu_scores)) if bleu_scores else 0.0,
-            "rouge_l": float(np.mean(rouge_scores)) if rouge_scores else 0.0,
             "semantic_similarity": float(np.mean(semantic_scores)) if semantic_scores else 0.0,
         }
-        
+
         print("\n=== Answer Quality Scores ===")
         for metric, score in scores.items():
             print(f"{metric:.<30} {score:.4f}")
-        
+
         return scores
     
     def run_full_evaluation(self, limit: int = 5) -> Dict:
