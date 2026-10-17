@@ -5,13 +5,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.evaluation_enhanced import RAGEvaluator
+from evaluation.rag_evaluator import RAGEvaluator
 from src.embedder import embeddings
 from src.retrieval_hybrid import qa_chain
 
 evaluator = RAGEvaluator(
     qa_chain=qa_chain,
     embeddings=embeddings,
-    test_set_path="test_set.json",
+    test_set_path="data/qa/test_set.json",
 )
 evaluator.run_full_evaluation(limit=10)

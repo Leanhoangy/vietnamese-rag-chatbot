@@ -24,13 +24,13 @@ def _norm(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip().lower()
 
 
-test_set = json.loads((ROOT / "test_set.json").read_text(encoding="utf-8"))
-training_anchors = {_norm(a) for a in load_from_disk(str(ROOT / "legal_triplets_dataset"))["anchor"]}
+test_set = json.loads((ROOT / "data/qa/test_set.json").read_text(encoding="utf-8"))
+training_anchors = {_norm(a) for a in load_from_disk(str(ROOT / "data/triplets/legal_triplets_dataset"))["anchor"]}
 
 _DECREE_100 = re.compile(r"Nghidinh 100|Nghị định 100/2019")
 
 unseen = [case for case in test_set if _norm(case["question"]) not in training_anchors]
 clean = [case for case in unseen if not _DECREE_100.search(case.get("source", ""))]
-(ROOT / "test_set_clean.json").write_text(json.dumps(clean, ensure_ascii=False, indent=2), encoding="utf-8")
+(ROOT / "data/qa/test_set_clean.json").write_text(json.dumps(clean, ensure_ascii=False, indent=2), encoding="utf-8")
 print(f"{len(unseen)}/{len(test_set)} test questions never appear in the training triplets; "
       f"{len(unseen) - len(clean)} answered from Decree 100/2019 dropped → {len(clean)} in test_set_clean.json")

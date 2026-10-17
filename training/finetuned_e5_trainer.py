@@ -24,7 +24,7 @@ class TripletLossEvaluator:
     """Tính test loss sau mỗi epoch, lưu vào JSON."""
 
     def __init__(self, test_examples: List[InputExample], margin: float = 0.5,
-                 log_path: str = "loss_log_test_finetuned.json"):
+                 log_path: str = "training/logs/loss_log_test_finetuned.json"):
         self.test_examples = test_examples
         self.margin = margin
         self.log_path = log_path
@@ -175,8 +175,8 @@ class EmbeddingFineTuner:
 
 
 def run_finetuning_pipeline(
-    dataset_path: str = "legal_triplets_dataset",
-    test_dataset_path: str = "test_triplets_dataset",
+    dataset_path: str = "data/triplets/legal_triplets_dataset",
+    test_dataset_path: str = "data/triplets/test_triplets_dataset",
     epochs: int = 15,
     batch_size: int = 32,
 ):

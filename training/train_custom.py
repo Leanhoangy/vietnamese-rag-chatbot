@@ -9,20 +9,22 @@ Bước 4: Train custom transformer
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # chạy được từ thư mục gốc repo
+
 
 def prepare_data():
     print("\n" + "=" * 60)
     print("BƯỚC 1: Chuẩn bị training data")
     print("=" * 60)
 
-    if Path("legal_triplets_dataset").exists():
+    if Path("data/triplets/legal_triplets_dataset").exists():
         from datasets import load_from_disk
-        ds = load_from_disk("legal_triplets_dataset")
+        ds = load_from_disk("data/triplets/legal_triplets_dataset")
         print(f"✓ Dataset đã có — {len(ds)} triplets. Bỏ qua.")
         return True
 
-    from src.data_preparation import LegalDataPreparator
-    preparator = LegalDataPreparator(test_set_path="test_set.json", k_hard_negatives=3)
+    from training.data_preparation import LegalDataPreparator
+    preparator = LegalDataPreparator(test_set_path="data/qa/test_set.json", k_hard_negatives=3)
     dataset = preparator.prepare_all(save_to_disk=True)
     if not dataset:
         print("✗ Tạo dataset thất bại")
@@ -37,14 +39,14 @@ def augment_data():
     print("=" * 60)
 
     from datasets import load_from_disk
-    ds = load_from_disk("legal_triplets_dataset")
+    ds = load_from_disk("data/triplets/legal_triplets_dataset")
 
     # Nếu đã augment rồi (nhiều hơn 300 triplets) thì bỏ qua
     if len(ds) > 300:
         print(f"✓ Dataset đã augment ({len(ds)} triplets). Bỏ qua.")
         return True
 
-    from src.augment_triplets import augment_dataset
+    from training.augment_triplets import augment_dataset
     augment_dataset()
     return True
 
@@ -68,7 +70,7 @@ def train_transformer():
     print("BƯỚC 4: Train custom transformer")
     print("=" * 60)
 
-    from src.custom_transformer.trainer import train
+    from training.custom_transformer_trainer import train
     train()
     return True
 
@@ -93,7 +95,7 @@ def main():
     print("\n✓ Hoàn thành!")
     print("  - Model: models/custom-transformer/model.pt")
     print("  - Tokenizer: models/custom-tokenizer/vocab.json")
-    print("  - Chạy evaluation: python evaluate.py")
+    print("  - Chạy evaluation: python evaluation/evaluate_custom.py")
 
 
 if __name__ == "__main__":

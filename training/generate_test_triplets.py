@@ -1,5 +1,6 @@
 """
-Tạo test triplets từ test_set.json dùng random negatives.
+Tạo test triplets từ data/qa/test_set.json dùng random negatives.
+Chạy từ thư mục gốc repo: python training/generate_test_triplets.py
 Lưu dưới dạng HuggingFace dataset để trainer load được.
 """
 import json
@@ -8,7 +9,7 @@ from datasets import Dataset
 
 random.seed(42)
 
-with open("test_set.json", encoding="utf-8") as f:
+with open("data/qa/test_set.json", encoding="utf-8") as f:
     test_cases = json.load(f)
 
 triplets = []
@@ -31,5 +32,5 @@ for i, case in enumerate(test_cases):
             triplets.append({"anchor": query, "positive": positive, "negative": neg})
 
 ds = Dataset.from_list(triplets)
-ds.save_to_disk("test_triplets_dataset")
-print(f"Created {len(triplets)} test triplets → test_triplets_dataset/")
+ds.save_to_disk("data/triplets/test_triplets_dataset")
+print(f"Created {len(triplets)} test triplets → data/triplets/test_triplets_dataset/")

@@ -6,13 +6,14 @@ Strategy:
   - Sample articles (weighted toward under-represented domains)
   - Ask LLM to produce 1-2 Q&A pairs per article
   - ground_truth must be an exact substring of the article text
-  - Merge with existing test_set.json and deduplicate
+  - Merge with existing data/qa/test_set.json and deduplicate
 """
 
 import json
 import os
 import random
 import re
+import sys
 import time
 from pathlib import Path
 from typing import Optional
@@ -21,10 +22,9 @@ from docx import Document
 from dotenv import load_dotenv
 from langchain_core.language_models import BaseChatModel
 
-try:
-    from .llm_chain import make_llm
-except ImportError:
-    from llm_chain import make_llm
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # chạy trực tiếp được từ thư mục gốc repo
+
+from src.llm_chain import make_llm
 
 load_dotenv()
 
@@ -33,7 +33,7 @@ load_dotenv()
 # ---------------------------------------------------------------------------
 
 RAW_DIR = Path("data/raw")
-TEST_SET_PATH = Path("test_set.json")
+TEST_SET_PATH = Path("data/qa/test_set.json")
 
 DOC_META = {
     "Luatdansu.docx":       {"label": "Bộ luật Dân sự",    "domain": "Dân sự"},

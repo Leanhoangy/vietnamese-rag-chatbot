@@ -1,6 +1,6 @@
 """Evaluate hệ thống dùng fine-tuned e5 (bỏ qua custom transformer).
 
-Mặc định chạy trên test_set_clean.json (câu hỏi chưa từng xuất hiện khi train). Ví dụ:
+Mặc định chạy trên data/qa/test_set_clean.json (câu hỏi chưa từng xuất hiện khi train). Ví dụ:
 
     # Gemini sinh câu trả lời (giống demo), qwen3:8b local chấm RAGAS để tiết kiệm quota
     EVAL_JUDGE_PROVIDER=ollama python evaluation/evaluate_finetuned.py --limit 3     # chạy thử
@@ -16,7 +16,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-parser.add_argument("--test-set", default="test_set_clean.json")
+parser.add_argument("--test-set", default="data/qa/test_set_clean.json")
 parser.add_argument("--limit", type=int, default=None, help="số câu hỏi đầu tiên cần chạy (mặc định: tất cả)")
 parser.add_argument("--ragas-limit", type=int, default=None, help="số câu chấm RAGAS (mặc định: tất cả câu đã chạy)")
 parser.add_argument("--output", default="evaluation/results_finetuned.json")
@@ -39,7 +39,7 @@ embeddings = HuggingFaceEmbeddings(
 
 from src.llm_chain import LLM_MODEL, LLM_PROVIDER
 from src.retrieval_hybrid import qa_chain
-from src.evaluation_enhanced import RAGEvaluator
+from evaluation.rag_evaluator import RAGEvaluator
 
 evaluator = RAGEvaluator(
     qa_chain=qa_chain,

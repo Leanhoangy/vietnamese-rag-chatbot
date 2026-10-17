@@ -9,6 +9,8 @@ import sys
 from pathlib import Path
 import traceback
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # chạy được từ thư mục gốc repo
+
 
 def install_dependencies():
     command = [
@@ -27,7 +29,7 @@ def prepare_training_data():
     print("STEP 1: Preparing Training Data")
     print("="*70)
 
-    dataset_path = Path("legal_triplets_dataset")
+    dataset_path = Path("data/triplets/legal_triplets_dataset")
     if dataset_path.exists():
         from datasets import load_from_disk
         dataset = load_from_disk(str(dataset_path))
@@ -36,8 +38,8 @@ def prepare_training_data():
         return True
 
     os.environ["USE_FINETUNED"] = "true"
-    from src.data_preparation import LegalDataPreparator
-    preparator = LegalDataPreparator(test_set_path="train_set.json", k_hard_negatives=3)
+    from training.data_preparation import LegalDataPreparator
+    preparator = LegalDataPreparator(test_set_path="data/qa/train_set.json", k_hard_negatives=3)
     dataset = preparator.prepare_all(save_to_disk=True)
 
     if dataset:
@@ -52,14 +54,14 @@ def finetune_embedding_model():
     print("STEP 2: Fine-tuning Embedding Model")
     print("="*70)
 
-    from src.finetuned_e5.trainer import run_finetuning_pipeline
+    from training.finetuned_e5_trainer import run_finetuning_pipeline
 
-    if not Path("legal_triplets_dataset").exists():
+    if not Path("data/triplets/legal_triplets_dataset").exists():
         print("✗ Dataset not found. Run data preparation first!")
         return False
 
     try:
-        tuner = run_finetuning_pipeline(dataset_path="legal_triplets_dataset", epochs=15, batch_size=32)
+        tuner = run_finetuning_pipeline(dataset_path="data/triplets/legal_triplets_dataset", epochs=15, batch_size=32)
         print(f"✓ Fine-tuning completed! Model saved to: {tuner.output_dir}")
         return True
     except Exception as e:
@@ -101,7 +103,7 @@ def main():
 
     print("\n✓ Training pipeline completed successfully!")
     print("  - Fine-tuned embedding model: models/finetuned-embedder/")
-    print("  - Chạy evaluation: python evaluate_finetuned.py")
+    print("  - Chạy evaluation: python evaluation/evaluate_finetuned.py")
 
 
 if __name__ == "__main__":

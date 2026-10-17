@@ -4,6 +4,7 @@ Dùng legal_triplets_dataset đã có sẵn.
 """
 
 import json
+import sys
 from pathlib import Path
 
 import torch
@@ -11,8 +12,10 @@ import torch.nn as nn
 from datasets import load_from_disk
 from torch.utils.data import DataLoader, Dataset
 
-from .tokenizer import LegalTokenizer, build_tokenizer
-from .architecture import LegalTransformerEncoder
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # chạy trực tiếp được từ thư mục gốc repo
+
+from src.custom_transformer.architecture import LegalTransformerEncoder
+from src.custom_transformer.tokenizer import LegalTokenizer, build_tokenizer
 
 
 CONFIG = {
@@ -26,8 +29,8 @@ CONFIG = {
     "epochs": 15,
     "lr": 3e-4,
     "triplet_margin": 0.3,
-    "dataset_path": "legal_triplets_dataset",
-    "test_dataset_path": "test_triplets_dataset",
+    "dataset_path": "data/triplets/legal_triplets_dataset",
+    "test_dataset_path": "data/triplets/test_triplets_dataset",
     "tokenizer_path": "models/custom-tokenizer/vocab.json",
     "model_output": "models/custom-transformer/model.pt",
 }
@@ -162,12 +165,12 @@ def train(config: dict = CONFIG):
         print(f"Epoch {epoch:02d}/{config['epochs']} | Loss: {avg_loss:.4f}{test_loss_str} | LR: {scheduler.get_last_lr()[0]:.6f}")
 
     # Lưu loss log
-    with open("loss_log_custom.json", "w") as f:
+    with open("training/logs/loss_log_custom.json", "w") as f:
         json.dump(train_log, f, indent=2)
     if test_log:
-        with open("loss_log_test_custom.json", "w") as f:
+        with open("training/logs/loss_log_test_custom.json", "w") as f:
             json.dump(test_log, f, indent=2)
-        print("Test loss log → loss_log_test_custom.json")
+        print("Test loss log → training/logs/loss_log_test_custom.json")
 
     # Save
     out_path = Path(config["model_output"])

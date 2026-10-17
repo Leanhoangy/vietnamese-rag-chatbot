@@ -7,6 +7,7 @@ and RAGAS evaluation.
 import json
 import os
 import re
+import sys
 from pathlib import Path
 import numpy as np
 from typing import List, Dict, Tuple
@@ -20,6 +21,8 @@ from ragas.embeddings import LangchainEmbeddingsWrapper
 from ragas.run_config import RunConfig
 
 from dotenv import load_dotenv
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # chạy trực tiếp được từ thư mục gốc repo
 
 try:
     from sentence_transformers import SentenceTransformer
@@ -133,7 +136,7 @@ class AnswerQualityMetrics:
 class RAGEvaluator:
     """Comprehensive RAG evaluation"""
     
-    def __init__(self, qa_chain, embeddings, test_set_path: str = "test_set.json"):
+    def __init__(self, qa_chain, embeddings, test_set_path: str = "data/qa/test_set.json"):
         """
         Initialize evaluator
         

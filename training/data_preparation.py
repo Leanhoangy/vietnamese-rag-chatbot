@@ -5,16 +5,17 @@ Prepares positive pairs, hard negatives, and creates training dataset.
 
 import json
 import random
+import sys
+from pathlib import Path
 from typing import List, Dict, Tuple
 
 from datasets import Dataset
 from dotenv import load_dotenv
 import time
 
-try:
-    from .vector_store import vectorstore
-except ImportError:
-    from vector_store import vectorstore
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # chạy trực tiếp được từ thư mục gốc repo
+
+from src.vector_store import vectorstore
 
 load_dotenv()
 
@@ -22,7 +23,7 @@ load_dotenv()
 class LegalDataPreparator:
     """Prepare training data for embedding fine-tuning"""
     
-    def __init__(self, test_set_path: str = "test_set.json", k_hard_negatives: int = 5):
+    def __init__(self, test_set_path: str = "data/qa/test_set.json", k_hard_negatives: int = 5):
         self.test_set_path = test_set_path
         self.k_hard_negatives = k_hard_negatives
         self.triplets = []
@@ -164,7 +165,7 @@ class LegalDataPreparator:
         
         return dataset
     
-    def save_dataset(self, dataset: Dataset, output_path: str = "legal_triplets_dataset"):
+    def save_dataset(self, dataset: Dataset, output_path: str = "data/triplets/legal_triplets_dataset"):
         """Save dataset to disk"""
         if dataset is None:
             print("No dataset to save")

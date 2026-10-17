@@ -6,6 +6,8 @@ Tài liệu này mô tả kiến trúc **hiện tại** của hệ thống (cậ
 
 ## 1. Tổng quan
 
+Bố cục thư mục: `src/` chỉ chứa code mà app đang deploy chạy; `training/` tạo dữ liệu và train 2 model embedding; `evaluation/` đo chất lượng; `data/` gồm `raw/` (văn bản luật), `qa/` (bộ câu hỏi) và `triplets/` (dữ liệu train embedding). Mọi lệnh chạy từ thư mục gốc repo.
+
 ### Offline — chuẩn bị dữ liệu
 ```
 data/raw/*.docx (10 văn bản luật)
@@ -132,7 +134,7 @@ Handler là hàm đồng bộ để FastAPI chạy trong threadpool, không ch�
 
 ## 3. Mô hình embedding
 
-### 3.1 Custom Transformer (`src/custom_transformer/`)
+### 3.1 Custom Transformer (`src/custom_transformer/`, train: `training/train_custom.py`)
 ```
 input_ids (≤128 token) → Token Embedding (vocab 2.672) + Positional Encoding (sin/cos)
 → TransformerEncoderLayer × 2 (4 heads, hidden 128, feed-forward 512, pre-LayerNorm, dropout 0.1)
@@ -142,9 +144,9 @@ input_ids (≤128 token) → Token Embedding (vocab 2.672) + Positional Encoding
 - 738.560 tham số (đếm từ `models/custom-transformer/model.pt`).
 - Train: `TripletMarginLoss` (margin 0.3), AdamW (lr 3e-4, weight decay 1e-2), CosineAnnealingLR, 15 epoch, batch 32, CPU.
 
-### 3.2 Fine-tuned multilingual-e5-base (`src/finetuned_e5/`)
+### 3.2 Fine-tuned multilingual-e5-base (`training/train_finetuned.py`, `training/finetuned_e5_trainer.py`)
 - `intfloat/multilingual-e5-base`, 278.043.648 tham số, vector 768 chiều.
-- sentence-transformers `TripletLoss` (margin 0.5), lr 2e-5, warmup 10%, 15 epoch, batch 32 → 1.710 bước (114 bước/epoch). Train trên Colab GPU (`train_colab.ipynb`), đẩy lên Hugging Face Hub.
+- sentence-transformers `TripletLoss` (margin 0.5), lr 2e-5, warmup 10%, 15 epoch, batch 32 → 1.710 bước (114 bước/epoch). Train trên Colab GPU (`training/train_colab.ipynb`), đẩy lên Hugging Face Hub.
 
 ---
 
@@ -152,18 +154,18 @@ input_ids (≤128 token) → Token Embedding (vocab 2.672) + Positional Encoding
 
 | Tập | Số lượng | Nguồn |
 |---|---|---|
-| `all_questions.json` | 1.530 câu hỏi + đáp án trích nguyên văn | LLM sinh từ từng điều luật (`src/generate_test_cases.py`), kiểm tra ≥ 60% từ khóa của đáp án có trong điều luật |
-| `train_set.json` / `test_set.json` | 1.224 / 306 | `split_dataset.py`, chia 80/20, seed 42 |
-| `legal_triplets_dataset` | 3.642 triplet (1.214 câu hỏi × 3 hard negative) | `src/data_preparation.py`, hard negative lấy từ FAISS |
-| `test_triplets_dataset` | 892 triplet | `generate_test_triplets.py`, negative ngẫu nhiên |
+| `data/qa/all_questions.json` | 1.530 câu hỏi + đáp án trích nguyên văn | LLM sinh từ từng điều luật (`training/generate_test_cases.py`), kiểm tra ≥ 60% từ khóa của đáp án có trong điều luật |
+| `data/qa/train_set.json` / `test_set.json` | 1.224 / 306 | `training/split_dataset.py`, chia 80/20, seed 42 |
+| `data/triplets/legal_triplets_dataset` | 3.642 triplet (1.214 câu hỏi × 3 hard negative) | `training/data_preparation.py`, hard negative lấy từ FAISS |
+| `data/triplets/test_triplets_dataset` | 892 triplet | `training/generate_test_triplets.py`, negative ngẫu nhiên |
 
-`src/augment_triplets.py` (paraphrase câu hỏi bằng LLM) có sẵn nhưng bộ 3.642 triplet hiện tại không chứa câu paraphrase.
+`training/augment_triplets.py` (paraphrase câu hỏi bằng LLM) có sẵn nhưng bộ 3.642 triplet hiện tại không chứa câu paraphrase.
 
-**Vấn đề đã biết:** `train_custom.py` tạo triplet từ `test_set.json`, nên 232/306 câu hỏi của tập test nằm trong tập triplet huấn luyện. Cách xử lý hiện tại (không cần train lại E5): `evaluation/make_clean_test_set.py` lọc ra **74 câu chưa từng xuất hiện khi train** → `test_set_clean.json`, dùng làm tập đánh giá mặc định. 8/74 câu có đoạn luật đáp án trùng với đoạn luật của một câu train khác (đoạn luật là nội dung kho văn bản nên chấp nhận được; câu hỏi thì không trùng).
+**Vấn đề đã biết:** `training/train_custom.py` tạo triplet từ `test_set.json`, nên 232/306 câu hỏi của tập test nằm trong tập triplet huấn luyện. Cách xử lý hiện tại (không cần train lại E5): `evaluation/make_clean_test_set.py` lọc ra **74 câu chưa từng xuất hiện khi train** → `test_set_clean.json`, dùng làm tập đánh giá mặc định. 8/74 câu có đoạn luật đáp án trùng với đoạn luật của một câu train khác (đoạn luật là nội dung kho văn bản nên chấp nhận được; câu hỏi thì không trùng).
 
 ---
 
-## 5. Đánh giá (`src/evaluation_enhanced.py`)
+## 5. Đánh giá (`evaluation/rag_evaluator.py`)
 
 | Nhóm | Chỉ số | Cách tính |
 |---|---|---|

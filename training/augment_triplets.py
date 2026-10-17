@@ -11,6 +11,7 @@ import json
 import os
 import random
 import re
+import sys
 import time
 from pathlib import Path
 
@@ -18,10 +19,9 @@ from datasets import Dataset, load_from_disk
 from dotenv import load_dotenv
 from langchain_core.language_models import BaseChatModel
 
-try:
-    from .llm_chain import LLM_MODEL, LLM_PROVIDER, make_llm
-except ImportError:
-    from llm_chain import LLM_MODEL, LLM_PROVIDER, make_llm
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # chạy trực tiếp được từ thư mục gốc repo
+
+from src.llm_chain import LLM_MODEL, LLM_PROVIDER, make_llm
 
 load_dotenv()
 
@@ -64,8 +64,8 @@ def generate_paraphrases(llm: BaseChatModel, question: str, n: int = 3, retries:
 
 
 def augment_dataset(
-    dataset_path: str = "legal_triplets_dataset",
-    output_path: str = "legal_triplets_dataset",
+    dataset_path: str = "data/triplets/legal_triplets_dataset",
+    output_path: str = "data/triplets/legal_triplets_dataset",
     paraphrases_per_anchor: int = 3,
     delay: float = 0.5,
 ) -> Dataset:
@@ -151,8 +151,8 @@ def augment_dataset(
 
 if __name__ == "__main__":
     augment_dataset(
-        dataset_path="legal_triplets_dataset",
-        output_path="legal_triplets_dataset",
+        dataset_path="data/triplets/legal_triplets_dataset",
+        output_path="data/triplets/legal_triplets_dataset",
         paraphrases_per_anchor=3,
         delay=0.5,
     )
