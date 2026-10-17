@@ -34,6 +34,12 @@ def small_talk_reply(text: str) -> str:
     return "Xin chào! Bạn cần tư vấn về vấn đề pháp luật nào? · Hello! What legal question can I help you with?"
 
 
+def not_in_uploaded_docs_reply(question: str) -> str:
+    if has_vietnamese_diacritics(question):
+        return "Tài liệu bạn tải lên không có thông tin liên quan tới câu hỏi này."
+    return "The documents you uploaded don't contain information about this question."
+
+
 def out_of_scope_reply(question: str) -> str:
     if has_vietnamese_diacritics(question):
         return (

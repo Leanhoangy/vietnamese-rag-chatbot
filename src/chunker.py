@@ -114,6 +114,8 @@ def _annotate_point_deductions(article: str) -> str:
 
 
 def _doc_label(doc: Document) -> str:
+    if doc.metadata.get("label"):  # tài liệu người dùng tải lên: luôn dùng tên tệp
+        return doc.metadata["label"]
     name = Path(doc.metadata.get("source", "")).name
     if name in DOC_LABELS:
         return DOC_LABELS[name]
@@ -128,8 +130,8 @@ def _with_header(text: str, label: str, heading: str | None) -> str:
     return f"[{label}]\n{text}"
 
 
-def _split_long_article(part: str) -> list[str]:
-    """Điều dài: gom các khoản liền nhau thành chunk ≤ MAX_CHUNK_CHARS, không cắt ngang khoản.
+def _split_long_article(part: str, max_chars: int = MAX_CHUNK_CHARS) -> list[str]:
+    """Điều dài: gom các khoản liền nhau thành chunk ≤ max_chars, không cắt ngang khoản.
 
     Cắt ngang khoản làm các điểm a), b)... rời khỏi dòng mở đầu của khoản (chủ thể, mức phạt),
     LLM sẽ đọc nhầm mức phạt của khoản kế tiếp. Khoản nào vẫn quá dài thì tách tiếp,
@@ -138,7 +140,7 @@ def _split_long_article(part: str) -> list[str]:
     segments = [s.strip() for s in _KHOAN_PATTERN.split(part) if s.strip()]
     texts, current = [], ""
     for seg in segments:
-        if len(seg) > MAX_CHUNK_CHARS:
+        if len(seg) > max_chars:
             is_khoan = re.match(r'\d+\.\s', seg) is not None
             lead = seg.split("\n", 1)[0][:300]
             if current and len(current) < MIN_CHUNK_CHARS:
@@ -149,7 +151,7 @@ def _split_long_article(part: str) -> list[str]:
             current = ""
             for i, piece in enumerate(_fallback_splitter.split_text(seg)):
                 texts.append(f"{lead} (tiếp theo)\n{piece}" if i > 0 and is_khoan else piece)
-        elif current and len(current) >= MIN_CHUNK_CHARS and len(current) + 1 + len(seg) > MAX_CHUNK_CHARS:
+        elif current and len(current) >= MIN_CHUNK_CHARS and len(current) + 1 + len(seg) > max_chars:
             texts.append(current)
             current = seg
         else:
@@ -159,7 +161,7 @@ def _split_long_article(part: str) -> list[str]:
     return texts
 
 
-def _split_by_dieu(doc: Document) -> list[Document]:
+def _split_by_dieu(doc: Document, max_chars: int = MAX_CHUNK_CHARS) -> list[Document]:
     """Tách document theo ranh giới Điều X., fallback RecursiveCharacter nếu điều quá dài."""
     label = _doc_label(doc)
     superseded_articles = SUPERSEDED_ARTICLES.get(Path(doc.metadata.get("source", "")).name, ())
@@ -184,7 +186,7 @@ def _split_by_dieu(doc: Document) -> list[Document]:
         article_number = re.search(r"\d+", article.group(0)) if article else None
         metadata["superseded"] = bool(article_number and int(article_number.group(0)) in superseded_articles)
 
-        texts = [part] if len(part) <= MAX_CHUNK_CHARS else _split_long_article(part)
+        texts = [part] if len(part) <= max_chars else _split_long_article(part, max_chars)
         chunks.extend(
             Document(page_content=_with_header(text, label, heading), metadata=dict(metadata))
             for text in texts
@@ -192,10 +194,10 @@ def _split_by_dieu(doc: Document) -> list[Document]:
     return chunks
 
 
-def split_documents(docs: list[Document]) -> list[Document]:
+def split_documents(docs: list[Document], max_chars: int = MAX_CHUNK_CHARS) -> list[Document]:
     chunks = []
     for doc in docs:
-        chunks.extend(_split_by_dieu(doc))
+        chunks.extend(_split_by_dieu(doc, max_chars))
     return chunks
 
 

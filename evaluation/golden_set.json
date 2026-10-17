@@ -3,80 +3,457 @@
     "id": "red-light-car",
     "question": "Lái ô tô vượt đèn đỏ bị phạt bao nhiêu tiền?",
     "reference": "Điểm b khoản 9 Điều 6 Nghị định 168/2024/NĐ-CP: 18.000.000–20.000.000 đồng",
-    "must_include": [["18.000.000", "18 triệu"], ["20.000.000", "20 triệu"]],
-    "must_cite": ["Điều 6", "168"],
-    "must_not_include": ["3.000.000 đồng đến 5.000.000"]
+    "must_include": [
+      [
+        "18.000.000",
+        "18 triệu"
+      ],
+      [
+        "20.000.000",
+        "20 triệu"
+      ]
+    ],
+    "must_cite": [
+      "Điều 6",
+      "168"
+    ],
+    "must_not_include": [
+      "3.000.000 đồng đến 5.000.000"
+    ],
+    "domain": "traffic"
   },
   {
     "id": "red-light-motorbike",
     "question": "Đi xe máy vượt đèn đỏ bị phạt bao nhiêu?",
     "reference": "Điểm c khoản 7 Điều 7 Nghị định 168/2024/NĐ-CP: 4.000.000–6.000.000 đồng",
-    "must_include": [["4.000.000", "4 triệu"], ["6.000.000", "6 triệu"]],
-    "must_cite": ["Điều 7", "168"],
-    "must_not_include": ["600.000 đồng đến 1.000.000"]
+    "must_include": [
+      [
+        "4.000.000",
+        "4 triệu"
+      ],
+      [
+        "6.000.000",
+        "6 triệu"
+      ]
+    ],
+    "must_cite": [
+      "Điều 7",
+      "168"
+    ],
+    "must_not_include": [
+      "600.000 đồng đến 1.000.000"
+    ],
+    "domain": "traffic"
   },
   {
     "id": "red-light-car-points",
     "question": "Lái ô tô vượt đèn đỏ bị trừ bao nhiêu điểm giấy phép lái xe?",
     "reference": "Điểm b khoản 16 Điều 6 Nghị định 168/2024/NĐ-CP (hành vi tại điểm b khoản 9): trừ 04 điểm",
-    "must_include": [["04 điểm", "4 điểm"]],
-    "must_cite": ["Điều 6", "168"],
-    "must_not_include": []
+    "must_include": [
+      [
+        "04 điểm",
+        "4 điểm"
+      ]
+    ],
+    "must_cite": [
+      "Điều 6",
+      "168"
+    ],
+    "must_not_include": [],
+    "domain": "traffic"
   },
   {
     "id": "alcohol-car-level-1",
     "question": "Lái ô tô mà trong máu có nồng độ cồn nhưng chưa vượt quá 50 miligam/100 mililít máu bị phạt bao nhiêu?",
     "reference": "Điểm c khoản 6 Điều 6 Nghị định 168/2024/NĐ-CP: 6.000.000–8.000.000 đồng",
-    "must_include": [["6.000.000", "6 triệu"], ["8.000.000", "8 triệu"]],
-    "must_cite": ["Điều 6", "168"],
-    "must_not_include": []
+    "must_include": [
+      [
+        "6.000.000",
+        "6 triệu"
+      ],
+      [
+        "8.000.000",
+        "8 triệu"
+      ]
+    ],
+    "must_cite": [
+      "Điều 6",
+      "168"
+    ],
+    "must_not_include": [],
+    "domain": "traffic"
   },
   {
     "id": "alcohol-motorbike-level-1",
     "question": "Đi xe máy mà trong máu có nồng độ cồn nhưng chưa vượt quá 50 miligam/100 mililít máu bị phạt bao nhiêu?",
     "reference": "Điểm a khoản 6 Điều 7 Nghị định 168/2024/NĐ-CP: 2.000.000–3.000.000 đồng",
-    "must_include": [["2.000.000", "2 triệu"], ["3.000.000", "3 triệu"]],
-    "must_cite": ["Điều 7", "168"],
-    "must_not_include": []
+    "must_include": [
+      [
+        "2.000.000",
+        "2 triệu"
+      ],
+      [
+        "3.000.000",
+        "3 triệu"
+      ]
+    ],
+    "must_cite": [
+      "Điều 7",
+      "168"
+    ],
+    "must_not_include": [],
+    "domain": "traffic"
   },
   {
     "id": "helmet-motorbike",
     "question": "Không đội mũ bảo hiểm khi đi xe máy bị phạt bao nhiêu?",
     "reference": "Điểm h khoản 2 Điều 7 Nghị định 168/2024/NĐ-CP: 400.000–600.000 đồng",
-    "must_include": [["400.000", "400 nghìn"], ["600.000", "600 nghìn"]],
-    "must_cite": ["Điều 7", "168"],
-    "must_not_include": []
+    "must_include": [
+      [
+        "400.000",
+        "400 nghìn"
+      ],
+      [
+        "600.000",
+        "600 nghìn"
+      ]
+    ],
+    "must_cite": [
+      "Điều 7",
+      "168"
+    ],
+    "must_not_include": [],
+    "domain": "traffic"
   },
   {
     "id": "speeding-car-5-10",
     "question": "Ô tô chạy quá tốc độ quy định từ 5 km/h đến dưới 10 km/h bị phạt bao nhiêu?",
     "reference": "Điểm a khoản 3 Điều 6 Nghị định 168/2024/NĐ-CP: 800.000–1.000.000 đồng",
-    "must_include": [["800.000", "800 nghìn"], ["1.000.000", "1 triệu"]],
-    "must_cite": ["Điều 6", "168"],
-    "must_not_include": []
+    "must_include": [
+      [
+        "800.000",
+        "800 nghìn"
+      ],
+      [
+        "1.000.000",
+        "1 triệu"
+      ]
+    ],
+    "must_cite": [
+      "Điều 6",
+      "168"
+    ],
+    "must_not_include": [],
+    "domain": "traffic"
   },
   {
     "id": "phone-car",
     "question": "Lái ô tô mà dùng tay cầm và sử dụng điện thoại thì bị phạt bao nhiêu?",
     "reference": "Điểm h khoản 5 Điều 6 Nghị định 168/2024/NĐ-CP: 4.000.000–6.000.000 đồng",
-    "must_include": [["4.000.000", "4 triệu"], ["6.000.000", "6 triệu"]],
-    "must_cite": ["Điều 6", "168"],
-    "must_not_include": []
+    "must_include": [
+      [
+        "4.000.000",
+        "4 triệu"
+      ],
+      [
+        "6.000.000",
+        "6 triệu"
+      ]
+    ],
+    "must_cite": [
+      "Điều 6",
+      "168"
+    ],
+    "must_not_include": [],
+    "domain": "traffic"
   },
   {
     "id": "wrong-way-motorbike",
     "question": "Đi xe máy ngược chiều của đường một chiều bị phạt bao nhiêu?",
     "reference": "Điểm a khoản 7 Điều 7 Nghị định 168/2024/NĐ-CP: 4.000.000–6.000.000 đồng",
-    "must_include": [["4.000.000", "4 triệu"], ["6.000.000", "6 triệu"]],
-    "must_cite": ["Điều 7", "168"],
-    "must_not_include": []
+    "must_include": [
+      [
+        "4.000.000",
+        "4 triệu"
+      ],
+      [
+        "6.000.000",
+        "6 triệu"
+      ]
+    ],
+    "must_cite": [
+      "Điều 7",
+      "168"
+    ],
+    "must_not_include": [],
+    "domain": "traffic"
   },
   {
     "id": "child-seat-amended",
     "question": "Chở trẻ em dưới 10 tuổi cao dưới 1,35 mét trên ô tô mà không dùng thiết bị an toàn cho trẻ em thì bị xử phạt thế nào?",
     "reference": "Khoản 1a Điều 6 Nghị định 168/2024/NĐ-CP, bổ sung bởi Nghị định 238/2026/NĐ-CP: phạt cảnh cáo",
-    "must_include": [["cảnh cáo"]],
-    "must_cite": ["238"],
+    "must_include": [
+      [
+        "cảnh cáo"
+      ]
+    ],
+    "must_cite": [
+      "238"
+    ],
+    "must_not_include": [],
+    "domain": "traffic"
+  },
+  {
+    "id": "annual-leave",
+    "domain": "labor",
+    "question": "Người lao động làm công việc trong điều kiện bình thường được nghỉ hằng năm bao nhiêu ngày?",
+    "reference": "Điểm a khoản 1 Điều 113 Bộ luật Lao động 2019: 12 ngày làm việc",
+    "must_include": [
+      [
+        "12 ngày"
+      ]
+    ],
+    "must_cite": [
+      "Điều 113",
+      "Lao động"
+    ],
+    "must_not_include": []
+  },
+  {
+    "id": "probation-college",
+    "domain": "labor",
+    "question": "Thời gian thử việc tối đa đối với công việc cần trình độ chuyên môn từ cao đẳng trở lên là bao lâu?",
+    "reference": "Khoản 2 Điều 25 Bộ luật Lao động 2019: không quá 60 ngày",
+    "must_include": [
+      [
+        "60 ngày"
+      ]
+    ],
+    "must_cite": [
+      "Điều 25",
+      "Lao động"
+    ],
+    "must_not_include": []
+  },
+  {
+    "id": "notice-indefinite-contract",
+    "domain": "labor",
+    "question": "Người lao động làm hợp đồng không xác định thời hạn muốn nghỉ việc thì phải báo trước bao nhiêu ngày?",
+    "reference": "Điểm a khoản 1 Điều 35 Bộ luật Lao động 2019: ít nhất 45 ngày",
+    "must_include": [
+      [
+        "45 ngày"
+      ]
+    ],
+    "must_cite": [
+      "Điều 35",
+      "Lao động"
+    ],
+    "must_not_include": []
+  },
+  {
+    "id": "overtime-per-year",
+    "domain": "labor",
+    "question": "Người lao động được làm thêm giờ tối đa bao nhiêu giờ trong một năm?",
+    "reference": "Điểm c khoản 2 Điều 107 Bộ luật Lao động 2019: không quá 200 giờ/năm (300 giờ với một số ngành, nghề theo khoản 3)",
+    "must_include": [
+      [
+        "200 giờ"
+      ]
+    ],
+    "must_cite": [
+      "Điều 107",
+      "Lao động"
+    ],
+    "must_not_include": []
+  },
+  {
+    "id": "maternity-leave",
+    "domain": "labor",
+    "question": "Lao động nữ được nghỉ thai sản bao lâu?",
+    "reference": "Khoản 1 Điều 139 Bộ luật Lao động 2019: 06 tháng",
+    "must_include": [
+      [
+        "06 tháng",
+        "6 tháng"
+      ]
+    ],
+    "must_cite": [
+      "Điều 139",
+      "Lao động"
+    ],
+    "must_not_include": []
+  },
+  {
+    "id": "marriage-age",
+    "domain": "family",
+    "question": "Nam và nữ được kết hôn khi đủ bao nhiêu tuổi?",
+    "reference": "Điểm a khoản 1 Điều 8 Luật Hôn nhân và Gia đình 2014: nam từ đủ 20 tuổi, nữ từ đủ 18 tuổi",
+    "must_include": [
+      [
+        "20 tuổi"
+      ],
+      [
+        "18 tuổi"
+      ]
+    ],
+    "must_cite": [
+      "Điều 8",
+      "Hôn nhân"
+    ],
+    "must_not_include": []
+  },
+  {
+    "id": "custody-under-36-months",
+    "domain": "family",
+    "question": "Sau khi ly hôn, con dưới 36 tháng tuổi được giao cho ai trực tiếp nuôi?",
+    "reference": "Khoản 3 Điều 81 Luật Hôn nhân và Gia đình 2014: giao cho mẹ (trừ trường hợp mẹ không đủ điều kiện hoặc có thỏa thuận khác)",
+    "must_include": [
+      [
+        "mẹ"
+      ]
+    ],
+    "must_cite": [
+      "Điều 81"
+    ],
+    "must_not_include": []
+  },
+  {
+    "id": "llc-max-members",
+    "domain": "enterprise",
+    "question": "Công ty trách nhiệm hữu hạn hai thành viên trở lên có tối đa bao nhiêu thành viên?",
+    "reference": "Khoản 1 Điều 46 Luật Doanh nghiệp 2020: từ 02 đến 50 thành viên",
+    "must_include": [
+      [
+        "50"
+      ]
+    ],
+    "must_cite": [
+      "Điều 46",
+      "Doanh nghiệp"
+    ],
+    "must_not_include": []
+  },
+  {
+    "id": "jsc-min-shareholders",
+    "domain": "enterprise",
+    "question": "Công ty cổ phần phải có tối thiểu bao nhiêu cổ đông?",
+    "reference": "Điểm b khoản 1 Điều 111 Luật Doanh nghiệp 2020: tối thiểu 03 cổ đông",
+    "must_include": [
+      [
+        "03",
+        "3 cổ đông",
+        "ba cổ đông"
+      ]
+    ],
+    "must_cite": [
+      "Điều 111",
+      "Doanh nghiệp"
+    ],
+    "must_not_include": []
+  },
+  {
+    "id": "registration-processing-time",
+    "domain": "enterprise",
+    "question": "Cơ quan đăng ký kinh doanh phải xem xét và cấp đăng ký doanh nghiệp trong thời hạn bao lâu?",
+    "reference": "Khoản 5 Điều 26 Luật Doanh nghiệp 2020: 03 ngày làm việc kể từ ngày nhận hồ sơ",
+    "must_include": [
+      [
+        "03 ngày làm việc",
+        "3 ngày làm việc"
+      ]
+    ],
+    "must_cite": [
+      "Điều 26",
+      "Doanh nghiệp"
+    ],
+    "must_not_include": []
+  },
+  {
+    "id": "contract-limitation-period",
+    "domain": "civil",
+    "question": "Thời hiệu khởi kiện tranh chấp hợp đồng là bao lâu?",
+    "reference": "Điều 429 Bộ luật Dân sự 2015: 03 năm",
+    "must_include": [
+      [
+        "03 năm",
+        "3 năm"
+      ]
+    ],
+    "must_cite": [
+      "Điều 429",
+      "Dân sự"
+    ],
+    "must_not_include": []
+  },
+  {
+    "id": "age-of-majority",
+    "domain": "civil",
+    "question": "Người thành niên là người từ bao nhiêu tuổi trở lên?",
+    "reference": "Khoản 1 Điều 20 Bộ luật Dân sự 2015: từ đủ mười tám tuổi",
+    "must_include": [
+      [
+        "mười tám",
+        "18"
+      ]
+    ],
+    "must_cite": [
+      "Điều 20",
+      "Dân sự"
+    ],
+    "must_not_include": []
+  },
+  {
+    "id": "inheritance-limitation-period",
+    "domain": "civil",
+    "question": "Thời hiệu yêu cầu chia di sản thừa kế là bao lâu?",
+    "reference": "Khoản 1 Điều 623 Bộ luật Dân sự 2015: 30 năm với bất động sản, 10 năm với động sản",
+    "must_include": [
+      [
+        "30 năm"
+      ],
+      [
+        "10 năm"
+      ]
+    ],
+    "must_cite": [
+      "Điều 623",
+      "Dân sự"
+    ],
+    "must_not_include": []
+  },
+  {
+    "id": "english-annual-leave",
+    "domain": "english",
+    "question": "How many days of annual leave does an employee working under normal conditions get?",
+    "reference": "Article 113(1)(a), Labor Code 2019: 12 working days — answer must be in English",
+    "must_include": [
+      [
+        "12 working days",
+        "12 days"
+      ]
+    ],
+    "must_cite": [
+      "Article 113"
+    ],
+    "must_not_include": []
+  },
+  {
+    "id": "english-marriage-age",
+    "domain": "english",
+    "question": "What is the minimum age to get married in Vietnam?",
+    "reference": "Article 8(1)(a), Law on Marriage and Family 2014: men 20, women 18 — answer must be in English",
+    "must_include": [
+      [
+        "20"
+      ],
+      [
+        "18"
+      ]
+    ],
+    "must_cite": [
+      "Article 8"
+    ],
     "must_not_include": []
   }
 ]

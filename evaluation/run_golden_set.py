@@ -48,6 +48,7 @@ for item in items:
     problems = check_answer(reply["result"], item)
     results.append({
         "id": item["id"],
+        "domain": item["domain"],
         "question": item["question"],
         "reference": item["reference"],
         "passed": not problems,
@@ -58,12 +59,20 @@ for item in items:
     time.sleep(REQUEST_INTERVAL)
 
 passed = sum(r["passed"] for r in results)
+by_domain = {}
+for r in results:
+    stats = by_domain.setdefault(r["domain"], {"passed": 0, "total": 0})
+    stats["passed"] += r["passed"]
+    stats["total"] += 1
 print(f"\n{passed}/{len(results)} golden questions passed")
+for domain, stats in by_domain.items():
+    print(f"  {domain:12s} {stats['passed']}/{stats['total']}")
 
 OUTPUT_PATH.write_text(json.dumps({
     "config": {"date": date.today().isoformat(), "answer_llm": f"{LLM_PROVIDER}/{LLM_MODEL}"},
     "passed": passed,
     "total": len(results),
+    "by_domain": by_domain,
     "results": results,
 }, ensure_ascii=False, indent=2), encoding="utf-8")
 print(f"Results saved to: {OUTPUT_PATH}")

@@ -4,7 +4,7 @@ Combines sparse (BM25) and dense (FAISS) retrieval for better results
 """
 
 import os
-from typing import Any, Dict, List, Protocol, Tuple
+from typing import Any, Dict, Iterator, List, Protocol, Tuple
 
 import numpy as np
 from langchain_core.documents import Document
@@ -51,17 +51,22 @@ class HybridRetriever:
         documents: List[DocumentLike],
         use_cross_encoder: bool = True,
         cross_encoder_model: str = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+        store=None,
+        cross_encoder=None,
     ):
         """
         Initialize hybrid retriever
-        
+
         Args:
             documents: List of LangChain Document objects
             use_cross_encoder: Whether to use cross-encoder re-ranking
             cross_encoder_model: Model for cross-encoder
+            store: FAISS store for dense search (default: the legal corpus index)
+            cross_encoder: already-loaded CrossEncoder to reuse (vd. index tài liệu người dùng tải lên)
         """
         self.documents = documents
         self.doc_texts = [doc.page_content for doc in documents]
+        self.store = store if store is not None else vectorstore
         
         # Initialize BM25 (sparse retriever)
         print("Initializing BM25 retriever...")
@@ -72,7 +77,9 @@ class HybridRetriever:
         
         # Initialize cross-encoder if available
         self.use_cross_encoder = use_cross_encoder and CROSS_ENCODER_AVAILABLE
-        if self.use_cross_encoder:
+        if cross_encoder is not None:
+            self.cross_encoder = cross_encoder
+        elif self.use_cross_encoder:
             print(f"Loading cross-encoder: {cross_encoder_model}")
             try:
                 self.cross_encoder = CrossEncoder(cross_encoder_model, device="cpu")
@@ -131,8 +138,8 @@ class HybridRetriever:
     def retrieve_dense(self, query: str, k: int = 5, include_superseded: bool = False) -> List[Tuple[DocumentLike, float]]:
         """Retrieve using dense vectors (semantic search)"""
         if include_superseded:
-            return vectorstore.similarity_search_with_score(query, k=k)
-        return vectorstore.similarity_search_with_score(
+            return self.store.similarity_search_with_score(query, k=k)
+        return self.store.similarity_search_with_score(
             query, k=k, filter=lambda metadata: not metadata.get("superseded"), fetch_k=k * 4,
         )
     
@@ -374,7 +381,7 @@ TRUY VẤN:"""
         # Câu tiếng Anh / tiếng Việt không dấu phải được viết lại sang tiếng Việt có dấu thì BM25 mới khớp
         return LLM_PROVIDER != "ollama" or bool(chat_history.strip()) or not has_vietnamese_diacritics(query)
 
-    def rewrite_query(self, query: str, chat_history: str = "") -> str:
+    def rewrite_query(self, query: str, chat_history: str = "", config: Dict | None = None) -> str:
         """Quy đổi từ đời thường theo từ điển, rồi LLM viết lại thành truy vấn pháp lý; lỗi thì dùng câu đã quy đổi."""
         query = apply_glossary(query)
         if not self._should_rewrite(query, chat_history):
@@ -383,7 +390,7 @@ TRUY VẤN:"""
             raw = (self.rewrite_prompt | self.model | StrOutputParser()).invoke({
                 "chat_history": chat_history or "(không có)",
                 "question": query,
-            })
+            }, config={**(config or {}), "run_name": "rewrite_query"})
         except Exception as e:
             print(f"Query rewrite failed, using original query: {e}")
             return query
@@ -393,39 +400,50 @@ TRUY VẤN:"""
         # Áp dụng lại từ điển: LLM đôi khi thêm ngược từ đời thường vào truy vấn
         return apply_glossary(rewritten) if 0 < len(rewritten) <= 300 else query
 
-    def invoke(self, query_dict: Dict) -> Dict:
-        """Invoke the QA chain (compatible with LangChain interface)"""
-        query = query_dict.get("query", "")
-        chat_history = query_dict.get("chat_history", "")
+    def prepare(self, query: str, chat_history: str = "", config: Dict | None = None) -> Dict:
+        """Mọi bước trước khi sinh câu trả lời: viết lại câu hỏi, tìm kiếm, cổng điểm liên quan.
 
+        "result" khác None → câu trả lời có sẵn (lời chào, từ chối), không cần gọi LLM sinh câu trả lời.
+        Ngược lại "prompt_inputs" dùng cho stream_answer / generate_answer.
+        """
         if is_small_talk(query):
             return {"result": small_talk_reply(query), "source_documents": [], "search_query": query}
 
-        search_query = self.rewrite_query(query, chat_history)
-        docs = self.retriever.invoke(search_query)
+        search_query = self.rewrite_query(query, chat_history, config)
+        docs = self.retriever.invoke(search_query, config={**(config or {}), "run_name": "retrieve"})
 
         # Không đoạn luật nào đủ liên quan → từ chối thay vì để LLM tự trả lời (dễ bịa), không tốn lượt gọi LLM
         top_score = docs[0].metadata.get("rerank_score") if docs else None
         if not docs or (top_score is not None and top_score < self.min_relevance_score):
             return {"result": out_of_scope_reply(query), "source_documents": [], "search_query": search_query}
 
-        context = self.format_docs(docs)
-
-        answer = (
-            self.prompt
-            | self.model
-            | StrOutputParser()
-        ).invoke({
-            "chat_history": chat_history,
-            "context": context,
-            "question": query,
-        })
-
         return {
-            "result": answer,
+            "result": None,
             "source_documents": docs,
             "search_query": search_query,
+            "prompt_inputs": {
+                "chat_history": chat_history,
+                "context": self.format_docs(docs),
+                "question": query,
+            },
         }
+
+    def _answer_chain(self):
+        return self.prompt | self.model | StrOutputParser()
+
+    def stream_answer(self, prepared: Dict, config: Dict | None = None) -> Iterator[str]:
+        return self._answer_chain().stream(prepared["prompt_inputs"], config={**(config or {}), "run_name": "answer"})
+
+    def generate_answer(self, prepared: Dict, config: Dict | None = None) -> str:
+        return self._answer_chain().invoke(prepared["prompt_inputs"], config={**(config or {}), "run_name": "answer"})
+
+    def invoke(self, query_dict: Dict) -> Dict:
+        """Invoke the QA chain (compatible with LangChain interface)"""
+        prepared = self.prepare(query_dict.get("query", ""), query_dict.get("chat_history", ""))
+        if prepared["result"] is None:
+            prepared["result"] = self.generate_answer(prepared)
+        prepared.pop("prompt_inputs", None)
+        return prepared
     
     def __call__(self, query: str) -> str:
         """Simple call interface"""

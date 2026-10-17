@@ -5,6 +5,9 @@ from pathlib import Path
 import torch
 from langchain_core.embeddings import Embeddings
 from langchain_huggingface import HuggingFaceEmbeddings
+from dotenv import load_dotenv
+
+load_dotenv()  # USE_FINETUNED có thể nằm trong .env; không phụ thuộc thứ tự import
 
 CUSTOM_MODEL_PATH = Path("models/custom-transformer/model.pt")
 CUSTOM_CONFIG_PATH = Path("models/custom-transformer/config.json")

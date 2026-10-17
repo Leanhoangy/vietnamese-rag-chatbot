@@ -3,51 +3,83 @@
     "date": "2026-10-17",
     "answer_llm": "gemini/gemini-3.5-flash-lite"
   },
-  "passed": 10,
-  "total": 10,
+  "passed": 25,
+  "total": 25,
+  "by_domain": {
+    "traffic": {
+      "passed": 10,
+      "total": 10
+    },
+    "labor": {
+      "passed": 5,
+      "total": 5
+    },
+    "family": {
+      "passed": 2,
+      "total": 2
+    },
+    "enterprise": {
+      "passed": 3,
+      "total": 3
+    },
+    "civil": {
+      "passed": 3,
+      "total": 3
+    },
+    "english": {
+      "passed": 2,
+      "total": 2
+    }
+  },
   "results": [
     {
       "id": "red-light-car",
+      "domain": "traffic",
       "question": "Lái ô tô vượt đèn đỏ bị phạt bao nhiêu tiền?",
       "reference": "Điểm b khoản 9 Điều 6 Nghị định 168/2024/NĐ-CP: 18.000.000–20.000.000 đồng",
       "passed": true,
       "problems": [],
-      "answer": "Phạt tiền từ 18.000.000 đồng đến 20.000.000 đồng đối với người điều khiển xe ô tô không chấp hành hiệu lệnh của đèn tín hiệu giao thông (bị trừ 04 điểm giấy phép lái xe) (Điều 6 Nghị định 168/2024/NĐ-CP)."
+      "answer": "Phạt tiền từ 18.000.000 đồng đến 20.000.000 đồng đối với người điều khiển xe ô tô không chấp hành hiệu lệnh của đèn tín hiệu giao thông (Điều 6 Nghị định 168/2024/NĐ-CP)."
     },
     {
       "id": "red-light-motorbike",
+      "domain": "traffic",
       "question": "Đi xe máy vượt đèn đỏ bị phạt bao nhiêu?",
       "reference": "Điểm c khoản 7 Điều 7 Nghị định 168/2024/NĐ-CP: 4.000.000–6.000.000 đồng",
       "passed": true,
       "problems": [],
-      "answer": "Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với người điều khiển xe mô tô, xe gắn máy, các loại xe tương tự xe mô tô và các loại xe tương tự xe gắn máy không chấp hành hiệu lệnh của đèn tín hiệu giao thông (đồng thời bị trừ 04 điểm giấy phép lái xe) (Điều 7 Nghị định 168/2024/NĐ-CP)."
+      "answer": "Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với người điều khiển xe mô tô, xe gắn máy, các loại xe tương tự xe mô tô và các loại xe tương tự xe gắn máy không chấp hành hiệu lệnh của đèn tín hiệu giao thông (bị trừ 04 điểm giấy phép lái xe) (Điều 7 Nghị định 168/2024/NĐ-CP)."
     },
     {
       "id": "red-light-car-points",
+      "domain": "traffic",
       "question": "Lái ô tô vượt đèn đỏ bị trừ bao nhiêu điểm giấy phép lái xe?",
       "reference": "Điểm b khoản 16 Điều 6 Nghị định 168/2024/NĐ-CP (hành vi tại điểm b khoản 9): trừ 04 điểm",
       "passed": true,
       "problems": [],
-      "answer": "Người điều khiển xe ô tô không chấp hành hiệu lệnh của đèn tín hiệu giao thông (vượt đèn đỏ) bị trừ 04 điểm giấy phép lái xe (Điều 6 Nghị định 168/2024/NĐ-CP)."
+      "answer": "Người điều khiển xe ô tô không chấp hành hiệu lệnh của đèn tín hiệu giao thông (vượt đèn đỏ) sẽ bị trừ 04 điểm giấy phép lái xe (khoản 6 Điều 6 Nghị định 168/2024/NĐ-CP)."
     },
     {
       "id": "alcohol-car-level-1",
+      "domain": "traffic",
       "question": "Lái ô tô mà trong máu có nồng độ cồn nhưng chưa vượt quá 50 miligam/100 mililít máu bị phạt bao nhiêu?",
       "reference": "Điểm c khoản 6 Điều 6 Nghị định 168/2024/NĐ-CP: 6.000.000–8.000.000 đồng",
       "passed": true,
       "problems": [],
-      "answer": "Phạt tiền từ 6.000.000 đồng đến 8.000.000 đồng và bị trừ 04 điểm giấy phép lái xe đối với người điều khiển xe ô tô, xe chở người bốn bánh có gắn động cơ, xe chở hàng bốn bánh có gắn động cơ và các loại xe tương tự xe ô tô vi phạm hành vi điều khiển xe trên đường mà trong máu hoặc hơi thở có nồng độ cồn nhưng chưa vượt quá 50 miligam/100 mililít máu hoặc chưa vượt quá 0,25 miligam/1 lít khí thở ([Nghị định 168/2024/NĐ-CP (xử phạt giao thông đường bộ, trừ điểm giấy phép lái xe)] Điều 6)."
+      "answer": "Phạt tiền từ 6.000.000 đồng đến 8.000.000 đồng và bị trừ 04 điểm giấy phép lái xe đối với người điều khiển xe ô tô, xe chở người bốn bánh có gắn động cơ, xe chở hàng bốn bánh có gắn động cơ và các loại xe tương tự xe ô tô vi phạm quy tắc giao thông đường bộ ([Nghị định 168/2024/NĐ-CP (xử phạt giao thông đường bộ, trừ điểm giấy phép lái xe)], Điều 6)."
     },
     {
       "id": "alcohol-motorbike-level-1",
+      "domain": "traffic",
       "question": "Đi xe máy mà trong máu có nồng độ cồn nhưng chưa vượt quá 50 miligam/100 mililít máu bị phạt bao nhiêu?",
       "reference": "Điểm a khoản 6 Điều 7 Nghị định 168/2024/NĐ-CP: 2.000.000–3.000.000 đồng",
       "passed": true,
       "problems": [],
-      "answer": "Phạt tiền từ 2.000.000 đồng đến 3.000.000 đồng đối với người điều khiển xe mô tô, xe gắn máy, các loại xe tương tự xe mô tô và các loại xe tương tự xe gắn máy điều khiển xe trên đường mà trong máu hoặc hơi thở có nồng độ cồn nhưng chưa vượt quá 50 miligam/100 mililít máu hoặc chưa vượt quá 0,25 miligam/1 lít khí thở (bị trừ 04 điểm giấy phép lái xe) (Điều 7 Nghị định 168/2024/NĐ-CP)."
+      "answer": "Người điều khiển xe mô tô, xe gắn máy, các loại xe tương tự xe mô tô và các loại xe tương tự xe gắn máy vi phạm: Phạt tiền từ 2.000.000 đồng đến 3.000.000 đồng và bị trừ 04 điểm giấy phép lái xe đối với hành vi điều khiển xe trên đường mà trong máu hoặc hơi thở có nồng độ cồn nhưng chưa vượt quá 50 miligam/100 mililít máu hoặc chưa vượt quá 0,25 miligam/1 lít khí thở (Điều 7 Nghị định 168/2024/NĐ-CP)."
     },
     {
       "id": "helmet-motorbike",
+      "domain": "traffic",
       "question": "Không đội mũ bảo hiểm khi đi xe máy bị phạt bao nhiêu?",
       "reference": "Điểm h khoản 2 Điều 7 Nghị định 168/2024/NĐ-CP: 400.000–600.000 đồng",
       "passed": true,
@@ -56,35 +88,174 @@
     },
     {
       "id": "speeding-car-5-10",
+      "domain": "traffic",
       "question": "Ô tô chạy quá tốc độ quy định từ 5 km/h đến dưới 10 km/h bị phạt bao nhiêu?",
       "reference": "Điểm a khoản 3 Điều 6 Nghị định 168/2024/NĐ-CP: 800.000–1.000.000 đồng",
       "passed": true,
       "problems": [],
-      "answer": "Phạt tiền từ 800.000 đồng đến 1.000.000 đồng đối với người điều khiển xe ô tô, xe chở người bốn bánh có gắn động cơ, xe chở hàng bốn bánh có gắn động cơ và các loại xe tương tự xe ô tô điều khiển xe chạy quá tốc độ quy định từ 05 km/h đến dưới 10 km/h (Điều 6 Nghị định 168/2024/NĐ-CP)."
+      "answer": "Phạt tiền từ 800.000 đồng đến 1.000.000 đồng đối với người điều khiển xe ô tô chạy quá tốc độ quy định từ 05 km/h đến dưới 10 km/h (Điều 6 Nghị định 168/2024/NĐ-CP)."
     },
     {
       "id": "phone-car",
+      "domain": "traffic",
       "question": "Lái ô tô mà dùng tay cầm và sử dụng điện thoại thì bị phạt bao nhiêu?",
       "reference": "Điểm h khoản 5 Điều 6 Nghị định 168/2024/NĐ-CP: 4.000.000–6.000.000 đồng",
       "passed": true,
       "problems": [],
-      "answer": "Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với người điều khiển xe ô tô, xe chở người bốn bánh có gắn động cơ, xe chở hàng bốn bánh có gắn động cơ và các loại xe tương tự xe ô tô dùng tay cầm và sử dụng điện thoại hoặc các thiết bị điện tử khác khi điều khiển phương tiện tham gia giao thông đang di chuyển trên đường bộ, đồng thời bị trừ 04 điểm giấy phép lái xe (Điều 6 Nghị định 168/2024/NĐ-CP)."
+      "answer": "Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng và bị trừ 04 điểm giấy phép lái xe đối với người điều khiển xe ô tô, xe chở người bốn bánh có gắn động cơ, xe chở hàng bốn bánh có gắn động cơ và các loại xe tương tự xe ô tô dùng tay cầm và sử dụng điện thoại hoặc các thiết bị điện tử khác khi điều khiển phương tiện tham gia giao thông đang di chuyển trên đường bộ (Điều 6 Nghị định 168/2024/NĐ-CP)."
     },
     {
       "id": "wrong-way-motorbike",
+      "domain": "traffic",
       "question": "Đi xe máy ngược chiều của đường một chiều bị phạt bao nhiêu?",
       "reference": "Điểm a khoản 7 Điều 7 Nghị định 168/2024/NĐ-CP: 4.000.000–6.000.000 đồng",
       "passed": true,
       "problems": [],
-      "answer": "Người điều khiển xe mô tô, xe gắn máy, các loại xe tương tự xe mô tô và xe gắn máy đi ngược chiều của đường một chiều hoặc đi ngược chiều trên đường có biển “Cấm đi ngược chiều” bị phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng và bị trừ 02 điểm giấy phép lái xe (Điều 7 Nghị định 168/2024/NĐ-CP)."
+      "answer": "[Nghị định 168/2024/NĐ-CP] Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với người điều khiển xe mô tô, xe gắn máy, các loại xe tương tự xe mô tô và các loại xe tương tự xe gắn máy đi ngược chiều của đường một chiều, đi ngược chiều trên đường có biển “Cấm đi ngược chiều”, trừ hành vi gây tai nạn giao thông (Điều 7). Đồng thời, bị trừ 02 điểm giấy phép lái xe."
     },
     {
       "id": "child-seat-amended",
+      "domain": "traffic",
       "question": "Chở trẻ em dưới 10 tuổi cao dưới 1,35 mét trên ô tô mà không dùng thiết bị an toàn cho trẻ em thì bị xử phạt thế nào?",
       "reference": "Khoản 1a Điều 6 Nghị định 168/2024/NĐ-CP, bổ sung bởi Nghị định 238/2026/NĐ-CP: phạt cảnh cáo",
       "passed": true,
       "problems": [],
-      "answer": "Phạt cảnh cáo đối với người điều khiển xe ô tô thực hiện hành vi chở trẻ em dưới 10 tuổi và chiều cao dưới 1,35 mét trên xe mà không sử dụng thiết bị an toàn phù hợp cho trẻ em theo quy định (trừ xe ô tô kinh doanh vận tải hành khách) (Điều 2 Nghị định 238/2026/NĐ-CP).\n\nPhạt tiền từ 800.000 đồng đến 1.000.000 đồng đối với người điều khiển xe ô tô không sử dụng thiết bị an toàn phù hợp cho trẻ em theo quy định khi chở trẻ em dưới 10 tuổi và chiều cao dưới 1,35 mét (Điều 6 Nghị định 168/2024/NĐ-CP)."
+      "answer": "Phạt cảnh cáo đối với người điều khiển xe ô tô thực hiện hành vi chở trẻ em dưới 10 tuổi và chiều cao dưới 1,35 mét trên xe mà không sử dụng thiết bị an toàn phù hợp cho trẻ em theo quy định (trừ xe ô tô kinh doanh vận tải hành khách) (Điều 2 Nghị định 238/2026/NĐ-CP).\n\nPhạt tiền từ 800.000 đồng đến 1.000.000 đồng đối với người điều khiển xe không sử dụng thiết bị an toàn phù hợp cho trẻ em theo quy định (Điều 6 Nghị định 168/2024/NĐ-CP)."
+    },
+    {
+      "id": "annual-leave",
+      "domain": "labor",
+      "question": "Người lao động làm công việc trong điều kiện bình thường được nghỉ hằng năm bao nhiêu ngày?",
+      "reference": "Điểm a khoản 1 Điều 113 Bộ luật Lao động 2019: 12 ngày làm việc",
+      "passed": true,
+      "problems": [],
+      "answer": "Người lao động làm việc đủ 12 tháng trong điều kiện bình thường được nghỉ hằng năm 12 ngày làm việc hưởng nguyên lương (Điều 113 Bộ luật Lao động 2019)."
+    },
+    {
+      "id": "probation-college",
+      "domain": "labor",
+      "question": "Thời gian thử việc tối đa đối với công việc cần trình độ chuyên môn từ cao đẳng trở lên là bao lâu?",
+      "reference": "Khoản 2 Điều 25 Bộ luật Lao động 2019: không quá 60 ngày",
+      "passed": true,
+      "problems": [],
+      "answer": "Thời gian thử việc tối đa đối với công việc có chức danh nghề nghiệp cần trình độ chuyên môn, kỹ thuật từ cao đẳng trở lên là không quá 60 ngày (Điều 25 Bộ luật Lao động 2019)."
+    },
+    {
+      "id": "notice-indefinite-contract",
+      "domain": "labor",
+      "question": "Người lao động làm hợp đồng không xác định thời hạn muốn nghỉ việc thì phải báo trước bao nhiêu ngày?",
+      "reference": "Điểm a khoản 1 Điều 35 Bộ luật Lao động 2019: ít nhất 45 ngày",
+      "passed": true,
+      "problems": [],
+      "answer": "Ít nhất 45 ngày nếu làm việc theo hợp đồng lao động không xác định thời hạn (Điều 35 Bộ luật Lao động 2019)."
+    },
+    {
+      "id": "overtime-per-year",
+      "domain": "labor",
+      "question": "Người lao động được làm thêm giờ tối đa bao nhiêu giờ trong một năm?",
+      "reference": "Điểm c khoản 2 Điều 107 Bộ luật Lao động 2019: không quá 200 giờ/năm (300 giờ với một số ngành, nghề theo khoản 3)",
+      "passed": true,
+      "problems": [],
+      "answer": "Người lao động được làm thêm giờ tối đa không quá 200 giờ trong 01 năm, trừ trường hợp quy định tại khoản 3 Điều 107 của Bộ luật Lao động thì được làm thêm không quá 300 giờ trong 01 năm (Điều 107 Bộ luật Lao động 2019)."
+    },
+    {
+      "id": "maternity-leave",
+      "domain": "labor",
+      "question": "Lao động nữ được nghỉ thai sản bao lâu?",
+      "reference": "Khoản 1 Điều 139 Bộ luật Lao động 2019: 06 tháng",
+      "passed": true,
+      "problems": [],
+      "answer": "Lao động nữ được nghỉ thai sản trước và sau khi sinh con là 06 tháng; thời gian nghỉ trước khi sinh không quá 02 tháng. Trường hợp sinh đôi trở lên thì tính từ con thứ 02 trở đi, cứ mỗi con, người mẹ được nghỉ thêm 01 tháng (khoản 1 Điều 139 Bộ luật Lao động 2019)."
+    },
+    {
+      "id": "marriage-age",
+      "domain": "family",
+      "question": "Nam và nữ được kết hôn khi đủ bao nhiêu tuổi?",
+      "reference": "Điểm a khoản 1 Điều 8 Luật Hôn nhân và Gia đình 2014: nam từ đủ 20 tuổi, nữ từ đủ 18 tuổi",
+      "passed": true,
+      "problems": [],
+      "answer": "Nam, nữ kết hôn với nhau phải đáp ứng điều kiện nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên (khoản 1 Điều 8 Luật Hôn nhân và Gia đình 2014)."
+    },
+    {
+      "id": "custody-under-36-months",
+      "domain": "family",
+      "question": "Sau khi ly hôn, con dưới 36 tháng tuổi được giao cho ai trực tiếp nuôi?",
+      "reference": "Khoản 3 Điều 81 Luật Hôn nhân và Gia đình 2014: giao cho mẹ (trừ trường hợp mẹ không đủ điều kiện hoặc có thỏa thuận khác)",
+      "passed": true,
+      "problems": [],
+      "answer": "Sau khi ly hôn, con dưới 36 tháng tuổi được giao cho mẹ trực tiếp nuôi, trừ trường hợp người mẹ không đủ điều kiện để trực tiếp trông nom, chăm sóc, nuôi dưỡng, giáo dục con hoặc cha mẹ có thỏa thuận khác phù hợp với lợi ích của con (Điều 81 Luật Hôn nhân và Gia đình 2014)."
+    },
+    {
+      "id": "llc-max-members",
+      "domain": "enterprise",
+      "question": "Công ty trách nhiệm hữu hạn hai thành viên trở lên có tối đa bao nhiêu thành viên?",
+      "reference": "Khoản 1 Điều 46 Luật Doanh nghiệp 2020: từ 02 đến 50 thành viên",
+      "passed": true,
+      "problems": [],
+      "answer": "Công ty trách nhiệm hữu hạn hai thành viên trở lên có từ 02 đến 50 thành viên là tổ chức, cá nhân (khoản 1 Điều 46 Luật Doanh nghiệp 2020)."
+    },
+    {
+      "id": "jsc-min-shareholders",
+      "domain": "enterprise",
+      "question": "Công ty cổ phần phải có tối thiểu bao nhiêu cổ đông?",
+      "reference": "Điểm b khoản 1 Điều 111 Luật Doanh nghiệp 2020: tối thiểu 03 cổ đông",
+      "passed": true,
+      "problems": [],
+      "answer": "Số lượng cổ đông tối thiểu của công ty cổ phần là 03 (khoản 1 Điều 120, điểm b khoản 1 Điều 111 Luật Doanh nghiệp 2020)."
+    },
+    {
+      "id": "registration-processing-time",
+      "domain": "enterprise",
+      "question": "Cơ quan đăng ký kinh doanh phải xem xét và cấp đăng ký doanh nghiệp trong thời hạn bao lâu?",
+      "reference": "Khoản 5 Điều 26 Luật Doanh nghiệp 2020: 03 ngày làm việc kể từ ngày nhận hồ sơ",
+      "passed": true,
+      "problems": [],
+      "answer": "Trong thời hạn 03 ngày làm việc kể từ ngày nhận hồ sơ (Điều 26 Luật Doanh nghiệp 2020)."
+    },
+    {
+      "id": "contract-limitation-period",
+      "domain": "civil",
+      "question": "Thời hiệu khởi kiện tranh chấp hợp đồng là bao lâu?",
+      "reference": "Điều 429 Bộ luật Dân sự 2015: 03 năm",
+      "passed": true,
+      "problems": [],
+      "answer": "Thời hiệu khởi kiện để yêu cầu Tòa án giải quyết tranh chấp hợp đồng là 03 năm, kể từ ngày người có quyền yêu cầu biết hoặc phải biết quyền và lợi ích hợp pháp của mình bị xâm phạm (Điều 429 Bộ luật Dân sự 2015)."
+    },
+    {
+      "id": "age-of-majority",
+      "domain": "civil",
+      "question": "Người thành niên là người từ bao nhiêu tuổi trở lên?",
+      "reference": "Khoản 1 Điều 20 Bộ luật Dân sự 2015: từ đủ mười tám tuổi",
+      "passed": true,
+      "problems": [],
+      "answer": "Người thành niên là người từ đủ mười tám tuổi trở lên (Điều 20 Bộ luật Dân sự 2015)."
+    },
+    {
+      "id": "inheritance-limitation-period",
+      "domain": "civil",
+      "question": "Thời hiệu yêu cầu chia di sản thừa kế là bao lâu?",
+      "reference": "Khoản 1 Điều 623 Bộ luật Dân sự 2015: 30 năm với bất động sản, 10 năm với động sản",
+      "passed": true,
+      "problems": [],
+      "answer": "Thời hiệu để người thừa kế yêu cầu chia di sản là 30 năm đối với bất động sản, 10 năm đối với động sản, kể từ thời điểm mở thừa kế (Điều 623 Bộ luật Dân sự 2015)."
+    },
+    {
+      "id": "english-annual-leave",
+      "domain": "english",
+      "question": "How many days of annual leave does an employee working under normal conditions get?",
+      "reference": "Article 113(1)(a), Labor Code 2019: 12 working days — answer must be in English",
+      "passed": true,
+      "problems": [],
+      "answer": "An employee working under normal conditions gets 12 working days of annual leave (Article 113, Labor Code 2019)."
+    },
+    {
+      "id": "english-marriage-age",
+      "domain": "english",
+      "question": "What is the minimum age to get married in Vietnam?",
+      "reference": "Article 8(1)(a), Law on Marriage and Family 2014: men 20, women 18 — answer must be in English",
+      "passed": true,
+      "problems": [],
+      "answer": "The minimum age to get married in Vietnam is:\n- Men must be full 20 years of age or older (Article 8, Law on Marriage and Family 2014)\n- Women must be full 18 years of age or older (Article 8, Law on Marriage and Family 2014)"
     }
   ]
 }

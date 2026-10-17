@@ -6,12 +6,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 try:
+    from . import observability
     from .chunker import DOC_NOTES
-    from .llm_chain import is_transient_error
+    from .llm_chain import LLM_PROVIDER, is_transient_error
     from .retrieval_hybrid import qa_chain
 except ImportError:
+    import observability
     from chunker import DOC_NOTES
-    from llm_chain import is_transient_error
+    from llm_chain import LLM_PROVIDER, is_transient_error
     from retrieval_hybrid import qa_chain
 
 app = FastAPI(title="Vietnamese Legal RAG API")
@@ -60,7 +62,12 @@ def format_history(history: List[ChatTurn], max_turns: int = 5) -> str:
 @app.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
     try:
-        result = qa_chain.invoke({"query": request.message, "chat_history": format_history(request.history)})
+        with observability.trace("api-chat", request.message, tags=["api", LLM_PROVIDER]) as trace:
+            result = qa_chain.prepare(request.message, format_history(request.history), config=trace.config)
+            trace.update(metadata={**observability.prepared_metadata(result), "provider": LLM_PROVIDER})
+            if result["result"] is None:
+                result["result"] = qa_chain.generate_answer(result, config=trace.config)
+            trace.update(output=result["result"])
     except Exception as e:
         traceback.print_exc()
         if is_transient_error(e):

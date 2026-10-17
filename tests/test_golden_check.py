@@ -31,5 +31,5 @@ def test_golden_set_file_is_well_formed():
     items = json.loads((Path(__file__).parent.parent / "evaluation" / "golden_set.json").read_text(encoding="utf-8"))
     assert len({item["id"] for item in items}) == len(items)
     for item in items:
-        assert item["question"] and item["reference"]
+        assert item["question"] and item["reference"] and item["domain"]
         assert all(isinstance(group, list) and group for group in item["must_include"])

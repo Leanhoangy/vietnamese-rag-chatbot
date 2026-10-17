@@ -26,10 +26,13 @@ Câu hỏi (+ 5 lượt hội thoại gần nhất)
         ├─ FAISS       → top 14 (ngữ nghĩa)
         ├─ Chuẩn hóa min-max, cộng 0.5 × dense + 0.5 × BM25
         └─ Cross-encoder rerank → top 7 (+ tối đa 3 chunk có điểm sát chunk đầu)
+        ↓ Cổng điểm: điểm rerank cao nhất < -4.0 → từ chối, không gọi LLM
         ↓ Prompt = nguyên tắc + lịch sử hội thoại + 7–10 tài liệu + câu hỏi
-        ↓ LLM (Gemini trên cloud / Ollama local), temperature 0
+        ↓ LLM (Gemini trên cloud / Ollama local), temperature 0, stream từng token
 Câu trả lời + nguồn (văn bản, Điều) + lưu ý về văn bản đã hết hiệu lực
 ```
+
+`HybridQAChain` tách hai bước: `prepare()` (viết lại câu hỏi, tìm kiếm, cổng điểm; trả về câu trả lời có sẵn nếu là lời chào hoặc bị từ chối) và `stream_answer()` / `generate_answer()` (gọi LLM). App stream, còn API và evaluation dùng `invoke()` = `prepare()` + `generate_answer()`, nên kết quả hai bên giống nhau.
 
 ---
 
@@ -95,7 +98,20 @@ Câu miễn trừ trách nhiệm song ngữ, 4 nút câu hỏi mẫu tiếng Vi�
 Bảo vệ quota của demo công khai (mọi người dùng chung một API key):
 - `DEMO_SESSION_LIMIT` (mặc định 20): số câu hỏi mỗi phiên trình duyệt; hết thì khóa ô nhập.
 - `DEMO_DAILY_LIMIT` (mặc định 200): số câu hỏi *thực sự gọi LLM* mỗi ngày cho cả app (bộ đếm dùng chung qua `st.cache_resource`).
-- Câu hỏi mở đầu phiên (không có lịch sử, vd. bấm nút mẫu) được cache 24 giờ (`st.cache_data`): hỏi lại không gọi LLM và không tính vào giới hạn ngày.
+- Câu hỏi mở đầu phiên (không có lịch sử, vd. bấm nút mẫu) được cache 24 giờ, tối đa 500 câu: hỏi lại không gọi LLM và không tính vào giới hạn ngày. Cache tự quản lý (dict trong `st.cache_resource`) thay vì `st.cache_data`, vì `st.cache_data` cần trả về kết quả hoàn chỉnh nên không stream được. Chỉ cache chế độ văn bản luật, không bao giờ cache câu trả lời về tài liệu tải lên.
+
+Câu trả lời hiện dần bằng `st.write_stream`. Lỗi giữa chừng (vd. 429 khi đang stream) được nối thành thông báo thân thiện vào cuối phần đã hiện, và câu đó không được cache. Mỗi tin nhắn lưu kèm nguồn, nên phần "Nguồn tài liệu" vẫn còn sau khi trang chạy lại.
+
+### 2.10b Chế độ "Tài liệu của bạn" (`src/user_docs.py`, `src/document_upload.py`)
+Nút chuyển ở đầu trang. Người dùng tải lên tối đa 3 tệp PDF / DOCX / TXT / MD (≤ 10 MB mỗi tệp, ≤ 400 chunk), hoặc bấm "Dùng tài liệu mẫu" (sổ tay nhân viên của công ty hư cấu trong `samples/`).
+- Đọc chữ: `pypdf` (PDF), `docx2txt` (DOCX). Dưới 50 ký tự → báo lỗi "có thể là PDF scan" thay vì trả lời rỗng.
+- Dùng lại chunker (nhãn chunk = tên tệp, chunk ≤ 400 ký tự vì các mục của tài liệu thường ngắn), embedder và cross-encoder đã tải sẵn; FAISS + BM25 dựng trong bộ nhớ, lưu ở `st.session_state` của phiên đó, khóa theo hash nội dung tệp. Không ghi xuống đĩa, không dùng chung giữa các phiên.
+- Không viết lại câu hỏi (tài liệu thuộc mọi lĩnh vực). Prompt viết bằng tiếng Anh vì với prompt tiếng Việt, Gemini trả lời câu hỏi tiếng Anh bằng tiếng Việt.
+- Cổng điểm `USER_DOCS_MIN_RELEVANCE_SCORE` = -6.0, lỏng hơn văn bản luật. Đo trên sổ tay mẫu: 10 câu có trong tài liệu (Anh + Việt) thấp nhất -4.39 (câu tiếng Việt hỏi tài liệu tiếng Anh); 6 câu ngoài tài liệu nằm từ -7.15 tới -0.77. Cross-encoder tách kém khi khác ngôn ngữ, nên cổng chỉ chặn câu rõ ràng không liên quan; các câu còn lại thì LLM tự nói "tài liệu không đề cập".
+- Câu hỏi ở chế độ này tính chung vào giới hạn phiên và giới hạn ngày.
+
+### 2.10c Giám sát (`src/observability.py`)
+Tuỳ chọn, chỉ bật khi có `LANGFUSE_PUBLIC_KEY` và `LANGFUSE_SECRET_KEY` (Langfuse SDK v5, LangChain `CallbackHandler`). Mỗi câu hỏi là một trace gồm các bước `rewrite_query`, `retrieve` (kèm các đoạn tìm được) và `answer` (token, độ trễ), gắn session của trình duyệt, tag (`law` / `uploaded-docs` / `api`, provider) và metadata: truy vấn tìm kiếm, điểm rerank cao nhất, số nguồn, có phải câu trả lời có sẵn không, có lấy từ cache không. Câu hỏi về tài liệu tải lên chỉ được trace khi đặt `LANGFUSE_TRACE_UPLOADS=true`. Lỗi của Langfuse không làm hỏng câu trả lời: việc gửi trace chạy ở luồng nền.
 
 ### 2.11 REST API (`src/api.py`)
 ```
@@ -110,7 +126,7 @@ POST /chat
 
 GET /health → {"status": "ok"}
 ```
-Handler là hàm đồng bộ để FastAPI chạy trong threadpool, không chặn event loop.
+Handler là hàm đồng bộ để FastAPI chạy trong threadpool, không chặn event loop. Khi bật Langfuse, mỗi request cũng là một trace (tag `api`).
 
 ---
 
@@ -160,9 +176,9 @@ input_ids (≤128 token) → Token Embedding (vocab 2.672) + Positional Encoding
 ---
 
 ### Bộ câu hỏi "đáp án vàng" (`evaluation/golden_set.json`)
-10 câu giao thông phổ biến, đáp án trích từ Nghị định 168/2024 và 238/2026 (kèm điều/khoản/điểm). `evaluation/golden_check.py` chấm tự động: phải có đủ khoảng tiền phạt (chấp nhận "18.000.000" hoặc "18 triệu"), trích đúng Điều và văn bản, không được chứa mức phạt cũ của Nghị định 100/2019. Chạy: `python evaluation/run_golden_set.py` → `evaluation/results_golden.json`. Kết quả hiện tại với Gemini 3.5 Flash-Lite: **10/10**.
+25 câu phổ biến, đáp án trích từ văn bản luật (kèm điều/khoản/điểm): giao thông 10 (Nghị định 168/2024 và 238/2026), lao động 5, doanh nghiệp 3, dân sự 3, hôn nhân và gia đình 2, và 2 câu hỏi bằng tiếng Anh. `evaluation/golden_check.py` chấm tự động: phải có đủ các ý chính (khoảng tiền phạt, chấp nhận "18.000.000" hoặc "18 triệu"; số ngày, độ tuổi…), trích đúng Điều và văn bản; câu giao thông không được chứa mức phạt cũ của Nghị định 100/2019. Chạy: `python evaluation/run_golden_set.py` → `evaluation/results_golden.json` (kèm kết quả theo lĩnh vực). Kết quả hiện tại với Gemini 3.5 Flash-Lite: **25/25**.
 
-Hai lần chạy đầu (8/10, 9/10) đã phát hiện 3 lỗi thật, sửa xong mới đạt 10/10 — xem 3 dòng cuối bảng dưới.
+Hai lần chạy đầu của 10 câu giao thông (8/10, 9/10) đã phát hiện 3 lỗi thật, sửa xong mới đạt 10/10 — xem 3 dòng cuối bảng dưới.
 
 Tập đánh giá tự động `test_set_clean.json` (57 câu) bỏ thêm 17 câu có đáp án theo Nghị định 100/2019, vì câu trả lời đúng theo Nghị định 168 sẽ bị chấm lệch đáp án cũ. Khi đánh giá bằng Gemini, mỗi câu cách nhau ~8 giây (`EVAL_REQUEST_INTERVAL`) để không vượt 15 request/phút của free tier.
 
@@ -181,12 +197,17 @@ Tập đánh giá tự động `test_set_clean.json` (57 câu) bỏ thêm 17 câ
 | Đáp án vàng: "nồng độ cồn xe máy" đúng số tiền nhưng trích Nghị định 100 | Hai nghị định có điều gần giống nhau; chunk Nghị định 100 chiếm hết 14+14 chỗ ứng viên của BM25/FAISS, chunk đúng của Nghị định 168 không vào được danh sách ứng viên (lọc sau rerank không cứu được) | Gắn cờ `superseded` cho Chương II (Điều 5–38, đường bộ) Nghị định 100 và loại ngay từ bước lấy ứng viên, trừ khi truy vấn nhắc "100/2019"; Chương III (đường sắt) vẫn tìm bình thường |
 | Đáp án vàng: "vượt đèn đỏ bị trừ mấy điểm" → "tài liệu không có" | Mức trừ điểm nằm ở khoản riêng ("điểm b khoản 9 … trừ 04 điểm"), khác chunk với hành vi | Khi chunk, gắn "[Bị trừ 04 điểm … theo điểm b khoản 16]" vào ngay dòng của từng hành vi; đọc tham chiếu lần lượt để xử lý cả "điểm b khoản 7, điểm c khoản 9" và "khoản 10" |
 | Đánh giá bằng Gemini bị lỗi 429 | Free tier 15 request/phút, mỗi câu 2 request | Giãn cách ~8 giây/câu khi đánh giá |
+| Tài liệu tải lên: hỏi tiếng Việt về tệp tiếng Anh → "tài liệu không có thông tin" | Chunk 1.000 ký tự gom 4–5 mục, cross-encoder chấm -5.49 khi khác ngôn ngữ, dưới ngưỡng -4.0 | Chunk 400 ký tự cho tài liệu tải lên, ngưỡng riêng -6.0 (đo trên 16 câu) |
+| Tài liệu tải lên: hỏi tiếng Anh nhưng trả lời tiếng Việt, chép cả dòng "[tên tệp]" | Prompt viết bằng tiếng Việt | Prompt tiếng Anh, quy tắc ngôn ngữ ghi rõ, cấm chép dòng tiêu đề |
+| Chuyển chế độ qua lại làm mất tài liệu đã tải | Streamlit bỏ trạng thái của widget không hiển thị nên uploader trở về rỗng; code coi "uploader rỗng" là người dùng đã xoá tệp | Chỉ xoá index trong `on_change` của uploader, tức là khi người dùng thật sự bỏ tệp |
+| `embedder` chọn sai model khi import theo thứ tự khác | `USE_FINETUNED` nằm trong `.env`, nhưng `.env` chỉ được nạp khi `llm_chain` được import trước | `embedder.py` tự gọi `load_dotenv()` |
 
 ---
 
 ## 7. Hạn chế hiện tại
 - Nghị định 168/2024 và 238/2026 là hai văn bản riêng (chưa có văn bản hợp nhất): câu trả lời đúng khi tìm được cả điều gốc lẫn điều sửa đổi.
 - Câu hỏi về vi phạm *trước* 01/01/2025 chỉ dùng Nghị định 100/2019 khi người hỏi nhắc tới chính nghị định này.
-- Mảng giao thông chỉ được kiểm bằng 10 câu đáp án vàng; tập đánh giá tự động (57 câu) không còn câu giao thông.
+- Mảng giao thông chỉ được kiểm bằng 10 câu đáp án vàng; tập đánh giá tự động (57 câu) không còn câu giao thông. Bộ đáp án vàng 25 câu chỉ kiểm các câu đã biết đáp án, không thay cho đánh giá trên câu hỏi mới.
+- Chế độ "Tài liệu của bạn" chưa hỗ trợ OCR cho PDF scan. Cổng điểm của chế độ này mới chỉ được đo trên một tài liệu mẫu. Tài liệu dài hơn 400 chunk (mỗi chunk ≤ 400 ký tự) bị từ chối để việc embed trên CPU của bản demo không quá lâu.
 - `qwen3:8b` chạy local yếu với câu hỏi nhiều đối tượng; Gemini trả lời đầy đủ hơn.
 - E5 vẫn được fine-tune trên tập triplet có lẫn câu test; đánh giá tránh vấn đề này bằng `test_set_clean.json`, nhưng muốn dùng lại cả 306 câu thì cần tạo lại triplet chỉ từ `train_set.json` và train lại.

@@ -23,8 +23,11 @@
 - **Query rewriting + hybrid retrieval with re-ranking.** A small glossary first maps everyday terms to the wording used in the law (for example "đèn đỏ" → "đèn tín hiệu giao thông"), then the LLM rewrites the question into a Vietnamese legal search query. This also covers follow-ups that depend on the chat history, questions asked in English and Vietnamese typed without diacritics; answers come back in the user's language. BM25 keyword search and FAISS dense search then run in parallel, their scores are fused 50/50, and a multilingual cross-encoder picks the top 7 passages, extended to up to 10 when more provisions score almost as high (questions such as "running a red light" span one article per vehicle type). Exact references (article numbers, fine amounts) and everyday wording can both match.
 - **Two domain-trained embedding models.** `multilingual-e5-base` (278M parameters) is fine-tuned with triplet loss on 3,642 legal triplets with FAISS-mined hard negatives and [published on Hugging Face](https://huggingface.co/Hoangy2005/vietnamese-legal-embedder). Alongside it is a 738,560-parameter Transformer encoder built from scratch in PyTorch, with its own tokenizer, architecture and training loop.
 - **Answers tied to sources.** Every chunk is stamped with its law name and article number, and the LLM (temperature 0) is prompted to answer only from the retrieved passages and cite them that way. Answers can expand to show the source passages. The last 5 chat turns go into the prompt, so follow-up questions work. When no passage is relevant enough (cooking, gold prices, laws outside the corpus), the bot declines without calling the LLM instead of guessing, and greetings get an instant reply.
+- **Chat with your own documents.** A second mode takes up to 3 PDF, DOCX, TXT or Markdown files (10 MB each), indexes them in memory for that browser session only, and answers from them with the same hybrid retrieval and re-ranking, citing the file name and section. A Vietnamese question about an English file works too, and scanned PDFs without a text layer get a clear error instead of an empty answer. A fictional employee handbook ([`samples/`](samples/)) lets visitors try it in one click.
+- **Streaming answers.** Retrieval runs first, then the answer streams token by token, so the reply starts appearing instead of arriving all at once. An error mid-stream (for example a rate limit) ends the reply with a readable message instead of breaking the page.
+- **Optional monitoring with [Langfuse](https://langfuse.com).** When Langfuse keys are set, every question becomes a trace with the query rewrite, the retrieved passages and the answer generation (tokens, latency), tagged with the LLM provider, the search query, the top re-rank score and whether the bot declined. Without keys it is switched off. Questions about uploaded files are not traced unless you opt in.
 - **Evaluation pipeline.** It measures retrieval (NDCG, MRR, Recall, Precision), runs RAGAS (faithfulness, answer relevancy, context precision and recall) and scores semantic similarity against reference answers.
-- **Cloud or fully local.** The repo includes a Streamlit chat UI, a FastAPI endpoint and a prebuilt FAISS index, and the fine-tuned model downloads from Hugging Face Hub on first start. One setting switches the LLM between Gemini (hosted demo) and any Ollama model running on your own machine, so documents and questions never leave it. The public demo protects its API quota with per-session and daily question limits and caches answers to repeated opening questions.
+- **Cloud or fully local.** The repo includes a Streamlit chat UI, a FastAPI endpoint and a prebuilt FAISS index, and the fine-tuned model downloads from Hugging Face Hub on first start. One setting switches the LLM between Gemini (hosted demo) and any Ollama model running on your own machine, so documents and questions never leave it. The public demo protects its API quota with per-session and daily question limits and caches answers to repeated opening questions (never answers about uploaded files).
 - **10 legal documents covered, kept current.** Civil Code 2015, Labor Code 2019, Land Law 2024, Law on Enterprises 2020, Law on Marriage and Family 2014, Road Law 2024, the 2025 law amending the Penal Code, and the traffic-fine decrees 168/2024 (in force since 1 January 2025), 238/2026 (its amendments) and 100/2019 (for earlier violations). The official texts of the two newest decrees are only published as scanned PDFs, so their Word texts were cross-checked against the scans with OCR: every monetary amount matches (473 in Decree 168, 23 in Decree 238).
 
 ## Architecture
@@ -58,7 +61,18 @@ More detail (in Vietnamese) is in [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Evaluation results
 
-**Golden-set check: 10/10.** Ten common traffic-fine questions (red light, drink-driving, helmet, speeding, phone use, wrong-way driving, licence point deductions, and a child-seat rule amended in 2026) have reference answers taken from Decrees 168/2024 and 238/2026. Each answer must contain the exact fine range, cite the right article and current decree, and must not quote the superseded Decree 100/2019 amounts. With Gemini 3.5 Flash-Lite answering, all 10 pass ([`evaluation/results_golden.json`](evaluation/results_golden.json), 17 Oct 2026). Earlier runs of this set exposed three real bugs, fixed before this run (see [ARCHITECTURE.md](ARCHITECTURE.md#6-lỗi-đã-gặp-và-cách-sửa)).
+**Golden-set check: 25/25.** 25 common questions have hand-checked reference answers taken from the legal text ([`evaluation/golden_set.json`](evaluation/golden_set.json)). Each answer must contain the key facts (exact fine range, number of days, age...), cite the right article and law, and for traffic questions must not quote the superseded Decree 100/2019 amounts. With Gemini 3.5 Flash-Lite answering, all 25 pass ([`evaluation/results_golden.json`](evaluation/results_golden.json), 17 Oct 2026):
+
+| Domain | Questions | Passed | Examples |
+|:--|:--:|:--:|:--|
+| Traffic fines (Decrees 168/2024, 238/2026) | 10 | 10 | red light, drink-driving, helmet, speeding, phone use, wrong-way driving, licence point deductions, child-seat rule amended in 2026 |
+| Labor Code 2019 | 5 | 5 | annual leave, probation, resignation notice, overtime cap, maternity leave |
+| Law on Enterprises 2020 | 3 | 3 | LLC member limit, minimum shareholders, registration deadline |
+| Civil Code 2015 | 3 | 3 | contract dispute limitation period, age of majority, inheritance claims |
+| Law on Marriage and Family 2014 | 2 | 2 | marriage age, custody of children under 36 months |
+| Asked in English | 2 | 2 | annual leave, minimum marriage age |
+
+Earlier runs of the traffic questions exposed three real bugs, fixed before this run (see [ARCHITECTURE.md](ARCHITECTURE.md#6-lỗi-đã-gặp-và-cách-sửa)). A golden set checks that known answers stay correct; it is not a benchmark of unseen questions.
 
 **Earlier automatic metrics** — full pipeline (hybrid retrieval, k = 7) on questions from `test_set.json`. All scores are averages between 0 and 1; higher is better. These runs used Groq-hosted Llama models, before the project switched to Gemini / Ollama.
 <!-- TODO: re-run the evaluation with the current LLM setup. -->
@@ -97,7 +111,9 @@ More detail (in Vietnamese) is in [ARCHITECTURE.md](ARCHITECTURE.md).
 | Retrieval | FAISS (`faiss-cpu`), `rank-bm25`, cross-encoder `cross-encoder/mmarco-mMiniLMv2-L12-H384-v1` |
 | Training | PyTorch, sentence-transformers `TripletLoss`, Google Colab GPU ([`train_colab.ipynb`](train_colab.ipynb)) |
 | Evaluation | RAGAS, custom NDCG / MRR / Recall / Precision, semantic similarity (`paraphrase-multilingual-MiniLM-L12-v2`) |
-| Serving | Streamlit (chat UI), FastAPI (REST), Streamlit Community Cloud, Hugging Face Hub (model hosting) |
+| Document upload | `pypdf`, `docx2txt`, in-memory FAISS + BM25 index per session |
+| Serving | Streamlit (chat UI, streaming), FastAPI (REST), Streamlit Community Cloud, Hugging Face Hub (model hosting) |
+| Monitoring | Langfuse (optional, via its LangChain callback) |
 
 ## Run locally
 
@@ -142,7 +158,19 @@ GOOGLE_API_KEY=your_google_ai_studio_key_here
 
 # Optional: decline a question when the best passage's cross-encoder score is below this
 # MIN_RELEVANCE_SCORE=-4.0
+
+# Optional ("Your documents" mode): relevance gate for uploaded files — looser than the legal corpus,
+# because the cross-encoder scores cross-language matches (Vietnamese question, English file) lower
+# USER_DOCS_MIN_RELEVANCE_SCORE=-6.0
+
+# Optional: Langfuse tracing (https://langfuse.com) — off unless both keys are set
+# LANGFUSE_PUBLIC_KEY=pk-lf-...
+# LANGFUSE_SECRET_KEY=sk-lf-...
+# LANGFUSE_BASE_URL=https://cloud.langfuse.com    # US region: https://us.cloud.langfuse.com
+# LANGFUSE_TRACE_UPLOADS=false                     # also trace "Your documents" questions (sends file excerpts)
 ```
+
+The template also has two settings for evaluation (`EVAL_JUDGE_PROVIDER`, `EVAL_JUDGE_MODEL`), used further below.
 
 **3. Start the app**
 
@@ -150,7 +178,7 @@ GOOGLE_API_KEY=your_google_ai_studio_key_here
 streamlit run src/app.py         # → http://localhost:8501
 ```
 
-The first start downloads the fine-tuned embedder from Hugging Face Hub, along with the cross-encoder. Later starts use the local copy. Running fully local with `qwen3:8b` on an M1 Pro with 16 GB RAM, a test question took about 24 seconds end to end. With Ollama, the LLM query rewrite runs only for follow-up questions and took 0.6–8 seconds in testing.
+The switch at the top of the page picks between the legal corpus and **Your documents**; in the second mode, upload files or click **Use sample**. The first start downloads the fine-tuned embedder from Hugging Face Hub, along with the cross-encoder. Later starts use the local copy. Running fully local with `qwen3:8b` on an M1 Pro with 16 GB RAM, a test question took about 24 seconds end to end. With Ollama, the LLM query rewrite runs only for follow-up questions and took 0.6–8 seconds in testing.
 
 **4. Optional: REST API**
 
@@ -173,7 +201,11 @@ pip install -r requirements-dev.txt   # light: no torch or model downloads neede
 pytest -q
 ```
 
-The same tests run on every push via GitHub Actions. They cover the glossary and the clause-aware chunker.
+The same tests run on every push via GitHub Actions. They cover the glossary, the clause-aware chunker, canned replies, the golden-set checker, file upload parsing (including scanned-PDF detection) and the tracing switch.
+
+**6. Optional: monitoring with Langfuse**
+
+Create a free project at [cloud.langfuse.com](https://cloud.langfuse.com), then put its keys in `.env` (locally) or in the app's Secrets (Streamlit Cloud): `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY` and, for the US region, `LANGFUSE_BASE_URL`. Restart the app. Each question then shows up under **Traces** with its steps (`rewrite_query`, `retrieve`, `answer`), the browser session and the metadata above. The FastAPI endpoint is traced the same way.
 
 <details>
 <summary><b>Retrain, rebuild the index, evaluate</b></summary>
@@ -187,7 +219,7 @@ python train_custom.py           # train the from-scratch Transformer (runs on C
 rm -rf faiss_index_local
 USE_FINETUNED=true python -c "from src.vector_store import vectorstore"   # E5 index
 
-# Golden set: 10 traffic-fine questions with reference answers from Decrees 168/2024 and 238/2026
+# Golden set: 25 questions (traffic, labor, enterprise, civil, family, English) with reference answers
 python evaluation/run_golden_set.py                                            # → evaluation/results_golden.json
 
 # Evaluate on test_set_clean.json: 57 test questions never seen in training, excluding those answered
@@ -210,8 +242,11 @@ python evaluation/evaluate_custom.py
 ```
 vietnamese-rag-chatbot/
 ├── src/
-│   ├── app.py                  # Streamlit chat UI
+│   ├── app.py                  # Streamlit chat UI: legal corpus / your documents, streaming answers
 │   ├── api.py                  # FastAPI: POST /chat (history in, sources out), GET /health
+│   ├── user_docs.py            # "Your documents" mode: per-session index over uploaded files
+│   ├── document_upload.py      # upload limits, PDF / DOCX / TXT / MD text extraction
+│   ├── observability.py        # optional Langfuse tracing (no-op without keys)
 │   ├── retrieval_hybrid.py     # query rewrite, BM25 + FAISS fusion, cross-encoder re-rank, QA chain + prompt
 │   ├── legal_glossary.py       # everyday words → legal terms, applied to every search query
 │   ├── canned_replies.py       # greetings and out-of-scope replies that need no LLM call
@@ -227,13 +262,14 @@ vietnamese-rag-chatbot/
 │   └── finetuned_e5/           # multilingual-e5-base fine-tuning
 ├── evaluation/                 # golden set + checker, evaluate_finetuned.py, make_clean_test_set.py
 ├── data/raw/                   # the 10 legal documents (.docx)
+├── samples/                    # fictional employee handbook for trying "Your documents"
 ├── faiss_index_local/          # prebuilt FAISS index (768-d, fine-tuned E5) used by the demo
 ├── train_finetuned.py          # fine-tuning pipeline
 ├── train_custom.py             # custom Transformer pipeline
 ├── train_colab.ipynb           # Colab GPU notebook for fine-tuning
 ├── test_set.json               # 306 evaluation questions with reference answers
 ├── test_set_clean.json         # 57 of them: never seen in training, not based on Decree 100/2019
-├── tests/                      # unit tests (glossary, chunker), run by .github/workflows/tests.yml
+├── tests/                      # unit tests, run by .github/workflows/tests.yml
 ├── ARCHITECTURE.md             # design notes and bugs fixed along the way (Vietnamese)
 ├── .env.example                # environment variable template
 ├── requirements.txt            # pinned dependency versions
@@ -258,6 +294,8 @@ Built as a Deep Learning course project at HUIT (2025) by [@Leanhoangy](https://
 ### Giới thiệu
 
 Hệ thống chatbot cho phép người dùng hỏi đáp về pháp luật Việt Nam dựa trên các văn bản luật chính thức (Luật Đường bộ 2024, Bộ luật Lao động, Luật Doanh nghiệp, Bộ luật Dân sự, Luật sửa đổi, bổ sung Bộ luật Hình sự 2025, Luật Đất đai, Luật Hôn nhân và Gia đình, Nghị định 168/2024 và Nghị định 238/2026 sửa đổi, Nghị định 100/2019).
+
+Ngoài văn bản luật có sẵn, chế độ **Tài liệu của bạn** cho phép tải lên tối đa 3 tệp PDF, DOCX, TXT hoặc MD (≤ 10 MB mỗi tệp) rồi hỏi đáp trên chính các tệp đó. Tài liệu chỉ nằm trong bộ nhớ của phiên trình duyệt, không được lưu lại. Câu trả lời hiện dần theo thời gian thực (streaming). Có thể bật giám sát bằng Langfuse (tuỳ chọn) để xem từng bước xử lý của mỗi câu hỏi.
 
 Lưu ý: từ 01/01/2025, xử phạt giao thông đường bộ áp dụng Nghị định 168/2024 (đã được sửa đổi bởi Nghị định 238/2026 từ 15/08/2026); Nghị định 100/2019 chỉ áp dụng cho vi phạm xảy ra trước ngày đó. Bản chính thức của hai nghị định mới chỉ có PDF scan, nên bản Word được đối chiếu với bản scan bằng OCR: mọi con số tiền phạt đều khớp.
 
@@ -385,9 +423,13 @@ vietnamese-rag-chatbot/
 │   ├── data_preparation.py         # Tạo triplets training
 │   ├── augment_triplets.py         # Augment data qua LLM
 │   ├── evaluation_enhanced.py      # RAGAS + Retrieval metrics
+│   ├── user_docs.py                # Chế độ "Tài liệu của bạn": index tạm theo phiên
+│   ├── document_upload.py          # Kiểm tra tệp tải lên, đọc chữ từ PDF / DOCX / TXT / MD
+│   ├── observability.py            # Giám sát bằng Langfuse (tuỳ chọn)
 │   ├── app.py                      # Streamlit UI
 │   └── api.py                      # FastAPI endpoint
-├── tests/                          # Unit test (từ điển, chunker) — chạy tự động bằng GitHub Actions
+├── samples/                        # Sổ tay nhân viên hư cấu để thử chế độ "Tài liệu của bạn"
+├── tests/                          # Unit test — chạy tự động bằng GitHub Actions
 ├── evaluation/
 │   ├── evaluate_custom.py          # Đánh giá custom transformer
 │   └── evaluate_finetuned.py       # Đánh giá fine-tuned e5
@@ -398,6 +440,8 @@ vietnamese-rag-chatbot/
 ```
 
 ### Kết quả Evaluation
+
+**Bộ đáp án vàng: 25/25** câu đạt (giao thông 10, lao động 5, doanh nghiệp 3, dân sự 3, hôn nhân và gia đình 2, hỏi bằng tiếng Anh 2), với Gemini 3.5 Flash-Lite trả lời. Chi tiết ở bảng *Golden-set check* phía trên.
 
 So sánh 2 embedding model với Hybrid Retrieval (BM25 + FAISS + Cross-Encoder, k=7):
 
