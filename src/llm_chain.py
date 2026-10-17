@@ -54,7 +54,7 @@ def make_llm(temperature: float = 0, max_tokens: int = 2048):
         base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
         temperature=temperature,
         num_predict=max_tokens,
-        num_ctx=8192,     # context mặc định của Ollama ngắn hơn prompt 7 chunks → bị cắt
+        num_ctx=12288,    # context mặc định của Ollama ngắn hơn prompt 7–10 chunks → bị cắt
         reasoning=False,  # tắt chế độ thinking (qwen3)
     )
 

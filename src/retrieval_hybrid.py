@@ -229,6 +229,11 @@ class LangChainHybridRetriever(BaseRetriever):
     hybrid_retriever: HybridRetriever
     k: int = 3
     alpha: float = 0.5
+    # k thích ứng: lấy thêm tối đa max_extra chunk nếu điểm cross-encoder sát chunk đứng đầu.
+    # Câu hỏi nhiều đối tượng (vd. vượt đèn đỏ: ô tô, xe máy, xe đạp... mỗi đối tượng một Điều)
+    # có thể cần hơn k chunk; câu hỏi thường ít khi có chunk ngoài top-k sát điểm như vậy.
+    max_extra: int = 3
+    score_margin: float = 2.0
 
     model_config = {"arbitrary_types_allowed": True}
 
@@ -237,10 +242,16 @@ class LangChainHybridRetriever(BaseRetriever):
             query,
             k_bm25=self.k * 2,
             k_dense=self.k * 2,
-            k_rerank=self.k,
+            k_rerank=self.k + self.max_extra,
             rerank=True,
             alpha=self.alpha,
         )
+        if self.hybrid_retriever.use_cross_encoder and results:
+            top_score = results[0][1]
+            extra = [r for r in results[self.k:] if r[1] >= top_score - self.score_margin]
+            results = results[:self.k] + extra
+        else:
+            results = results[:self.k]
         return [doc for doc, _ in results]
 
 

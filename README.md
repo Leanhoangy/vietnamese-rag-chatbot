@@ -19,7 +19,7 @@
 
 ## Key features
 
-- **Query rewriting + hybrid retrieval with re-ranking.** A small glossary first maps everyday terms to the wording used in the law (for example "đèn đỏ" → "đèn tín hiệu giao thông"), then the LLM rewrites the question, including follow-ups that depend on the chat history, into legal terminology. BM25 keyword search and FAISS dense search then run in parallel, their scores are fused 50/50, and a multilingual cross-encoder picks the top 7 passages. Exact references (article numbers, fine amounts) and everyday wording can both match.
+- **Query rewriting + hybrid retrieval with re-ranking.** A small glossary first maps everyday terms to the wording used in the law (for example "đèn đỏ" → "đèn tín hiệu giao thông"), then the LLM rewrites the question, including follow-ups that depend on the chat history, into legal terminology. BM25 keyword search and FAISS dense search then run in parallel, their scores are fused 50/50, and a multilingual cross-encoder picks the top 7 passages, extended to up to 10 when more provisions score almost as high (questions such as "running a red light" span one article per vehicle type). Exact references (article numbers, fine amounts) and everyday wording can both match.
 - **Two domain-trained embedding models.** `multilingual-e5-base` (278M parameters) is fine-tuned with triplet loss on 3,642 legal triplets with FAISS-mined hard negatives and [published on Hugging Face](https://huggingface.co/Hoangy2005/vietnamese-legal-embedder). Alongside it is a 738,560-parameter Transformer encoder built from scratch in PyTorch, with its own tokenizer, architecture and training loop.
 - **Answers tied to sources.** Every chunk is stamped with its law name and article number, and the LLM (temperature 0) is prompted to answer only from the retrieved passages and cite them that way. Answers can expand to show the source passages. The last 5 chat turns go into the prompt, so follow-up questions work.
 - **Evaluation pipeline.** It measures retrieval (NDCG, MRR, Recall, Precision), runs RAGAS (faithfulness, answer relevancy, context precision and recall) and scores semantic similarity against reference answers.
@@ -43,8 +43,8 @@ flowchart TD
         RW --> R2["Dense search: top 14"]
         R1 --> F["Min-max normalize and fuse<br/>0.5 × dense + 0.5 × BM25"]
         R2 --> F
-        F --> X["Cross-encoder re-rank<br/>mmarco-mMiniLMv2-L12-H384 → top 7"]
-        X --> P["Prompt: 7 passages + last 5 chat turns + question"]
+        F --> X["Cross-encoder re-rank<br/>mmarco-mMiniLMv2-L12-H384 → top 7<br/>(+ up to 3 near-ties)"]
+        X --> P["Prompt: 7–10 passages + last 5 chat turns + question"]
         P --> L["LLM, temperature 0<br/>Gemini 3.5 Flash-Lite (demo) or Ollama qwen3:8b (local)"]
         L --> ANS["Answer + source passages"]
     end
