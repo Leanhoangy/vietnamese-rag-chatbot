@@ -232,17 +232,6 @@ class RAGEvaluator:
                 return True
         return False
 
-    @staticmethod
-    def _safe_mean(values: List[float]) -> float:
-        if not values:
-            return 0.0
-
-        numeric_values = np.array(values, dtype=float)
-        if np.isnan(numeric_values).all():
-            return 0.0
-
-        return float(np.nanmean(numeric_values))
-
     def run_qa_pipeline(
         self,
         test_cases: List[Dict],

@@ -56,7 +56,7 @@ MIN_RELEVANCE_SCORE = float(os.getenv("USER_DOCS_MIN_RELEVANCE_SCORE", "-6.0"))
 
 @dataclass
 class UserDocsIndex:
-    """Cùng giao diện prepare / stream_answer / generate_answer với HybridQAChain."""
+    """Cùng giao diện prepare / stream_answer với HybridQAChain."""
 
     file_names: list[str]
     chunks: list[Document]
@@ -84,17 +84,6 @@ class UserDocsIndex:
     def stream_answer(self, prepared: Dict, config: Dict | None = None) -> Iterator[str]:
         return (PROMPT | model | StrOutputParser()).stream(
             prepared["prompt_inputs"], config={**(config or {}), "run_name": "answer"})
-
-    def generate_answer(self, prepared: Dict, config: Dict | None = None) -> str:
-        return (PROMPT | model | StrOutputParser()).invoke(
-            prepared["prompt_inputs"], config={**(config or {}), "run_name": "answer"})
-
-    def answer(self, question: str, chat_history: str = "") -> Dict:
-        prepared = self.prepare(question, chat_history)
-        if prepared["result"] is None:
-            prepared["result"] = self.generate_answer(prepared)
-        prepared.pop("prompt_inputs", None)
-        return prepared
 
 
 def build_index(files: list[tuple[str, bytes]]) -> UserDocsIndex:

@@ -10,7 +10,6 @@ import numpy as np
 from langchain_core.documents import Document
 from langchain_core.retrievers import BaseRetriever
 from langchain_core.prompts import PromptTemplate
-from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 from rank_bm25 import BM25Okapi
 
@@ -278,31 +277,12 @@ class LangChainHybridRetriever(BaseRetriever):
 class HybridQAChain:
     """QA chain using hybrid retrieval"""
     
-    def __init__(self, use_hybrid: bool = True, hybrid_alpha: float = 0.5):
-        """
-        Initialize QA chain
-        
-        Args:
-            use_hybrid: Whether to use hybrid retrieval (True) or just dense (False)
-            hybrid_alpha: Weight for score fusion (0 = BM25, 1 = dense)
-        """
-        self.use_hybrid = use_hybrid
+    def __init__(self, hybrid_alpha: float = 0.5):
+        """hybrid_alpha: trọng số khi cộng điểm (0 = chỉ BM25, 1 = chỉ dense)."""
         self.hybrid_alpha = hybrid_alpha
-        
-        if use_hybrid:
-            print("Initializing Hybrid Retriever...")
-            self.hybrid_retriever = HybridRetriever(
-                splits,
-                use_cross_encoder=CROSS_ENCODER_AVAILABLE,
-            )
-            retriever = self.hybrid_retriever.as_retriever(
-                k=7,
-                alpha=hybrid_alpha,
-            )
-        else:
-            print("Using Dense Retriever only...")
-            retriever = vectorstore.as_retriever(search_kwargs={"k": 7})
-        
+        self.hybrid_retriever = HybridRetriever(splits, use_cross_encoder=CROSS_ENCODER_AVAILABLE)
+        retriever = self.hybrid_retriever.as_retriever(k=7, alpha=hybrid_alpha)
+
         prompt_template = """Bạn là trợ lý tư vấn pháp luật Việt Nam.
 
 NGUYÊN TẮC:
@@ -444,31 +424,7 @@ TRUY VẤN:"""
             prepared["result"] = self.generate_answer(prepared)
         prepared.pop("prompt_inputs", None)
         return prepared
-    
-    def __call__(self, query: str) -> str:
-        """Simple call interface"""
-        result = self.invoke({"query": query})
-        return result["result"]
 
 
-# Export instances
-print("=" * 60)
-print("Initializing Hybrid Retrieval System")
-print("=" * 60)
-
-# Check if we should use hybrid retrieval (set via environment or default True)
-USE_HYBRID = os.getenv("USE_HYBRID_RETRIEVAL", "true").lower() == "true"
-
-if USE_HYBRID:
-    # Create hybrid retriever
-    print("\n✓ Using HYBRID retrieval (BM25 + Dense + Cross-Encoder)")
-    qa_chain = HybridQAChain(use_hybrid=True, hybrid_alpha=0.5)
-    hybrid_retriever = True
-else:
-    # Fall back to dense retrieval with custom prompt
-    print("\n✓ Using DENSE retrieval only (default)")
-    retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
-    qa_chain = HybridQAChain(use_hybrid=False, hybrid_alpha=0.5)
-    hybrid_retriever = False
-
-print("=" * 60)
+print("Initializing hybrid retrieval (BM25 + dense + cross-encoder)...")
+qa_chain = HybridQAChain(hybrid_alpha=0.5)

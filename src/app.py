@@ -69,7 +69,6 @@ class DemoQuotaExceeded(Exception):
 def load_chain():
     import sys
     sys.path.insert(0, str(Path(__file__).parent.parent))
-    os.environ["USE_HYBRID_RETRIEVAL"] = "true"
     from src.retrieval_hybrid import qa_chain
     return qa_chain
 
@@ -307,12 +306,10 @@ for key, default in [("messages", []), ("doc_messages", []), ("doc_index", None)
     st.session_state.setdefault(key, default)
 st.session_state.setdefault("session_id", uuid.uuid4().hex)
 
-hybrid_retriever = getattr(qa_chain, "hybrid_retriever", None)
-if hybrid_retriever is not None:
-    with st.sidebar:
-        st.markdown("**Văn bản trong hệ thống** · *Documents covered*")
-        laws = sorted({doc.metadata.get("law") for doc in hybrid_retriever.documents if doc.metadata.get("law")})
-        st.markdown("\n".join(f"- {law}" for law in laws))
+with st.sidebar:
+    st.markdown("**Văn bản trong hệ thống** · *Documents covered*")
+    laws = sorted({doc.metadata.get("law") for doc in qa_chain.hybrid_retriever.documents if doc.metadata.get("law")})
+    st.markdown("\n".join(f"- {law}" for law in laws))
 
 if mode == MODE_DOCS:
     load_user_docs()

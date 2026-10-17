@@ -92,7 +92,7 @@ Earlier runs of the traffic questions exposed three real bugs, fixed before this
 | **Answer vs. reference** | | |
 | Semantic similarity | 0.8049 | 0.7428 |
 
-<!-- TODO: no raw evaluation output (evaluation_results.json) is committed. These values come from README.md at HEAD (commit e13f29b) and visualize.py. An earlier run (2026-05-18) gave fine-tuned E5 NDCG@7 0.9950 / MRR@10 1.0000 / Precision@7 0.9857. Re-run and commit the output, then update this table. -->
+<!-- TODO: no raw evaluation output (evaluation_results.json) is committed. These values come from README.md at commit e13f29b. An earlier run (2026-05-18) gave fine-tuned E5 NDCG@7 0.9950 / MRR@10 1.0000 / Precision@7 0.9857. Re-run and commit the output, then update this table. -->
 
 **How to read these numbers**
 

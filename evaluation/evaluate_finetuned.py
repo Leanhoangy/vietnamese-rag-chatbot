@@ -24,7 +24,6 @@ args = parser.parse_args()
 
 from langchain_huggingface import HuggingFaceEmbeddings
 
-os.environ["USE_HYBRID_RETRIEVAL"] = "true"
 os.environ["USE_FINETUNED"] = "true"  # skip custom transformer, dùng fine-tuned e5
 
 FINETUNED_PATH = Path("models/finetuned-embedder")

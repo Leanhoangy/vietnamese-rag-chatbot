@@ -106,19 +106,3 @@ class LegalTransformerEncoder(nn.Module):
         """Inference-mode wrapper (no grad)."""
         with torch.no_grad():
             return self.forward(input_ids, attention_mask)
-
-
-# ------------------------------------------------------------------
-# Helper: load model đã train
-# ------------------------------------------------------------------
-
-def load_custom_model(
-    model_path: str = "models/custom-transformer/model.pt",
-    vocab_size: int = 8000,
-) -> LegalTransformerEncoder:
-    model = LegalTransformerEncoder(vocab_size=vocab_size)
-    state = torch.load(model_path, map_location="cpu", weights_only=True)
-    model.load_state_dict(state)
-    model.eval()
-    print(f"Custom transformer loaded ← {model_path}")
-    return model
