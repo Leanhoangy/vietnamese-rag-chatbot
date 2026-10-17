@@ -173,7 +173,9 @@ input_ids (≤128 token) → Token Embedding (vocab 2.672) + Positional Encoding
 | Sinh câu trả lời | RAGAS: faithfulness, answer relevancy, context precision, context recall | Giám khảo mặc định cùng provider với chatbot; `EVAL_JUDGE_PROVIDER=ollama` để chấm bằng model local trong khi Gemini vẫn sinh câu trả lời. Ghi lại số mẫu chấm được (giám khảo trả JSON lỗi → bỏ qua). Gặp 429/503 thì chờ 30 giây, thử lại tối đa 3 lần |
 | So với đáp án | Semantic similarity | Cosine giữa embedding (`paraphrase-multilingual-MiniLM-L12-v2`) của câu trả lời và đáp án |
 
-`evaluation/evaluate_finetuned.py` mặc định chạy toàn bộ `test_set_clean.json` (tùy chọn `--limit`, `--ragas-limit`, `--test-set`) và lưu điểm kèm cấu hình chạy (LLM trả lời, giám khảo, số câu, ngày) vào `evaluation/results_finetuned.json`. `evaluation/evaluate_custom.py` chạy 10 câu. Kết quả cũ trong README được đo khi hệ thống còn dùng Llama trên Groq, trên tập test bị lẫn dữ liệu train, và trước các thay đổi chunking/retrieval ở trên.
+`evaluation/evaluate_finetuned.py` mặc định chạy toàn bộ `test_set_clean.json` (tùy chọn `--limit`, `--ragas-limit`, `--test-set`) và lưu điểm kèm cấu hình chạy (LLM trả lời, giám khảo, số câu, ngày) vào `evaluation/results_finetuned.json`. `evaluation/evaluate_custom.py` chạy 10 câu.
+
+Kết quả hiện tại (57 câu, 17/10/2026, Gemini trả lời, `qwen3:8b` chấm): NDCG@7 0,9905 · MRR@10 1,0 · Recall@7 0,9908 · Precision@7 0,9198; faithfulness 0,8377 (55/57 câu, 2 câu giám khảo trả JSON lỗi) · answer relevancy 0,7891 · context precision 0,8756 · context recall 0,9123; semantic similarity 0,7278. RAGAS gọi giám khảo 635 lần (≈ 11 lần/câu, không lỗi nào), mất 117 phút trên M1 Pro (≈ 2 phút/câu). Kết quả cũ thời Groq (tập test lẫn dữ liệu train, trước các thay đổi chunking/retrieval) chỉ còn trong phần thu gọn của README, không tái lập được.
 
 ---
 
