@@ -5,7 +5,6 @@ and RAGAS evaluation.
 """
 
 import json
-import os
 import re
 import numpy as np
 from typing import List, Dict, Tuple
