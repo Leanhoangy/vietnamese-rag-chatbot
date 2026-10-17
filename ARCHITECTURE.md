@@ -159,6 +159,13 @@ input_ids (≤128 token) → Token Embedding (vocab 2.672) + Positional Encoding
 
 ---
 
+### Bộ câu hỏi "đáp án vàng" (`evaluation/golden_set.json`)
+10 câu giao thông phổ biến, đáp án trích từ Nghị định 168/2024 và 238/2026 (kèm điều/khoản/điểm). `evaluation/golden_check.py` chấm tự động: phải có đủ khoảng tiền phạt (chấp nhận "18.000.000" hoặc "18 triệu"), trích đúng Điều và văn bản, không được chứa mức phạt cũ của Nghị định 100/2019. Chạy: `python evaluation/run_golden_set.py` → `evaluation/results_golden.json`. Kết quả hiện tại với Gemini 3.5 Flash-Lite: **10/10**.
+
+Hai lần chạy đầu (8/10, 9/10) đã phát hiện 3 lỗi thật, sửa xong mới đạt 10/10 — xem 3 dòng cuối bảng dưới.
+
+Tập đánh giá tự động `test_set_clean.json` (57 câu) bỏ thêm 17 câu có đáp án theo Nghị định 100/2019, vì câu trả lời đúng theo Nghị định 168 sẽ bị chấm lệch đáp án cũ. Khi đánh giá bằng Gemini, mỗi câu cách nhau ~8 giây (`EVAL_REQUEST_INTERVAL`) để không vượt 15 request/phút của free tier.
+
 ## 6. Lỗi đã gặp và cách sửa
 
 | Triệu chứng | Nguyên nhân gốc | Cách sửa |
@@ -171,11 +178,15 @@ input_ids (≤128 token) → Token Embedding (vocab 2.672) + Positional Encoding
 | App lỗi khó hiểu khi chạy local | Index 768 chiều nhưng embedder chọn Custom Transformer 128 chiều | Kiểm tra số chiều khi load, gợi ý `USE_FINETUNED=true` |
 | Build index bị crash trên macOS | Import `faiss` trước `torch` (xung đột OpenMP) | Import embedder trước FAISS |
 | Trả lời mức phạt giao thông đã hết hiệu lực | Nghị định 168/2024 chỉ có bản scan chính thức | Bản Word + đối chiếu từng con số với bản scan bằng OCR; prompt ưu tiên Nghị định 168 theo Điều 53, 54 của chính nghị định này |
+| Đáp án vàng: "nồng độ cồn xe máy" đúng số tiền nhưng trích Nghị định 100 | Hai nghị định có điều gần giống nhau; chunk Nghị định 100 chiếm hết 14+14 chỗ ứng viên của BM25/FAISS, chunk đúng của Nghị định 168 không vào được danh sách ứng viên (lọc sau rerank không cứu được) | Gắn cờ `superseded` cho Chương II (Điều 5–38, đường bộ) Nghị định 100 và loại ngay từ bước lấy ứng viên, trừ khi truy vấn nhắc "100/2019"; Chương III (đường sắt) vẫn tìm bình thường |
+| Đáp án vàng: "vượt đèn đỏ bị trừ mấy điểm" → "tài liệu không có" | Mức trừ điểm nằm ở khoản riêng ("điểm b khoản 9 … trừ 04 điểm"), khác chunk với hành vi | Khi chunk, gắn "[Bị trừ 04 điểm … theo điểm b khoản 16]" vào ngay dòng của từng hành vi; đọc tham chiếu lần lượt để xử lý cả "điểm b khoản 7, điểm c khoản 9" và "khoản 10" |
+| Đánh giá bằng Gemini bị lỗi 429 | Free tier 15 request/phút, mỗi câu 2 request | Giãn cách ~8 giây/câu khi đánh giá |
 
 ---
 
 ## 7. Hạn chế hiện tại
-- Nghị định 168/2024 và 238/2026 là hai văn bản riêng (chưa có văn bản hợp nhất): câu trả lời đúng khi tìm được cả điều gốc lẫn điều sửa đổi. Mức trừ điểm giấy phép lái xe nằm ở khoản riêng nên đôi khi không được nêu.
-- Các câu hỏi giao thông trong `test_set.json` có đáp án theo Nghị định 100/2019; với dữ liệu mới, câu trả lời đúng theo Nghị định 168/2024 sẽ bị chấm lệch đáp án — cần cập nhật đáp án các câu này trước khi đánh giá lại.
+- Nghị định 168/2024 và 238/2026 là hai văn bản riêng (chưa có văn bản hợp nhất): câu trả lời đúng khi tìm được cả điều gốc lẫn điều sửa đổi.
+- Câu hỏi về vi phạm *trước* 01/01/2025 chỉ dùng Nghị định 100/2019 khi người hỏi nhắc tới chính nghị định này.
+- Mảng giao thông chỉ được kiểm bằng 10 câu đáp án vàng; tập đánh giá tự động (57 câu) không còn câu giao thông.
 - `qwen3:8b` chạy local yếu với câu hỏi nhiều đối tượng; Gemini trả lời đầy đủ hơn.
 - E5 vẫn được fine-tune trên tập triplet có lẫn câu test; đánh giá tránh vấn đề này bằng `test_set_clean.json`, nhưng muốn dùng lại cả 306 câu thì cần tạo lại triplet chỉ từ `train_set.json` và train lại.

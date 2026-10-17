@@ -1,0 +1,90 @@
+{
+  "config": {
+    "date": "2026-10-17",
+    "answer_llm": "gemini/gemini-3.5-flash-lite"
+  },
+  "passed": 10,
+  "total": 10,
+  "results": [
+    {
+      "id": "red-light-car",
+      "question": "Lái ô tô vượt đèn đỏ bị phạt bao nhiêu tiền?",
+      "reference": "Điểm b khoản 9 Điều 6 Nghị định 168/2024/NĐ-CP: 18.000.000–20.000.000 đồng",
+      "passed": true,
+      "problems": [],
+      "answer": "Phạt tiền từ 18.000.000 đồng đến 20.000.000 đồng đối với người điều khiển xe ô tô không chấp hành hiệu lệnh của đèn tín hiệu giao thông (bị trừ 04 điểm giấy phép lái xe) (Điều 6 Nghị định 168/2024/NĐ-CP)."
+    },
+    {
+      "id": "red-light-motorbike",
+      "question": "Đi xe máy vượt đèn đỏ bị phạt bao nhiêu?",
+      "reference": "Điểm c khoản 7 Điều 7 Nghị định 168/2024/NĐ-CP: 4.000.000–6.000.000 đồng",
+      "passed": true,
+      "problems": [],
+      "answer": "Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với người điều khiển xe mô tô, xe gắn máy, các loại xe tương tự xe mô tô và các loại xe tương tự xe gắn máy không chấp hành hiệu lệnh của đèn tín hiệu giao thông (đồng thời bị trừ 04 điểm giấy phép lái xe) (Điều 7 Nghị định 168/2024/NĐ-CP)."
+    },
+    {
+      "id": "red-light-car-points",
+      "question": "Lái ô tô vượt đèn đỏ bị trừ bao nhiêu điểm giấy phép lái xe?",
+      "reference": "Điểm b khoản 16 Điều 6 Nghị định 168/2024/NĐ-CP (hành vi tại điểm b khoản 9): trừ 04 điểm",
+      "passed": true,
+      "problems": [],
+      "answer": "Người điều khiển xe ô tô không chấp hành hiệu lệnh của đèn tín hiệu giao thông (vượt đèn đỏ) bị trừ 04 điểm giấy phép lái xe (Điều 6 Nghị định 168/2024/NĐ-CP)."
+    },
+    {
+      "id": "alcohol-car-level-1",
+      "question": "Lái ô tô mà trong máu có nồng độ cồn nhưng chưa vượt quá 50 miligam/100 mililít máu bị phạt bao nhiêu?",
+      "reference": "Điểm c khoản 6 Điều 6 Nghị định 168/2024/NĐ-CP: 6.000.000–8.000.000 đồng",
+      "passed": true,
+      "problems": [],
+      "answer": "Phạt tiền từ 6.000.000 đồng đến 8.000.000 đồng và bị trừ 04 điểm giấy phép lái xe đối với người điều khiển xe ô tô, xe chở người bốn bánh có gắn động cơ, xe chở hàng bốn bánh có gắn động cơ và các loại xe tương tự xe ô tô vi phạm hành vi điều khiển xe trên đường mà trong máu hoặc hơi thở có nồng độ cồn nhưng chưa vượt quá 50 miligam/100 mililít máu hoặc chưa vượt quá 0,25 miligam/1 lít khí thở ([Nghị định 168/2024/NĐ-CP (xử phạt giao thông đường bộ, trừ điểm giấy phép lái xe)] Điều 6)."
+    },
+    {
+      "id": "alcohol-motorbike-level-1",
+      "question": "Đi xe máy mà trong máu có nồng độ cồn nhưng chưa vượt quá 50 miligam/100 mililít máu bị phạt bao nhiêu?",
+      "reference": "Điểm a khoản 6 Điều 7 Nghị định 168/2024/NĐ-CP: 2.000.000–3.000.000 đồng",
+      "passed": true,
+      "problems": [],
+      "answer": "Phạt tiền từ 2.000.000 đồng đến 3.000.000 đồng đối với người điều khiển xe mô tô, xe gắn máy, các loại xe tương tự xe mô tô và các loại xe tương tự xe gắn máy điều khiển xe trên đường mà trong máu hoặc hơi thở có nồng độ cồn nhưng chưa vượt quá 50 miligam/100 mililít máu hoặc chưa vượt quá 0,25 miligam/1 lít khí thở (bị trừ 04 điểm giấy phép lái xe) (Điều 7 Nghị định 168/2024/NĐ-CP)."
+    },
+    {
+      "id": "helmet-motorbike",
+      "question": "Không đội mũ bảo hiểm khi đi xe máy bị phạt bao nhiêu?",
+      "reference": "Điểm h khoản 2 Điều 7 Nghị định 168/2024/NĐ-CP: 400.000–600.000 đồng",
+      "passed": true,
+      "problems": [],
+      "answer": "Phạt tiền từ 400.000 đồng đến 600.000 đồng đối với các đối tượng sau:\n- Người điều khiển xe mô tô, xe gắn máy, các loại xe tương tự xe mô tô và các loại xe tương tự xe gắn máy không đội “mũ bảo hiểm cho người đi mô tô, xe máy” hoặc đội “mũ bảo hiểm cho người đi mô tô, xe máy” không cài quai đúng quy cách khi điều khiển xe tham gia giao thông trên đường bộ (Điều 7 Nghị định 168/2024/NĐ-CP).\n- Người được chở trên xe mô tô, xe gắn máy, các loại xe tương tự xe mô tô, các loại xe tương tự xe gắn máy không đội “mũ bảo hiểm cho người đi mô tô, xe máy” hoặc đội “mũ bảo hiểm cho người đi mô tô, xe máy” không cài quai đúng quy cách khi tham gia giao thông trên đường bộ (Điều 12 Nghị định 168/2024/NĐ-CP)."
+    },
+    {
+      "id": "speeding-car-5-10",
+      "question": "Ô tô chạy quá tốc độ quy định từ 5 km/h đến dưới 10 km/h bị phạt bao nhiêu?",
+      "reference": "Điểm a khoản 3 Điều 6 Nghị định 168/2024/NĐ-CP: 800.000–1.000.000 đồng",
+      "passed": true,
+      "problems": [],
+      "answer": "Phạt tiền từ 800.000 đồng đến 1.000.000 đồng đối với người điều khiển xe ô tô, xe chở người bốn bánh có gắn động cơ, xe chở hàng bốn bánh có gắn động cơ và các loại xe tương tự xe ô tô điều khiển xe chạy quá tốc độ quy định từ 05 km/h đến dưới 10 km/h (Điều 6 Nghị định 168/2024/NĐ-CP)."
+    },
+    {
+      "id": "phone-car",
+      "question": "Lái ô tô mà dùng tay cầm và sử dụng điện thoại thì bị phạt bao nhiêu?",
+      "reference": "Điểm h khoản 5 Điều 6 Nghị định 168/2024/NĐ-CP: 4.000.000–6.000.000 đồng",
+      "passed": true,
+      "problems": [],
+      "answer": "Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với người điều khiển xe ô tô, xe chở người bốn bánh có gắn động cơ, xe chở hàng bốn bánh có gắn động cơ và các loại xe tương tự xe ô tô dùng tay cầm và sử dụng điện thoại hoặc các thiết bị điện tử khác khi điều khiển phương tiện tham gia giao thông đang di chuyển trên đường bộ, đồng thời bị trừ 04 điểm giấy phép lái xe (Điều 6 Nghị định 168/2024/NĐ-CP)."
+    },
+    {
+      "id": "wrong-way-motorbike",
+      "question": "Đi xe máy ngược chiều của đường một chiều bị phạt bao nhiêu?",
+      "reference": "Điểm a khoản 7 Điều 7 Nghị định 168/2024/NĐ-CP: 4.000.000–6.000.000 đồng",
+      "passed": true,
+      "problems": [],
+      "answer": "Người điều khiển xe mô tô, xe gắn máy, các loại xe tương tự xe mô tô và xe gắn máy đi ngược chiều của đường một chiều hoặc đi ngược chiều trên đường có biển “Cấm đi ngược chiều” bị phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng và bị trừ 02 điểm giấy phép lái xe (Điều 7 Nghị định 168/2024/NĐ-CP)."
+    },
+    {
+      "id": "child-seat-amended",
+      "question": "Chở trẻ em dưới 10 tuổi cao dưới 1,35 mét trên ô tô mà không dùng thiết bị an toàn cho trẻ em thì bị xử phạt thế nào?",
+      "reference": "Khoản 1a Điều 6 Nghị định 168/2024/NĐ-CP, bổ sung bởi Nghị định 238/2026/NĐ-CP: phạt cảnh cáo",
+      "passed": true,
+      "problems": [],
+      "answer": "Phạt cảnh cáo đối với người điều khiển xe ô tô thực hiện hành vi chở trẻ em dưới 10 tuổi và chiều cao dưới 1,35 mét trên xe mà không sử dụng thiết bị an toàn phù hợp cho trẻ em theo quy định (trừ xe ô tô kinh doanh vận tải hành khách) (Điều 2 Nghị định 238/2026/NĐ-CP).\n\nPhạt tiền từ 800.000 đồng đến 1.000.000 đồng đối với người điều khiển xe ô tô không sử dụng thiết bị an toàn phù hợp cho trẻ em theo quy định khi chở trẻ em dưới 10 tuổi và chiều cao dưới 1,35 mét (Điều 6 Nghị định 168/2024/NĐ-CP)."
+    }
+  ]
+}

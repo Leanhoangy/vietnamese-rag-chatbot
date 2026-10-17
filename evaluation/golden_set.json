@@ -1,0 +1,82 @@
+[
+  {
+    "id": "red-light-car",
+    "question": "Lái ô tô vượt đèn đỏ bị phạt bao nhiêu tiền?",
+    "reference": "Điểm b khoản 9 Điều 6 Nghị định 168/2024/NĐ-CP: 18.000.000–20.000.000 đồng",
+    "must_include": [["18.000.000", "18 triệu"], ["20.000.000", "20 triệu"]],
+    "must_cite": ["Điều 6", "168"],
+    "must_not_include": ["3.000.000 đồng đến 5.000.000"]
+  },
+  {
+    "id": "red-light-motorbike",
+    "question": "Đi xe máy vượt đèn đỏ bị phạt bao nhiêu?",
+    "reference": "Điểm c khoản 7 Điều 7 Nghị định 168/2024/NĐ-CP: 4.000.000–6.000.000 đồng",
+    "must_include": [["4.000.000", "4 triệu"], ["6.000.000", "6 triệu"]],
+    "must_cite": ["Điều 7", "168"],
+    "must_not_include": ["600.000 đồng đến 1.000.000"]
+  },
+  {
+    "id": "red-light-car-points",
+    "question": "Lái ô tô vượt đèn đỏ bị trừ bao nhiêu điểm giấy phép lái xe?",
+    "reference": "Điểm b khoản 16 Điều 6 Nghị định 168/2024/NĐ-CP (hành vi tại điểm b khoản 9): trừ 04 điểm",
+    "must_include": [["04 điểm", "4 điểm"]],
+    "must_cite": ["Điều 6", "168"],
+    "must_not_include": []
+  },
+  {
+    "id": "alcohol-car-level-1",
+    "question": "Lái ô tô mà trong máu có nồng độ cồn nhưng chưa vượt quá 50 miligam/100 mililít máu bị phạt bao nhiêu?",
+    "reference": "Điểm c khoản 6 Điều 6 Nghị định 168/2024/NĐ-CP: 6.000.000–8.000.000 đồng",
+    "must_include": [["6.000.000", "6 triệu"], ["8.000.000", "8 triệu"]],
+    "must_cite": ["Điều 6", "168"],
+    "must_not_include": []
+  },
+  {
+    "id": "alcohol-motorbike-level-1",
+    "question": "Đi xe máy mà trong máu có nồng độ cồn nhưng chưa vượt quá 50 miligam/100 mililít máu bị phạt bao nhiêu?",
+    "reference": "Điểm a khoản 6 Điều 7 Nghị định 168/2024/NĐ-CP: 2.000.000–3.000.000 đồng",
+    "must_include": [["2.000.000", "2 triệu"], ["3.000.000", "3 triệu"]],
+    "must_cite": ["Điều 7", "168"],
+    "must_not_include": []
+  },
+  {
+    "id": "helmet-motorbike",
+    "question": "Không đội mũ bảo hiểm khi đi xe máy bị phạt bao nhiêu?",
+    "reference": "Điểm h khoản 2 Điều 7 Nghị định 168/2024/NĐ-CP: 400.000–600.000 đồng",
+    "must_include": [["400.000", "400 nghìn"], ["600.000", "600 nghìn"]],
+    "must_cite": ["Điều 7", "168"],
+    "must_not_include": []
+  },
+  {
+    "id": "speeding-car-5-10",
+    "question": "Ô tô chạy quá tốc độ quy định từ 5 km/h đến dưới 10 km/h bị phạt bao nhiêu?",
+    "reference": "Điểm a khoản 3 Điều 6 Nghị định 168/2024/NĐ-CP: 800.000–1.000.000 đồng",
+    "must_include": [["800.000", "800 nghìn"], ["1.000.000", "1 triệu"]],
+    "must_cite": ["Điều 6", "168"],
+    "must_not_include": []
+  },
+  {
+    "id": "phone-car",
+    "question": "Lái ô tô mà dùng tay cầm và sử dụng điện thoại thì bị phạt bao nhiêu?",
+    "reference": "Điểm h khoản 5 Điều 6 Nghị định 168/2024/NĐ-CP: 4.000.000–6.000.000 đồng",
+    "must_include": [["4.000.000", "4 triệu"], ["6.000.000", "6 triệu"]],
+    "must_cite": ["Điều 6", "168"],
+    "must_not_include": []
+  },
+  {
+    "id": "wrong-way-motorbike",
+    "question": "Đi xe máy ngược chiều của đường một chiều bị phạt bao nhiêu?",
+    "reference": "Điểm a khoản 7 Điều 7 Nghị định 168/2024/NĐ-CP: 4.000.000–6.000.000 đồng",
+    "must_include": [["4.000.000", "4 triệu"], ["6.000.000", "6 triệu"]],
+    "must_cite": ["Điều 7", "168"],
+    "must_not_include": []
+  },
+  {
+    "id": "child-seat-amended",
+    "question": "Chở trẻ em dưới 10 tuổi cao dưới 1,35 mét trên ô tô mà không dùng thiết bị an toàn cho trẻ em thì bị xử phạt thế nào?",
+    "reference": "Khoản 1a Điều 6 Nghị định 168/2024/NĐ-CP, bổ sung bởi Nghị định 238/2026/NĐ-CP: phạt cảnh cáo",
+    "must_include": [["cảnh cáo"]],
+    "must_cite": ["238"],
+    "must_not_include": []
+  }
+]

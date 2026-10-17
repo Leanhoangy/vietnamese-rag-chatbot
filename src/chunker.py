@@ -23,6 +23,12 @@ DOC_LABELS = {
     "Nghidinh_238_2026.docx": "Nghị định 238/2026/NĐ-CP (sửa đổi, bổ sung Nghị định 168/2024)",
 }
 
+# Phần đã bị thay thế: Chương II (Điều 5–38, giao thông đường bộ) của NĐ 100/2019 — từ 01/01/2025 áp dụng
+# NĐ 168/2024 (Điều 53, 54 NĐ 168). Hai văn bản có nhiều điều gần giống nhau nên NĐ 100 chiếm hết chỗ ứng viên
+# khi tìm kiếm → các chunk này được gắn cờ "superseded" và chỉ được tìm khi người hỏi nhắc tới NĐ 100.
+# Chương III (đường sắt) không bị NĐ 168 thay thế nên vẫn tìm bình thường.
+SUPERSEDED_ARTICLES = {"Nghidinh 100:2019.docx": range(5, 39)}
+
 # Lưu ý hiển thị kèm câu trả lời khi nguồn đã bị thay thế một phần hoặc không phải toàn văn
 DOC_NOTES = {
     # Theo Điều 53, 54 Nghị định 168/2024: hiệu lực từ 01/01/2025; vi phạm trước đó áp dụng nghị định cũ
@@ -61,6 +67,50 @@ _fallback_splitter = RecursiveCharacterTextSplitter(
     strip_whitespace=True,
     separators=["\n\n", "\n", ".", " ", ""],
 )
+
+
+# Nghị định 168/2024 ghi mức trừ điểm ở khoản riêng, vd. "b) Thực hiện hành vi quy định tại điểm h khoản 5;
+# khoản 6; điểm b, điểm c khoản 9 Điều này bị trừ điểm giấy phép lái xe 04 điểm" → hành vi và mức trừ điểm
+# nằm ở hai chunk khác nhau, LLM không nối được. Gắn mức trừ điểm vào ngay dòng của từng hành vi.
+_DEDUCTION_RULE = re.compile(
+    r"^([a-zđ])\) Thực hiện hành vi quy định tại (.+?) Điều này bị trừ điểm giấy phép lái xe (\d+) điểm"
+)
+_CLAUSE_LINE = re.compile(r"^(\d+)\.\s")
+_POINT_LINE = re.compile(r"^([a-zđ])\)\s")
+
+
+def _annotate_point_deductions(article: str) -> str:
+    if "bị trừ điểm giấy phép lái xe" not in article:
+        return article
+    lines = article.split("\n")
+
+    deductions: dict[tuple[str, str | None], str] = {}  # (khoản, điểm hoặc None = cả khoản) → ghi chú
+    clause = None
+    for line in lines:
+        if match := _CLAUSE_LINE.match(line):
+            clause = match.group(1)
+        if rule := _DEDUCTION_RULE.match(line):
+            note = f"[Bị trừ {rule.group(3)} điểm giấy phép lái xe theo điểm {rule.group(1)} khoản {clause} Điều này]"
+            # Đọc lần lượt: "điểm b khoản 7, điểm c khoản 9" → (7, b), (9, c); "khoản 10" không kèm điểm → cả khoản
+            pending: list[str] = []
+            for token in re.finditer(r"điểm ([a-zđ])\b|khoản (\d+)", rule.group(2)):
+                if token.group(1):
+                    pending.append(token.group(1))
+                else:
+                    for point in pending or [None]:
+                        deductions[(token.group(2), point)] = note
+                    pending = []
+
+    annotated, clause = [], None
+    for line in lines:
+        if match := _CLAUSE_LINE.match(line):
+            clause = match.group(1)
+            if (clause, None) in deductions:
+                line = f"{line} {deductions[(clause, None)]}"
+        elif (match := _POINT_LINE.match(line)) and (clause, match.group(1)) in deductions:
+            line = f"{line} {deductions[(clause, match.group(1))]}"
+        annotated.append(line)
+    return "\n".join(annotated)
 
 
 def _doc_label(doc: Document) -> str:
@@ -112,6 +162,7 @@ def _split_long_article(part: str) -> list[str]:
 def _split_by_dieu(doc: Document) -> list[Document]:
     """Tách document theo ranh giới Điều X., fallback RecursiveCharacter nếu điều quá dài."""
     label = _doc_label(doc)
+    superseded_articles = SUPERSEDED_ARTICLES.get(Path(doc.metadata.get("source", "")).name, ())
     parts = []
     for part in (p.strip() for p in _DIEU_PATTERN.split(doc.page_content)):
         if not part:
@@ -125,10 +176,13 @@ def _split_by_dieu(doc: Document) -> list[Document]:
 
     chunks = []
     for part in parts:
+        part = _annotate_point_deductions(part)
         first_line = part.split("\n", 1)[0].strip().lstrip('“"')
         article = _ARTICLE_PATTERN.match(first_line)
         heading = first_line[:200] if article else None
         metadata = {**doc.metadata, "law": label, "article": article.group(0) if article else ""}
+        article_number = re.search(r"\d+", article.group(0)) if article else None
+        metadata["superseded"] = bool(article_number and int(article_number.group(0)) in superseded_articles)
 
         texts = [part] if len(part) <= MAX_CHUNK_CHARS else _split_long_article(part)
         chunks.extend(

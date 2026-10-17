@@ -58,7 +58,9 @@ More detail (in Vietnamese) is in [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Evaluation results
 
-Full pipeline (hybrid retrieval, k = 7) on questions from `test_set.json`. All scores are averages between 0 and 1; higher is better. These runs used Groq-hosted Llama models, before the project switched to Gemini / Ollama.
+**Golden-set check: 10/10.** Ten common traffic-fine questions (red light, drink-driving, helmet, speeding, phone use, wrong-way driving, licence point deductions, and a child-seat rule amended in 2026) have reference answers taken from Decrees 168/2024 and 238/2026. Each answer must contain the exact fine range, cite the right article and current decree, and must not quote the superseded Decree 100/2019 amounts. With Gemini 3.5 Flash-Lite answering, all 10 pass ([`evaluation/results_golden.json`](evaluation/results_golden.json), 17 Oct 2026). Earlier runs of this set exposed three real bugs, fixed before this run (see [ARCHITECTURE.md](ARCHITECTURE.md#6-lỗi-đã-gặp-và-cách-sửa)).
+
+**Earlier automatic metrics** — full pipeline (hybrid retrieval, k = 7) on questions from `test_set.json`. All scores are averages between 0 and 1; higher is better. These runs used Groq-hosted Llama models, before the project switched to Gemini / Ollama.
 <!-- TODO: re-run the evaluation with the current LLM setup. -->
 
 | Metric | Fine-tuned E5 (deployed) | Custom Transformer |
@@ -185,9 +187,13 @@ python train_custom.py           # train the from-scratch Transformer (runs on C
 rm -rf faiss_index_local
 USE_FINETUNED=true python -c "from src.vector_store import vectorstore"   # E5 index
 
-# Evaluate on test_set_clean.json: the 74 test questions that never appear in the training triplets
-# (regenerate with: python evaluation/make_clean_test_set.py). Needs models/finetuned-embedder/.
-# RAGAS makes ~10 LLM calls per question, so let a local Ollama model judge while Gemini answers:
+# Golden set: 10 traffic-fine questions with reference answers from Decrees 168/2024 and 238/2026
+python evaluation/run_golden_set.py                                            # → evaluation/results_golden.json
+
+# Evaluate on test_set_clean.json: 57 test questions never seen in training, excluding those answered
+# from the superseded Decree 100/2019 (regenerate with: python evaluation/make_clean_test_set.py).
+# Needs models/finetuned-embedder/. RAGAS makes ~10 LLM calls per question, so let a local Ollama model
+# judge while Gemini answers (requests are paced to stay under the free-tier 15 requests/minute):
 EVAL_JUDGE_PROVIDER=ollama python evaluation/evaluate_finetuned.py --limit 3   # quick check
 EVAL_JUDGE_PROVIDER=ollama python evaluation/evaluate_finetuned.py             # → evaluation/results_finetuned.json
 
@@ -219,14 +225,14 @@ vietnamese-rag-chatbot/
 │   ├── evaluation_enhanced.py  # retrieval metrics, RAGAS, semantic similarity
 │   ├── custom_transformer/     # tokenizer, encoder architecture, triplet-loss trainer
 │   └── finetuned_e5/           # multilingual-e5-base fine-tuning
-├── evaluation/                 # evaluate_finetuned.py, evaluate_custom.py, make_clean_test_set.py
+├── evaluation/                 # golden set + checker, evaluate_finetuned.py, make_clean_test_set.py
 ├── data/raw/                   # the 10 legal documents (.docx)
 ├── faiss_index_local/          # prebuilt FAISS index (768-d, fine-tuned E5) used by the demo
 ├── train_finetuned.py          # fine-tuning pipeline
 ├── train_custom.py             # custom Transformer pipeline
 ├── train_colab.ipynb           # Colab GPU notebook for fine-tuning
 ├── test_set.json               # 306 evaluation questions with reference answers
-├── test_set_clean.json         # the 74 of them never seen in training (used for evaluation)
+├── test_set_clean.json         # 57 of them: never seen in training, not based on Decree 100/2019
 ├── tests/                      # unit tests (glossary, chunker), run by .github/workflows/tests.yml
 ├── ARCHITECTURE.md             # design notes and bugs fixed along the way (Vietnamese)
 ├── .env.example                # environment variable template

@@ -67,6 +67,8 @@ class HybridRetriever:
         print("Initializing BM25 retriever...")
         tokenized_docs = [doc.split() for doc in self.doc_texts]
         self.bm25 = BM25Okapi(tokenized_docs)
+        # Chunk của văn bản đã bị thay thế (xem chunker.SUPERSEDED_ARTICLES) — loại khỏi ứng viên mặc định
+        self.superseded = np.array([bool(doc.metadata.get("superseded")) for doc in documents])
         
         # Initialize cross-encoder if available
         self.use_cross_encoder = use_cross_encoder and CROSS_ENCODER_AVAILABLE
@@ -111,10 +113,12 @@ class HybridRetriever:
             normalized.append((doc, float(value)))
         return normalized
     
-    def retrieve_bm25(self, query: str, k: int = 5) -> List[Tuple[DocumentLike, float]]:
+    def retrieve_bm25(self, query: str, k: int = 5, include_superseded: bool = False) -> List[Tuple[DocumentLike, float]]:
         """Retrieve using BM25 (sparse lexical search)"""
         query_tokens = query.split()
         scores = self.bm25.get_scores(query_tokens)
+        if not include_superseded:
+            scores = np.where(self.superseded, 0.0, scores)
         top_indices = np.argsort(scores)[::-1][:k]
         
         results = []
@@ -124,10 +128,13 @@ class HybridRetriever:
         
         return results
     
-    def retrieve_dense(self, query: str, k: int = 5) -> List[Tuple[DocumentLike, float]]:
+    def retrieve_dense(self, query: str, k: int = 5, include_superseded: bool = False) -> List[Tuple[DocumentLike, float]]:
         """Retrieve using dense vectors (semantic search)"""
-        docs = vectorstore.similarity_search_with_score(query, k=k)
-        return docs
+        if include_superseded:
+            return vectorstore.similarity_search_with_score(query, k=k)
+        return vectorstore.similarity_search_with_score(
+            query, k=k, filter=lambda metadata: not metadata.get("superseded"), fetch_k=k * 4,
+        )
     
     def rerank_with_cross_encoder(
         self,
@@ -159,6 +166,7 @@ class HybridRetriever:
         k_rerank: int = 3,
         rerank: bool = True,
         alpha: float = 0.5,  # Weight for combining BM25 and dense scores
+        include_superseded: bool = False,
     ) -> List[Tuple[DocumentLike, float]]:
         """
         Hybrid search combining BM25, dense, and optionally cross-encoder
@@ -175,8 +183,8 @@ class HybridRetriever:
             List of (Document, score) sorted by final score
         """
         # Retrieve from both retrievers
-        bm25_results = self.retrieve_bm25(query, k=k_bm25)
-        dense_results = self.retrieve_dense(query, k=k_dense)
+        bm25_results = self.retrieve_bm25(query, k=k_bm25, include_superseded=include_superseded)
+        dense_results = self.retrieve_dense(query, k=k_dense, include_superseded=include_superseded)
         
         # BM25 scores: higher is better. FAISS scores are distances: lower is better.
         bm25_results_norm = self._normalize_scores(bm25_results, higher_is_better=True)
@@ -247,6 +255,8 @@ class LangChainHybridRetriever(BaseRetriever):
             k_rerank=self.k + self.max_extra,
             rerank=True,
             alpha=self.alpha,
+            # Phần đường bộ NĐ 100/2019 đã bị NĐ 168/2024 thay thế: chỉ tìm khi người hỏi nhắc tới chính NĐ 100
+            include_superseded="100/2019" in query,
         )
         if self.hybrid_retriever.use_cross_encoder and results:
             top_score = results[0][1]

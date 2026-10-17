@@ -152,7 +152,10 @@ class RAGEvaluator:
 
         # Giám khảo RAGAS: mặc định cùng provider với chatbot. RAGAS gọi LLM ~10 lần/câu (phần lớn quota),
         # nên EVAL_JUDGE_PROVIDER=ollama cho phép chấm bằng model local mà vẫn để Gemini sinh câu trả lời.
-        from src.llm_chain import make_llm, resolve_llm
+        from src.llm_chain import LLM_PROVIDER, make_llm, resolve_llm
+
+        # Free tier Gemini Flash-Lite: 15 request/phút; mỗi câu ~2 request (viết lại câu hỏi + trả lời) → ~8 giây/câu
+        self.request_interval = float(os.getenv("EVAL_REQUEST_INTERVAL", "8" if LLM_PROVIDER == "gemini" else "0.5"))
         self.judge_provider, self.judge_model = resolve_llm(
             os.getenv("EVAL_JUDGE_PROVIDER") or None,
             os.getenv("EVAL_JUDGE_MODEL") or None,
@@ -270,7 +273,7 @@ class RAGEvaluator:
                     ground_truths.append(self._normalize_ground_truths(case.get("ground_truth", "")))
                     retrieved_docs.append(context)
 
-                    time.sleep(0.5)
+                    time.sleep(self.request_interval)
                     break
                 except Exception as e:
                     if _is_rate_limit(e) and attempt < RATE_LIMIT_RETRIES:
