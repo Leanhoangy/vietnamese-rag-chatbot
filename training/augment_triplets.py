@@ -7,9 +7,6 @@ Strategy:
   - Result: ~370 triplets (from 93 original)
 """
 
-import json
-import os
-import random
 import re
 import sys
 import time
