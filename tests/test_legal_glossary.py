@@ -1,6 +1,17 @@
 import pytest
 
-from src.legal_glossary import apply_glossary
+from src.legal_glossary import apply_glossary, has_vietnamese_diacritics
+
+
+@pytest.mark.parametrize("question, expected", [
+    ("Vượt đèn đỏ bị phạt bao nhiêu tiền?", True),
+    ("Điều kiện kết hôn là gì?", True),
+    ("How much is the fine for running a red light?", False),
+    ("vuot den do bi phat bao nhieu", False),  # tiếng Việt không dấu cũng cần LLM viết lại
+    ("", False),
+])
+def test_detects_vietnamese_diacritics(question, expected):
+    assert has_vietnamese_diacritics(question) is expected
 
 
 @pytest.mark.parametrize("question, expected", [

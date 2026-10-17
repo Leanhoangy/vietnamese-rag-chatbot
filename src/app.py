@@ -1,10 +1,16 @@
+import datetime
+import os
+import threading
 import traceback
 
 import streamlit as st
 
 st.set_page_config(page_title="Chatbot Tư Vấn Pháp Luật", page_icon="⚖️")
 st.title("⚖️ Chatbot Tư Vấn Pháp Luật Việt Nam")
-st.write("Hỏi đáp về các quy định pháp luật Việt Nam dựa trên văn bản luật chính thức.")
+st.write(
+    "Hỏi đáp về các quy định pháp luật Việt Nam dựa trên văn bản luật chính thức. "
+    "· *Ask about Vietnamese law in Vietnamese or English.*"
+)
 st.caption(
     "⚠️ Thông tin chỉ mang tính tham khảo, được tổng hợp tự động từ các văn bản trong hệ thống "
     "và có thể chưa cập nhật quy định mới nhất. Không thay thế tư vấn của luật sư. "
@@ -18,11 +24,23 @@ EXAMPLE_QUESTIONS = [
     ("Hồ sơ đăng ký thành lập công ty trách nhiệm hữu hạn gồm những gì?", "What documents are needed to register a limited liability company?"),
     ("Thời hiệu khởi kiện tranh chấp hợp đồng là bao lâu?", "What is the limitation period for contract disputes?"),
 ]
+# Cho khách nước ngoài thử ngay: câu hỏi tiếng Anh được LLM viết lại thành truy vấn tiếng Việt
+ENGLISH_EXAMPLES = [
+    "How many days of annual leave does an employee get?",
+    "What are the legal conditions for getting married?",
+]
+
+# Demo công khai: mọi người dùng chung quota của một API key
+DEMO_SESSION_LIMIT = int(os.getenv("DEMO_SESSION_LIMIT", "20"))  # câu hỏi / phiên; 0 = không giới hạn
+DEMO_DAILY_LIMIT = int(os.getenv("DEMO_DAILY_LIMIT", "200"))     # câu hỏi gọi LLM / ngày cho cả app; 0 = không giới hạn
+
+
+class DemoQuotaExceeded(Exception):
+    """Demo đã dùng hết số câu hỏi gọi LLM trong ngày."""
 
 
 @st.cache_resource(show_spinner="Đang tải mô hình...")
 def load_chain():
-    import os
     import sys
     from pathlib import Path
     sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -36,10 +54,54 @@ qa_chain = load_chain()
 from src.chunker import DOC_NOTES  # noqa: E402 — sys.path đã được thêm trong load_chain()
 from src.llm_chain import is_transient_error  # noqa: E402
 
+
+@st.cache_resource
+def _daily_usage() -> dict:
+    """Bộ đếm dùng chung cho mọi phiên trong process."""
+    return {"date": "", "count": 0, "lock": threading.Lock()}
+
+
+def _take_daily_quota() -> bool:
+    usage = _daily_usage()
+    today = datetime.date.today().isoformat()
+    with usage["lock"]:
+        if usage["date"] != today:
+            usage["date"], usage["count"] = today, 0
+        if DEMO_DAILY_LIMIT and usage["count"] >= DEMO_DAILY_LIMIT:
+            return False
+        usage["count"] += 1
+        return True
+
+
+def run_chain(question: str, chat_history: str) -> dict:
+    """Gọi QA chain (tính vào quota ngày), trả về dữ liệu thuần để cache được."""
+    if not _take_daily_quota():
+        raise DemoQuotaExceeded()
+    result = qa_chain.invoke({"query": question, "chat_history": chat_history})
+    return {
+        "answer": result["result"],
+        "search_query": result.get("search_query", ""),
+        "sources": [
+            {
+                "law": doc.metadata.get("law") or doc.metadata.get("source", "Không rõ"),
+                "article": doc.metadata.get("article", ""),
+                "text": doc.page_content,
+            }
+            for doc in result.get("source_documents", [])
+        ],
+    }
+
+
+@st.cache_data(ttl=24 * 3600, show_spinner=False)
+def run_chain_cached(question: str) -> dict:
+    """Câu hỏi mở đầu giống nhau (vd. nút câu hỏi mẫu) → dùng lại câu trả lời, không tốn quota."""
+    return run_chain(question, "")
+
+
 hybrid_retriever = getattr(qa_chain, "hybrid_retriever", None)
 if hybrid_retriever is not None:
     with st.sidebar:
-        st.markdown("**Văn bản trong hệ thống**")
+        st.markdown("**Văn bản trong hệ thống** · *Documents covered*")
         laws = sorted({doc.metadata.get("law") for doc in hybrid_retriever.documents if doc.metadata.get("law")})
         st.markdown("\n".join(f"- {law}" for law in laws))
 
@@ -62,6 +124,9 @@ def format_chat_history(messages: list, max_turns: int = 5) -> str:
 
 def friendly_error(error: Exception) -> str:
     """Thông báo dễ hiểu cho người dùng; lỗi chi tiết được in ra log."""
+    if isinstance(error, DemoQuotaExceeded):
+        return ("⚠️ Demo đã dùng hết lượt hỏi của hôm nay, vui lòng quay lại vào ngày mai. "
+                "*(The demo has reached today's question limit — please come back tomorrow.)*")
     message = f"{type(error).__name__}: {error}".lower()
     if is_transient_error(error):
         return ("⚠️ Hệ thống AI đang quá tải, vui lòng thử lại sau ít phút. "
@@ -72,6 +137,12 @@ def friendly_error(error: Exception) -> str:
             "*(Something went wrong — please try again.)*")
 
 
+questions_asked = sum(1 for msg in st.session_state.messages if msg["role"] == "user")
+session_limit_reached = bool(DEMO_SESSION_LIMIT) and questions_asked >= DEMO_SESSION_LIMIT
+if session_limit_reached:
+    st.info(f"Bạn đã dùng hết {DEMO_SESSION_LIMIT} câu hỏi cho phiên demo này. "
+            f"*(You've reached the {DEMO_SESSION_LIMIT}-question limit for this demo session.)*")
+
 examples = st.empty()
 if not st.session_state.messages:
     with examples.container():
@@ -80,10 +151,18 @@ if not st.session_state.messages:
         for i, (question, english) in enumerate(EXAMPLE_QUESTIONS):
             if columns[i % 2].button(question, help=english, width="stretch", key=f"example_{i}"):
                 st.session_state.pending_question = question
+        st.markdown("**Or ask in English**")
+        columns = st.columns(2)
+        for i, question in enumerate(ENGLISH_EXAMPLES):
+            if columns[i % 2].button(question, width="stretch", key=f"example_en_{i}"):
+                st.session_state.pending_question = question
 
-prompt = st.chat_input("Nhập câu hỏi về pháp luật Việt Nam...") or st.session_state.pop("pending_question", None)
+prompt = st.chat_input(
+    "Nhập câu hỏi về pháp luật Việt Nam… · Ask in Vietnamese or English…",
+    disabled=session_limit_reached,
+) or st.session_state.pop("pending_question", None)
 
-if prompt:
+if prompt and not session_limit_reached:
     examples.empty()
     with st.chat_message("user"):
         st.write(prompt)
@@ -93,29 +172,25 @@ if prompt:
         with st.spinner("Đang tìm kiếm..."):
             try:
                 chat_history = format_chat_history(st.session_state.messages[:-1])
-                result = qa_chain.invoke({"query": prompt, "chat_history": chat_history})
-                answer = result["result"]
-                source_docs = result.get("source_documents", [])
-                search_query = result.get("search_query", "")
+                reply = run_chain(prompt, chat_history) if chat_history else run_chain_cached(prompt)
             except Exception as e:
-                traceback.print_exc()
-                answer = friendly_error(e)
-                source_docs = []
-                search_query = ""
+                if not isinstance(e, DemoQuotaExceeded):
+                    traceback.print_exc()
+                reply = {"answer": friendly_error(e), "search_query": "", "sources": []}
 
+        answer, sources = reply["answer"], reply["sources"]
         st.write(answer)
 
-        if source_docs and len(answer) > 100:
-            notes = sorted({DOC_NOTES[doc.metadata.get("law")] for doc in source_docs if doc.metadata.get("law") in DOC_NOTES})
+        if sources and len(answer) > 100:
+            notes = sorted({DOC_NOTES[source["law"]] for source in sources if source["law"] in DOC_NOTES})
             for note in notes:
                 st.warning(note, icon="⚠️")
-            with st.expander("Nguồn tài liệu"):
-                if search_query and search_query != prompt:
-                    st.caption(f"Truy vấn tìm kiếm: {search_query}")
-                for i, doc in enumerate(source_docs, 1):
-                    law = doc.metadata.get("law") or doc.metadata.get("source", "Không rõ")
-                    article = doc.metadata.get("article")
-                    st.markdown(f"**{i}.** {law}" + (f" — {article}" if article else ""))
-                    st.caption(doc.page_content[:300] + "..." if len(doc.page_content) > 300 else doc.page_content)
+            with st.expander("Nguồn tài liệu · Sources"):
+                if reply["search_query"] and reply["search_query"] != prompt:
+                    st.caption(f"Truy vấn tìm kiếm: {reply['search_query']}")
+                for i, source in enumerate(sources, 1):
+                    st.markdown(f"**{i}.** {source['law']}" + (f" — {source['article']}" if source["article"] else ""))
+                    text = source["text"]
+                    st.caption(text[:300] + "..." if len(text) > 300 else text)
 
     st.session_state.messages.append({"role": "assistant", "content": answer})

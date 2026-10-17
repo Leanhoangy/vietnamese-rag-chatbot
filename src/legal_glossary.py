@@ -38,6 +38,11 @@ LEGAL_GLOSSARY = [
 ]
 
 
+def has_vietnamese_diacritics(text: str) -> bool:
+    """True nếu câu có chữ tiếng Việt có dấu; False với tiếng Anh hoặc tiếng Việt gõ không dấu."""
+    return any(ch.isalpha() and not ch.isascii() for ch in text)
+
+
 def apply_glossary(text: str) -> str:
     """Thay từ ngữ đời thường trong câu bằng thuật ngữ pháp lý tương ứng."""
     for pattern, replacement, unless in LEGAL_GLOSSARY:

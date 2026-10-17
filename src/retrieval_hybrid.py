@@ -22,12 +22,12 @@ class DocumentLike(Protocol):
     metadata: Dict[str, Any]
 
 try:
-    from .legal_glossary import apply_glossary
+    from .legal_glossary import apply_glossary, has_vietnamese_diacritics
     from .llm_chain import LLM_PROVIDER, model
     from .vector_store import vectorstore
     from .chunker import splits
 except ImportError:
-    from legal_glossary import apply_glossary
+    from legal_glossary import apply_glossary, has_vietnamese_diacritics
     from llm_chain import LLM_PROVIDER, model
     from vector_store import vectorstore
     from chunker import splits
@@ -294,6 +294,7 @@ NGUYÊN TẮC:
 - Chỉ nói "Tài liệu không cung cấp thông tin" khi hoàn toàn không tìm thấy gì liên quan.
 - Không bịa thông tin ngoài tài liệu.
 - Nếu tài liệu quy định khác nhau cho từng đối tượng (vd. ô tô, xe máy, xe đạp, người đi bộ; người lao động, người sử dụng lao động), liệt kê ĐẦY ĐỦ mọi đối tượng có trong tài liệu, mỗi đối tượng một dòng.
+- Trả lời bằng đúng ngôn ngữ của CÂU HỎI. Hỏi tiếng Anh thì trả lời tiếng Anh, dịch tên văn bản sang tiếng Anh và giữ số hiệu, vd. "(Article 8, Decree 100/2019/NĐ-CP)", "(Article 113, Labor Code 2019)".
 - Dựa vào LỊCH SỬ HỘI THOẠI để hiểu ngữ cảnh các câu hỏi tiếp theo.
 
 LỊCH SỬ HỘI THOẠI:
@@ -319,6 +320,7 @@ YÊU CẦU:
 - THAY từ ngữ đời thường bằng thuật ngữ pháp lý tương ứng như trong luật, nghị định; không giữ lại từ đời thường đã được thay. Ví dụ: "bằng lái" → "giấy phép lái xe"; "xe máy" → "xe mô tô, xe gắn máy"; "bị đuổi việc" → "người sử dụng lao động đơn phương chấm dứt hợp đồng lao động".
 - Nếu câu hỏi phụ thuộc LỊCH SỬ HỘI THOẠI (ví dụ "còn ô tô thì sao?"), bổ sung chủ đề đang nói tới để truy vấn tự đủ nghĩa.
 - Giữ nguyên ý hỏi. Không trả lời câu hỏi, không thêm thông tin mới.
+- Câu hỏi bằng tiếng Anh (hoặc ngôn ngữ khác) hay tiếng Việt không dấu: truy vấn LUÔN viết bằng tiếng Việt có dấu, dùng thuật ngữ pháp lý Việt Nam (văn bản luật chỉ có tiếng Việt).
 - Nếu là lời chào hoặc không liên quan pháp luật, trả về nguyên văn câu hỏi.
 - Chỉ trả về một dòng truy vấn, không giải thích.
 
@@ -348,15 +350,16 @@ TRUY VẤN:"""
         self.model = model
         self.retriever = retriever
 
-    def _should_rewrite(self, chat_history: str) -> bool:
+    def _should_rewrite(self, query: str, chat_history: str) -> bool:
         if self.query_rewrite_mode in ("true", "false"):
             return self.query_rewrite_mode == "true"
-        return LLM_PROVIDER != "ollama" or bool(chat_history.strip())
+        # Câu tiếng Anh / tiếng Việt không dấu phải được viết lại sang tiếng Việt có dấu thì BM25 mới khớp
+        return LLM_PROVIDER != "ollama" or bool(chat_history.strip()) or not has_vietnamese_diacritics(query)
 
     def rewrite_query(self, query: str, chat_history: str = "") -> str:
         """Quy đổi từ đời thường theo từ điển, rồi LLM viết lại thành truy vấn pháp lý; lỗi thì dùng câu đã quy đổi."""
         query = apply_glossary(query)
-        if not self._should_rewrite(chat_history):
+        if not self._should_rewrite(query, chat_history):
             return query
         try:
             raw = (self.rewrite_prompt | self.model | StrOutputParser()).invoke({

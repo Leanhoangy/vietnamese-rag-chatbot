@@ -65,9 +65,9 @@ FAISS (`IndexFlatL2`, brute force — đủ nhanh với vài nghìn chunk). Khi 
 Ngoại lệ được giữ nguyên: câu có "đường sắt / đường ngang" (Điều 47 NĐ 100/2019 đúng là quy định về đèn đỏ ở đường ngang), "xe máy chuyên dùng", "nghỉ việc riêng".
 
 ### 2.6 Viết lại câu hỏi (`HybridQAChain.rewrite_query`)
-LLM viết lại câu hỏi thành một truy vấn pháp lý, dùng lịch sử hội thoại để câu nối tiếp ("còn người đi bộ thì sao?") tự đủ nghĩa. Từ điển được áp dụng cả trước và sau bước này. Lỗi khi gọi LLM → dùng câu đã quy đổi.
+LLM viết lại câu hỏi thành một truy vấn pháp lý **bằng tiếng Việt có dấu**, dùng lịch sử hội thoại để câu nối tiếp ("còn người đi bộ thì sao?") tự đủ nghĩa. Nhờ vậy câu hỏi tiếng Anh ("What are the legal conditions for getting married?" → "Điều kiện kết hôn…") và tiếng Việt gõ không dấu cũng khớp được văn bản luật; câu trả lời được viết bằng ngôn ngữ của người hỏi. Từ điển được áp dụng cả trước và sau bước này. Lỗi khi gọi LLM → dùng câu đã quy đổi.
 
-`QUERY_REWRITE`: `auto` (mặc định) | `true` | `false`. Ở `auto`, Gemini viết lại mọi câu; Ollama chỉ viết lại câu nối tiếp, vì `qwen3:8b` viết lại câu độc lập kém hơn từ điển (từng bỏ mất chữ "đèn" làm rơi Điều 6).
+`QUERY_REWRITE`: `auto` (mặc định) | `true` | `false`. Ở `auto`, Gemini viết lại mọi câu; Ollama chỉ viết lại câu nối tiếp và câu không có dấu tiếng Việt (tiếng Anh, tiếng Việt không dấu), vì `qwen3:8b` viết lại câu tiếng Việt độc lập kém hơn từ điển (từng bỏ mất chữ "đèn" làm rơi Điều 6).
 
 ### 2.7 Hybrid retriever (`src/retrieval_hybrid.py`)
 - **BM25** (`rank-bm25`, tách từ theo khoảng trắng): mạnh với từ khóa chính xác — số điều, mức phạt.
@@ -83,7 +83,12 @@ LLM viết lại câu hỏi thành một truy vấn pháp lý, dùng lịch sử
 Nguyên tắc chính: trả lời thẳng vào câu hỏi; chỉ dùng thông tin trong tài liệu; trích dẫn gọn dạng "(khoản 2 Điều 8 Nghị định 100/2019/NĐ-CP)" và chỉ ghi khoản/điểm khi thấy rõ trong tài liệu; nếu tài liệu quy định khác nhau cho từng đối tượng thì liệt kê đủ mọi đối tượng; dùng lịch sử hội thoại cho câu hỏi tiếp theo.
 
 ### 2.10 Streamlit app (`src/app.py`)
-Câu miễn trừ trách nhiệm song ngữ, 4 nút câu hỏi mẫu (rê chuột xem tiếng Anh), thanh bên liệt kê văn bản trong hệ thống, lưu ý khi nguồn là văn bản đã bị thay thế, mục "Nguồn tài liệu" kèm truy vấn đã viết lại, thông báo lỗi thân thiện (lỗi chi tiết ghi vào log).
+Câu miễn trừ trách nhiệm song ngữ, 4 nút câu hỏi mẫu tiếng Việt (rê chuột xem tiếng Anh) và 2 nút tiếng Anh, thanh bên liệt kê văn bản trong hệ thống, lưu ý khi nguồn là văn bản đã bị thay thế, mục "Nguồn tài liệu" kèm truy vấn đã viết lại, thông báo lỗi thân thiện (lỗi chi tiết ghi vào log).
+
+Bảo vệ quota của demo công khai (mọi người dùng chung một API key):
+- `DEMO_SESSION_LIMIT` (mặc định 20): số câu hỏi mỗi phiên trình duyệt; hết thì khóa ô nhập.
+- `DEMO_DAILY_LIMIT` (mặc định 200): số câu hỏi *thực sự gọi LLM* mỗi ngày cho cả app (bộ đếm dùng chung qua `st.cache_resource`).
+- Câu hỏi mở đầu phiên (không có lịch sử, vd. bấm nút mẫu) được cache 24 giờ (`st.cache_data`): hỏi lại không gọi LLM và không tính vào giới hạn ngày.
 
 ### 2.11 REST API (`src/api.py`)
 ```
@@ -131,7 +136,7 @@ input_ids (≤128 token) → Token Embedding (vocab 2.672) + Positional Encoding
 
 `src/augment_triplets.py` (paraphrase câu hỏi bằng LLM) có sẵn nhưng bộ 3.642 triplet hiện tại không chứa câu paraphrase.
 
-**Vấn đề đã biết:** `train_custom.py` tạo triplet từ `test_set.json`, nên 232 câu hỏi của tập test nằm trong tập triplet huấn luyện (119/150 câu dùng để đánh giá). Cần tạo lại triplet chỉ từ `train_set.json` rồi đánh giá lại.
+**Vấn đề đã biết:** `train_custom.py` tạo triplet từ `test_set.json`, nên 232/306 câu hỏi của tập test nằm trong tập triplet huấn luyện. Cách xử lý hiện tại (không cần train lại E5): `evaluation/make_clean_test_set.py` lọc ra **74 câu chưa từng xuất hiện khi train** → `test_set_clean.json`, dùng làm tập đánh giá mặc định. 8/74 câu có đoạn luật đáp án trùng với đoạn luật của một câu train khác (đoạn luật là nội dung kho văn bản nên chấp nhận được; câu hỏi thì không trùng).
 
 ---
 
@@ -140,10 +145,10 @@ input_ids (≤128 token) → Token Embedding (vocab 2.672) + Positional Encoding
 | Nhóm | Chỉ số | Cách tính |
 |---|---|---|
 | Retrieval | NDCG@7, MRR@10, Recall@7, Precision@7 | Một đoạn được coi là liên quan nếu trùng đủ từ với đáp án tham chiếu; chỉ chấm trên các đoạn đã lấy về |
-| Sinh câu trả lời | RAGAS: faithfulness, answer relevancy, context precision, context recall | LLM chấm điểm là cùng provider với chatbot; gặp 429/503 thì chờ 30 giây, thử lại tối đa 3 lần |
+| Sinh câu trả lời | RAGAS: faithfulness, answer relevancy, context precision, context recall | Giám khảo mặc định cùng provider với chatbot; `EVAL_JUDGE_PROVIDER=ollama` để chấm bằng model local trong khi Gemini vẫn sinh câu trả lời. Ghi lại số mẫu chấm được (giám khảo trả JSON lỗi → bỏ qua). Gặp 429/503 thì chờ 30 giây, thử lại tối đa 3 lần |
 | So với đáp án | Semantic similarity | Cosine giữa embedding (`paraphrase-multilingual-MiniLM-L12-v2`) của câu trả lời và đáp án |
 
-`evaluation/evaluate_finetuned.py` chạy 150 câu đầu của tập test (RAGAS 50 câu); `evaluation/evaluate_custom.py` chạy 10 câu. Kết quả trong README được đo khi hệ thống còn dùng Llama trên Groq và trước các thay đổi chunking/retrieval ở trên — cần chạy lại.
+`evaluation/evaluate_finetuned.py` mặc định chạy toàn bộ `test_set_clean.json` (tùy chọn `--limit`, `--ragas-limit`, `--test-set`) và lưu điểm kèm cấu hình chạy (LLM trả lời, giám khảo, số câu, ngày) vào `evaluation/results_finetuned.json`. `evaluation/evaluate_custom.py` chạy 10 câu. Kết quả cũ trong README được đo khi hệ thống còn dùng Llama trên Groq, trên tập test bị lẫn dữ liệu train, và trước các thay đổi chunking/retrieval ở trên.
 
 ---
 
@@ -164,4 +169,4 @@ input_ids (≤128 token) → Token Embedding (vocab 2.672) + Positional Encoding
 ## 7. Hạn chế hiện tại
 - Mức phạt giao thông theo Nghị định 100/2019, đã được thay bằng Nghị định 168/2024 (sửa đổi bởi Nghị định 238/2026). Bản chính thức của hai nghị định mới trên vanban.chinhphu.vn chỉ có PDF scan, chưa có bản văn bản để đưa vào hệ thống; app hiện lưu ý này khi trả lời.
 - `qwen3:8b` chạy local yếu với câu hỏi nhiều đối tượng; Gemini trả lời đầy đủ hơn.
-- Đánh giá cần chạy lại sau khi sửa lỗi lẫn dữ liệu test vào train.
+- E5 vẫn được fine-tune trên tập triplet có lẫn câu test; đánh giá tránh vấn đề này bằng `test_set_clean.json`, nhưng muốn dùng lại cả 306 câu thì cần tạo lại triplet chỉ từ `train_set.json` và train lại.

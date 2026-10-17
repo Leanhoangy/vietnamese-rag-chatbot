@@ -25,10 +25,13 @@ DOC_LABELS = {
 DOC_NOTES = {
     DOC_LABELS["Nghidinh 100:2019.docx"]: (
         "Mức phạt giao thông đường bộ trong Nghị định 100/2019 đã được thay bằng Nghị định 168/2024/NĐ-CP "
-        "từ 01/01/2025; văn bản mới chưa có trong hệ thống."
+        "từ 01/01/2025; văn bản mới chưa có trong hệ thống. "
+        "(Road-traffic fines in Decree 100/2019 were replaced by Decree 168/2024 from 1 Jan 2025; "
+        "the new decree is not in the system yet.)"
     ),
     DOC_LABELS["Luathinhsu.docx"]: (
-        "Đây là luật sửa đổi, bổ sung một số điều của Bộ luật Hình sự, không phải toàn văn Bộ luật Hình sự."
+        "Đây là luật sửa đổi, bổ sung một số điều của Bộ luật Hình sự, không phải toàn văn Bộ luật Hình sự. "
+        "(This is the 2025 law amending the Penal Code, not the full Penal Code.)"
     ),
 }
 

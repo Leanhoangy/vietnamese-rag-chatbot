@@ -1,6 +1,6 @@
 # Vietnamese Legal RAG Chatbot
 
-**A chatbot that answers plain-Vietnamese questions about 8 core Vietnamese laws and decrees, grounded in the official legal text and showing the source passages. It is built for citizens, HR staff and small businesses who need a quick legal lookup without reading the whole code.**
+**A chatbot that answers questions about 8 core Vietnamese laws and decrees, asked in Vietnamese or English, grounded in the official Vietnamese legal text and citing the law and article. It is built for citizens, HR staff, small businesses and foreign investors who need a quick legal lookup without reading the whole code.**
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://vietnamese-rag-chatbot-jemrcpipbmxd5bdugx5z2l.streamlit.app)
 [![tests](https://github.com/Leanhoangy/vietnamese-rag-chatbot/actions/workflows/tests.yml/badge.svg)](https://github.com/Leanhoangy/vietnamese-rag-chatbot/actions/workflows/tests.yml)
@@ -20,11 +20,11 @@
 
 ## Key features
 
-- **Query rewriting + hybrid retrieval with re-ranking.** A small glossary first maps everyday terms to the wording used in the law (for example "đèn đỏ" → "đèn tín hiệu giao thông"), then the LLM rewrites the question, including follow-ups that depend on the chat history, into legal terminology. BM25 keyword search and FAISS dense search then run in parallel, their scores are fused 50/50, and a multilingual cross-encoder picks the top 7 passages, extended to up to 10 when more provisions score almost as high (questions such as "running a red light" span one article per vehicle type). Exact references (article numbers, fine amounts) and everyday wording can both match.
+- **Query rewriting + hybrid retrieval with re-ranking.** A small glossary first maps everyday terms to the wording used in the law (for example "đèn đỏ" → "đèn tín hiệu giao thông"), then the LLM rewrites the question into a Vietnamese legal search query. This also covers follow-ups that depend on the chat history, questions asked in English and Vietnamese typed without diacritics; answers come back in the user's language. BM25 keyword search and FAISS dense search then run in parallel, their scores are fused 50/50, and a multilingual cross-encoder picks the top 7 passages, extended to up to 10 when more provisions score almost as high (questions such as "running a red light" span one article per vehicle type). Exact references (article numbers, fine amounts) and everyday wording can both match.
 - **Two domain-trained embedding models.** `multilingual-e5-base` (278M parameters) is fine-tuned with triplet loss on 3,642 legal triplets with FAISS-mined hard negatives and [published on Hugging Face](https://huggingface.co/Hoangy2005/vietnamese-legal-embedder). Alongside it is a 738,560-parameter Transformer encoder built from scratch in PyTorch, with its own tokenizer, architecture and training loop.
 - **Answers tied to sources.** Every chunk is stamped with its law name and article number, and the LLM (temperature 0) is prompted to answer only from the retrieved passages and cite them that way. Answers can expand to show the source passages. The last 5 chat turns go into the prompt, so follow-up questions work.
 - **Evaluation pipeline.** It measures retrieval (NDCG, MRR, Recall, Precision), runs RAGAS (faithfulness, answer relevancy, context precision and recall) and scores semantic similarity against reference answers.
-- **Cloud or fully local.** The repo includes a Streamlit chat UI, a FastAPI endpoint and a prebuilt FAISS index, and the fine-tuned model downloads from Hugging Face Hub on first start. One setting switches the LLM between Gemini (hosted demo) and any Ollama model running on your own machine, so documents and questions never leave it.
+- **Cloud or fully local.** The repo includes a Streamlit chat UI, a FastAPI endpoint and a prebuilt FAISS index, and the fine-tuned model downloads from Hugging Face Hub on first start. One setting switches the LLM between Gemini (hosted demo) and any Ollama model running on your own machine, so documents and questions never leave it. The public demo protects its API quota with per-session and daily question limits and caches answers to repeated opening questions.
 - **8 legal documents covered.** Civil Code 2015, Labor Code 2019, Land Law 2024, Law on Enterprises 2020, Law on Marriage and Family 2014, Road Law 2024, the 2025 law amending the Penal Code, and Decree 100/2019 on traffic fines. The road-traffic fines in Decree 100/2019 were replaced by Decree 168/2024 from 1 January 2025 (since amended by Decree 238/2026), which is not in the corpus yet, so the app shows a warning whenever an answer cites Decree 100/2019. <!-- TODO: the official texts of Decrees 168/2024 and 238/2026 on vanban.chinhphu.vn are scanned PDFs; add a verified text version to data/raw/ and rebuild the index. -->
 
 ## Architecture
@@ -133,6 +133,10 @@ GOOGLE_API_KEY=your_google_ai_studio_key_here
 # auto = always with Gemini; with Ollama only for follow-up questions (the glossary covers the rest).
 # Each rewrite is one extra LLM call.
 # QUERY_REWRITE=auto
+
+# Optional: demo protection (0 = unlimited)
+# DEMO_SESSION_LIMIT=20     # questions per browser session
+# DEMO_DAILY_LIMIT=200      # LLM-backed questions per day for the whole app
 ```
 
 **3. Start the app**
@@ -178,9 +182,11 @@ python train_custom.py           # train the from-scratch Transformer (runs on C
 rm -rf faiss_index_local
 USE_FINETUNED=true python -c "from src.vector_store import vectorstore"   # E5 index
 
-# RAGAS uses the same LLM as the judge and makes several calls per question,
-# so a full run can exceed the Gemini free-tier daily quota.
-python evaluation/evaluate_finetuned.py   # needs models/finetuned-embedder/ (downloaded by the app on first run)
+# Evaluate on test_set_clean.json: the 74 test questions that never appear in the training triplets
+# (regenerate with: python evaluation/make_clean_test_set.py). Needs models/finetuned-embedder/.
+# RAGAS makes ~10 LLM calls per question, so let a local Ollama model judge while Gemini answers:
+EVAL_JUDGE_PROVIDER=ollama python evaluation/evaluate_finetuned.py --limit 3   # quick check
+EVAL_JUDGE_PROVIDER=ollama python evaluation/evaluate_finetuned.py             # → evaluation/results_finetuned.json
 
 # To evaluate the custom Transformer, rebuild the index with it first (don't commit this 128-d index)
 rm -rf faiss_index_local
@@ -209,13 +215,14 @@ vietnamese-rag-chatbot/
 │   ├── evaluation_enhanced.py  # retrieval metrics, RAGAS, semantic similarity
 │   ├── custom_transformer/     # tokenizer, encoder architecture, triplet-loss trainer
 │   └── finetuned_e5/           # multilingual-e5-base fine-tuning
-├── evaluation/                 # evaluate_finetuned.py, evaluate_custom.py
+├── evaluation/                 # evaluate_finetuned.py, evaluate_custom.py, make_clean_test_set.py
 ├── data/raw/                   # the 8 legal documents (.docx)
 ├── faiss_index_local/          # prebuilt FAISS index (768-d, fine-tuned E5) used by the demo
 ├── train_finetuned.py          # fine-tuning pipeline
 ├── train_custom.py             # custom Transformer pipeline
 ├── train_colab.ipynb           # Colab GPU notebook for fine-tuning
 ├── test_set.json               # 306 evaluation questions with reference answers
+├── test_set_clean.json         # the 74 of them never seen in training (used for evaluation)
 ├── tests/                      # unit tests (glossary, chunker), run by .github/workflows/tests.yml
 ├── ARCHITECTURE.md             # design notes and bugs fixed along the way (Vietnamese)
 ├── .env.example                # environment variable template

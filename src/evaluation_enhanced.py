@@ -5,7 +5,9 @@ and RAGAS evaluation.
 """
 
 import json
+import os
 import re
+from pathlib import Path
 import numpy as np
 from typing import List, Dict, Tuple
 import time
@@ -148,10 +150,17 @@ class RAGEvaluator:
         self.retrieval_metrics = RetrievalMetrics()
         self.answer_metrics = AnswerQualityMetrics()
 
-        # RAGAS judge dùng cùng provider với chatbot (LLM_PROVIDER / LLM_MODEL)
-        from src.llm_chain import make_llm
-        self.ragas_model = make_llm()
+        # Giám khảo RAGAS: mặc định cùng provider với chatbot. RAGAS gọi LLM ~10 lần/câu (phần lớn quota),
+        # nên EVAL_JUDGE_PROVIDER=ollama cho phép chấm bằng model local mà vẫn để Gemini sinh câu trả lời.
+        from src.llm_chain import make_llm, resolve_llm
+        self.judge_provider, self.judge_model = resolve_llm(
+            os.getenv("EVAL_JUDGE_PROVIDER") or None,
+            os.getenv("EVAL_JUDGE_MODEL") or None,
+        )
+        print(f"RAGAS judge: {self.judge_provider} / {self.judge_model}")
+        self.ragas_model = make_llm(provider=self.judge_provider, model_name=self.judge_model)
         self.ragas_llm = LangchainLLMWrapper(self.ragas_model)
+        self.ragas_valid_samples: Dict[str, int] = {}
 
         # RAGAS requires a HuggingFace embedding with a string model name.
         # Always use e5-base regardless of what the QA chain uses.
@@ -320,8 +329,9 @@ class RAGEvaluator:
         answers: List[str],
         contexts: List[List[str]],
         ground_truths: List[str],
+        ragas_limit: int | None = 50,
     ) -> Dict:
-        """Run RAGAS evaluation"""
+        """Run RAGAS evaluation on the first ragas_limit samples (None = all)."""
         print("\n" + "="*60)
         print("Running RAGAS Evaluation")
         print("="*60)
@@ -335,7 +345,6 @@ class RAGEvaluator:
                 "context_recall": 0.0,
             }
         
-        ragas_limit = 50
         questions = questions[:ragas_limit]
         answers = answers[:ragas_limit]
         contexts = contexts[:ragas_limit]
@@ -358,7 +367,7 @@ class RAGEvaluator:
                                  self.context_precision_metric, self.context_recall_metric],
                         llm=self.ragas_llm,
                         embeddings=self.ragas_embeddings,
-                        run_config=RunConfig(max_workers=1, timeout=200)
+                        run_config=RunConfig(max_workers=1, timeout=600),  # giám khảo local chậm hơn API
                     )
                     df = res.to_pandas()
                     for metric in all_scores:
@@ -381,12 +390,17 @@ class RAGEvaluator:
                 for metric in all_scores:
                     all_scores[metric].append(float("nan"))
 
-        scores = {metric: float(np.nanmean(vals)) if vals else 0.0 for metric, vals in all_scores.items()}
-        
+        # Giám khảo có thể trả JSON lỗi → NaN; ghi lại số mẫu chấm được để biết điểm đáng tin tới đâu
+        self.ragas_valid_samples = {metric: int(np.sum(~np.isnan(vals))) for metric, vals in all_scores.items()}
+        scores = {
+            metric: float(np.nanmean(vals)) if self.ragas_valid_samples[metric] else 0.0
+            for metric, vals in all_scores.items()
+        }
+
         print("\n=== RAGAS Scores ===")
         for metric, score in scores.items():
-            print(f"{metric:.<30} {score:.4f}")
-        
+            print(f"{metric:.<30} {score:.4f}  ({self.ragas_valid_samples[metric]}/{len(questions)} samples)")
+
         return scores
     
     def evaluate_answer_quality(
@@ -414,8 +428,14 @@ class RAGEvaluator:
 
         return scores
     
-    def run_full_evaluation(self, limit: int = 5) -> Dict:
-        """Run complete evaluation pipeline"""
+    def run_full_evaluation(
+        self,
+        limit: int | None = 5,
+        ragas_limit: int | None = 50,
+        output_path: str = "evaluation_results.json",
+        config: Dict | None = None,
+    ) -> Dict:
+        """Run complete evaluation pipeline and save scores together with the run configuration."""
         print("Loading test set...")
         test_cases = self.load_test_set()
         
@@ -434,7 +454,7 @@ class RAGEvaluator:
         retrieval_scores = self.evaluate_retrieval(retrieved_docs, ground_truths)
         
         # RAGAS evaluation
-        ragas_scores = self.evaluate_ragas(questions, answers, contexts, ground_truths)
+        ragas_scores = self.evaluate_ragas(questions, answers, contexts, ground_truths, ragas_limit=ragas_limit)
         
         # Answer quality evaluation
         answer_scores = self.evaluate_answer_quality(
@@ -444,21 +464,29 @@ class RAGEvaluator:
         
         # Combine results
         all_scores = {
+            "config": {
+                "test_set": self.test_set_path,
+                "questions_evaluated": len(questions),
+                "judge_llm": f"{self.judge_provider}/{self.judge_model}",
+                **(config or {}),
+            },
             "retrieval": retrieval_scores,
             "ragas": ragas_scores,
+            "ragas_valid_samples": self.ragas_valid_samples,
             "answer_quality": answer_scores,
         }
-        
+
         print("\n" + "="*60)
         print("FINAL RESULTS")
         print("="*60)
-        print(json.dumps(all_scores, indent=2))
-        
+        print(json.dumps(all_scores, indent=2, ensure_ascii=False))
+
         # Save results
-        with open("evaluation_results.json", "w", encoding="utf-8") as f:
+        Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+        with open(output_path, "w", encoding="utf-8") as f:
             json.dump(all_scores, f, indent=2, ensure_ascii=False)
-        print("\nResults saved to: evaluation_results.json")
-        
+        print(f"\nResults saved to: {output_path}")
+
         return all_scores
 
 
