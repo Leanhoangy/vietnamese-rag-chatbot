@@ -13,10 +13,10 @@
 **▶ Live demo: [vietnamese-rag-chatbot-jemrcpipbmxd5bdugx5z2l.streamlit.app](https://vietnamese-rag-chatbot-jemrcpipbmxd5bdugx5z2l.streamlit.app)**
 <br><sub>Hosted on the free tier: the app sleeps when idle, so the first load can take a few minutes while it wakes up and downloads the model.</sub>
 
-<!-- TODO: record the demo and save it as docs/demo.gif -->
 <p align="center">
-  <img src="docs/demo.gif" alt="Demo: asking about a traffic fine and opening the cited source passages" width="760">
+  <img src="docs/demo.gif" alt="Demo: an English question about marriage conditions answered from Vietnamese law with cited articles, then the sample employee handbook loaded in 'Your documents' mode and asked about annual leave" width="665">
 </p>
+<p align="center"><sub>Asking about Vietnamese law in English, opening the cited articles, then switching to <b>Your documents</b> and asking the sample handbook.</sub></p>
 
 ## Key features
 
