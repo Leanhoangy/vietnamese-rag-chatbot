@@ -315,7 +315,7 @@ vietnamese-rag-chatbot/
 ## About
 
 Built as a Deep Learning course project at HUIT (2025) by [@Leanhoangy](https://github.com/Leanhoangy).
-<!-- TODO: add your Upwork / Fiverr profile link here -->
+Available for freelance work (RAG chatbots, LLM agents, document Q&A) on [Upwork](https://www.upwork.com/freelancers/~010d9000e2b9af1ca9).
 
 ---
 
